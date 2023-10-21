@@ -1,0 +1,12 @@
+{
+  "extends": [
+    "react-app"
+  ],
+  "rules": {
+    "jsx-quotes": [
+      1,
+      "prefer-double"
+    ],
+    "react-hooks/exhaustive-deps": "off" // отключим предупреждения в хуках
+  }
+}
