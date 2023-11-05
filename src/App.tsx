@@ -1,44 +1,115 @@
-import React, { useState, useEffect, ReactNode, MouseEventHandler } from 'react';
-import bridge, { UserInfo } from '@vkontakte/vk-bridge';
-import { View, ScreenSpinner, AdaptivityProvider, AppRoot, ConfigProvider, SplitLayout, SplitCol } from '@vkontakte/vkui';
+import React, {useEffect, useState} from 'react';
+import bridge, {UserInfo} from '@vkontakte/vk-bridge';
+import {
+	AdaptivityProps,
+	Epic,
+	Platform,
+	ScreenSpinner,
+	SplitCol,
+	SplitLayout,
+	useAdaptivityWithJSMediaQueries,
+	usePlatform,
+	View,
+	ViewWidth
+} from '@vkontakte/vkui';
 import '@vkontakte/vkui/dist/vkui.css';
 
-import Home from './panels/Home';
-import Persik from './panels/Persik';
+import HomePanel from './panels/main/HomePanel';
+import {useActiveVkuiLocation, useGetPanelForView, usePopout, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import TabBarWrapper from "./components/TabBarWrapper";
+import {PANEL_CONSTANTS, VIEW_CONSTANTS} from "./constants/RouterConstants";
+import {DEV_USER_VK_IDS} from "./constants/UserConstants";
+import SelectProfilePanel from "./panels/generate_images/SelectProfilePanel";
+import ModalRootComponent from "./modals/ModalRoot";
+import './assets/css/style.scss';
+import SelectImagePanel from "./panels/generate_images/SelectImagePanel";
+import {AdaptiveContext} from "./context/AdaptiveContext";
+import ShowGeneratedImagePanel from "./panels/generate_images/ShowGeneratedImagePanel";
+import AboutPanel from "./panels/about/AboutPanel";
+import WelcomePanel from "./panels/monetization/WelcomePanel";
+import ProfilePanel from "./panels/monetization/ProfilePanel";
+import {useDispatch, useSelector} from "react-redux";
+import {RootStateType} from "./redux/store/ConfigureStore";
+import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
+import {apiInitUser} from "./api/AxiosApi";
+import {imageType} from "./types/ApiTypes";
+import {setUserDbData} from "./redux/slice/UserSlice";
 
 const App = () => {
-	const [activePanel, setActivePanel] = useState('home');
-	const [fetchedUser, setUser] = useState<UserInfo | undefined>();
-	const [popout, setPopout] = useState<ReactNode | null>(<ScreenSpinner size='large' />);
+	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
+	const routerPopout = usePopout();
+	const routeNavigator = useRouteNavigator();
+	const [popularImageTypes, setPopularImageTypes] = useState<imageType[] | []>([]);
+
+	const { view: activeView } = useActiveVkuiLocation();
+	const activePanel = useGetPanelForView();
+	const platform = usePlatform();
+	const isVkComPlatform = platform === Platform.VKCOM;
+	const view:AdaptivityProps = useAdaptivityWithJSMediaQueries();
+	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
+	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
+	const dispatch = useDispatch()
 
 	useEffect(() => {
 		async function fetchData() {
-			const user = await bridge.send('VKWebAppGetUserInfo');
-			setUser(user);
-			setPopout(null);
+			const userInfo = await bridge.send('VKWebAppGetUserInfo');
+
+			if (DEV_USER_VK_IDS.includes(userInfo.id) && !isVkComPlatform) {
+				import("./eruda").then(({ default: eruda }) => {});
+			}
+
+			setUser(userInfo);
+			const {popular_image_types, user} = await apiInitUser();
+
+			dispatch(setUserDbData(user));
+			dispatch(hideAppLoading());
+			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
+
+			setPopularImageTypes(popular_image_types);
+			setTimeout(() => routeNavigator.hidePopout(), 1000);
 		}
 		fetchData();
 	}, []);
 
-	const go: MouseEventHandler<HTMLElement> = e => {
-		setActivePanel(e.currentTarget.dataset.to ?? 'home');
-	};
-
 	return (
-		<ConfigProvider>
-			<AdaptivityProvider>
-				<AppRoot>
-					<SplitLayout popout={popout}>
-						<SplitCol>
-							<View activePanel={activePanel}>
-								<Home id='home' fetchedUser={fetchedUser} go={go} />
-								<Persik id='persik' go={go} />
-							</View>
-						</SplitCol>
-					</SplitLayout>
-				</AppRoot>
-			</AdaptivityProvider>
-		</ConfigProvider>
+		<AdaptiveContext.Provider value={
+			{
+				isMobileSize,
+				isVkComPlatform,
+				vkUserInfo,
+			}
+		}>
+		<SplitLayout
+			popout={appIsLoading ? <ScreenSpinner style={{backgroundColor: 'var(--vkui--color_background)'}} size='large' /> : routerPopout}
+			modal={<ModalRootComponent />}
+		>
+			{
+				(activeView && activePanel) &&
+				<SplitCol>
+					<Epic
+						activeStory={activeView}
+						tabbar={<TabBarWrapper />}
+					>
+						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel}>
+							<HomePanel popularImageTypes={popularImageTypes} id={PANEL_CONSTANTS.PANEL_MAIN_HOME} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel}>
+							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />
+							<SelectImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_IMAGE} />
+							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SHOW_GENERATED_IMAGE} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel}>
+							<AboutPanel id={PANEL_CONSTANTS.PANEL_ABOUT_MAIN} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_MONETIZATION} activePanel={activePanel}>
+							<WelcomePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_WELCOME} />
+							<ProfilePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_PROFILE} />
+						</View>
+					</Epic>
+				</SplitCol>
+			}
+		</SplitLayout>
+		</AdaptiveContext.Provider>
 	);
 }
 
