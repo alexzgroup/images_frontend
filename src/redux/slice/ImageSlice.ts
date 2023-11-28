@@ -1,7 +1,8 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
+import {userImage} from "../../types/UserTypes";
 
 export interface ReduxSliceImageInterface {
-    generateImage: string|null,
+    generateImage: userImage|null,
     generateImageUrl: string|null,
 }
 
@@ -15,7 +16,7 @@ export const imageSlice = createSlice({
     name: 'imageSlice',
     initialState,
     reducers: {
-        setGenerateImage: (state, action: PayloadAction<string>) => {
+        setGenerateImage: (state, action: PayloadAction<userImage>) => {
             state.generateImage = action.payload;
         },
         clearGenerateImage: state => {

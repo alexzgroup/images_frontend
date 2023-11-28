@@ -58,7 +58,8 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     const showProcessModal = async () => {
         if (generateImage && params?.imageTypeId) {
             routeNavigator.showModal(ModalTypes.MODAL_PROCESS_GENERATE_IMAGE)
-            const {result, image_url} = await apiGenerateImage(generateImage, params?.imageTypeId)
+            const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
+            const {result, image_url} = await apiGenerateImage(imageUrl, params?.imageTypeId)
 
             if (result) {
                 dispatch(setGenerateImageUrl(image_url))
@@ -84,8 +85,6 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
-
-
         return () => {
             dispatch(clearGenerateImage())
         }
@@ -101,7 +100,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
                     {
                         generateImage
                             ?
-                            <Image withBorder={false} size={128} src={generateImage}/>
+                            <Image withBorder={false} size={128} src={generateImage.sizes[generateImage.sizes.length - 1].url}/>
                             :
                             <IconButton onClick={getUserToken} style={{height: 128}}>
                                 <Image withBorder={false} size={128}>
@@ -123,7 +122,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
                 <div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
                     <div>
                         <Image
-                            src={generateImage || vkUserInfo?.photo_200}
+                            src={generateImage ? generateImage.sizes[generateImage.sizes.length - 1].url : vkUserInfo?.photo_200}
                             size={96} />
                     </div>
                     <div>

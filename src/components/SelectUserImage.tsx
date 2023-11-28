@@ -1,0 +1,64 @@
+import React, {FC, useContext, useEffect, useState} from "react";
+import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {useDispatch, useSelector} from "react-redux";
+import {RootStateType} from "../redux/store/ConfigureStore";
+import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
+import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import {setGenerateImage} from "../redux/slice/ImageSlice";
+import bridge from "@vkontakte/vk-bridge";
+import {Button, Div, Group, Image} from "@vkontakte/vkui";
+import {userImage, userVkPhotoType} from "../types/UserTypes";
+
+export const SelectUserImage:FC = () => {
+    const [imageData, setImageData] = useState<userVkPhotoType|undefined>();
+    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const dispatch = useDispatch();
+    const routeNavigator = useRouteNavigator();
+
+    const selectImage = (image: userImage) => {
+        dispatch(setGenerateImage(image))
+        routeNavigator.hideModal();
+    }
+
+    useEffect(() => {
+        (async () => {
+            const {response} = await bridge.send('VKWebAppCallAPIMethod', {
+                method: 'photos.get',
+                params: {
+                    owner_id: Number(vkUserInfo?.id),
+                    v: process.env.REACT_APP_V_API,
+                    access_token: access_token,
+                    album_id: 'profile',
+                }});
+
+            setImageData(response);
+        })()
+    }, []);
+
+    return (
+        <React.Fragment>
+            {
+                imageData &&
+                <Group>
+                    <Div style={{
+                        display: 'grid',
+                        gridTemplate: '1fr/1fr 1fr 1fr',
+                        gap: 15,
+                        justifyItems: 'center'
+                    }}>
+                        {
+                            imageData.items.map((item, key) => (
+                                <div key={'select_image_' + key}>
+                                    <Button onClick={() => selectImage(item)} mode='link'>
+                                        <Image size={96} src={item.sizes[item.sizes.length - 1].url} />
+                                    </Button>
+                                </div>
+                            ))
+                        }
+                    </Div>
+                </Group>
+            }
+        </React.Fragment>
+    )
+}

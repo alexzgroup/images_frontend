@@ -17,9 +17,10 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
 
     const shareWall = async () => {
         bridge.send('VKWebAppShowWallPostBox', {
-            message: 'Займы под 0%! Моментальный перевод на банковскую карту. Оформляй займ по ссылке:',
-            attachments: 'https://vk.com/app7648288,photo-219904897_457239017',
+            message: 'Это изображение сгенерировано с помощью приложения "Ренестра". Для генерации своего уникального аватара переходи по ссылке:',
+            attachments: 'https://vk.com/app' + process.env.REACT_APP_APP_ID + ',photo-219904897_457239017',
             owner_id: vkUserInfo?.id,
+            copyright: 'https://vk.com/app' + process.env.REACT_APP_APP_ID,
         })
             .then((data) => {
                 if (data.post_id) {
