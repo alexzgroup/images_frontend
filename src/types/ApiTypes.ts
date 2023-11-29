@@ -41,8 +41,13 @@ export type operationWithMessageType = operationResultType & {
     message: string,
 }
 
+export type uploadPhotoType = {
+    url: string,
+    photo_upload_id: string,
+}
+
 export type generateImageType = operationResultType & {
-    image_url: string,
+    image: uploadPhotoType,
 }
 
 export type monetizationDataType = {

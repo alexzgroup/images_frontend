@@ -26,7 +26,7 @@ import LabelsList from "../../components/LabelsList";
 import {useDispatch, useSelector} from "react-redux";
 import {UrlConstants} from "../../constants/UrlConstants";
 import bridge from "@vkontakte/vk-bridge";
-import {setAccessToken} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface, setGenerateImageUrl} from "../../redux/slice/ImageSlice";
 import {apiGenerateImage} from "../../api/AxiosApi";
@@ -54,15 +54,16 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
     const showProcessModal = async () => {
         if (generateImage && params?.imageTypeId) {
             routeNavigator.showModal(ModalTypes.MODAL_PROCESS_GENERATE_IMAGE)
             const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
-            const {result, image_url} = await apiGenerateImage(imageUrl, params?.imageTypeId)
+            const {result, image} = await apiGenerateImage(imageUrl, params?.imageTypeId, access_token)
 
             if (result) {
-                dispatch(setGenerateImageUrl(image_url))
+                dispatch(setGenerateImageUrl(image))
                 await routeNavigator.push('/generate/show-image');
             }
         }
@@ -71,7 +72,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     const getUserToken = () => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
-            scope: 'photos'
+            scope: 'photos,wall'
         })
             .then((data) => {
                 if (data.access_token) {
@@ -85,9 +86,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
-        return () => {
-            dispatch(clearGenerateImage())
-        }
+        dispatch(clearGenerateImage())
     }, []);
 
     return (

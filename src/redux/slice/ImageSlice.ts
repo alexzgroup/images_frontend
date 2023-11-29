@@ -1,15 +1,15 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {userImage} from "../../types/UserTypes";
+import {uploadPhotoType} from "../../types/ApiTypes";
 
 export interface ReduxSliceImageInterface {
     generateImage: userImage|null,
-    generateImageUrl: string|null,
+    uploadPhoto?: uploadPhotoType,
 }
 
 // Define the initial state using that type
 const initialState: ReduxSliceImageInterface = {
     generateImage: null,
-    generateImageUrl: null,
 }
 
 export const imageSlice = createSlice({
@@ -22,8 +22,8 @@ export const imageSlice = createSlice({
         clearGenerateImage: state => {
             state.generateImage = null;
         },
-        setGenerateImageUrl: (state, action: PayloadAction<string>) => {
-            state.generateImageUrl = action.payload;
+        setGenerateImageUrl: (state, action: PayloadAction<uploadPhotoType>) => {
+            state.uploadPhoto = action.payload;
         },
     }
 })

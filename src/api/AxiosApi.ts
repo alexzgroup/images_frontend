@@ -47,8 +47,8 @@ export const apiAddAppToGroup = (group_id: number) => {
     return axiosApi.post(`add_app_to_group`, {group_id}).then((r: {data: operationWithMessageType}) => r.data);
 };
 
-export const apiGenerateImage = (image_url: string, image_type_id: string) => {
-    return axiosApi.post(`generate_image`, {image_url, image_type_id}).then((r: {data: generateImageType}) => r.data);
+export const apiGenerateImage = (image_url: string, image_type_id: string, access_token: string) => {
+    return axiosApi.post(`generate_image`, {image_url, image_type_id, access_token}).then((r: {data: generateImageType}) => r.data);
 };
 
 
