@@ -1,6 +1,7 @@
-import React, {useContext, useEffect} from 'react';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
 
 import {
+    Alert,
     Banner,
     Button,
     Caption,
@@ -10,7 +11,7 @@ import {
     Image,
     Link,
     Panel,
-    PanelHeader,
+    PanelHeader, PanelSpinner,
     Spacing,
     Subhead,
     Text
@@ -29,7 +30,11 @@ import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface, setGenerateImageUrl} from "../../redux/slice/ImageSlice";
-import {apiGenerateImage} from "../../api/AxiosApi";
+import {apiGenerateImage, apiGetUser} from "../../api/AxiosApi";
+import {userAvailableGenerationType} from "../../types/ApiTypes";
+import PromiseWrapper from "../../api/PromiseWrapper";
+import {trueWordForm} from "../../helpers/AppHelper";
+import {generateWordsArray} from "../../constants/AppConstants";
 
 interface Props {
     id: string;
@@ -47,17 +52,38 @@ const NoRecomendedImageLabels = [
     'Картинки с интернета',
 ]
 
-const SelectImagePanel: React.FC<Props> = ({id}) => {
+const PanelData = () => {
+
     const params = useParams<'imageTypeId'>();
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
-    const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {access_token, userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const [availableGenerationData, setAvailableGenerationData] = useState<userAvailableGenerationType>({
+        generate_in_process: false,
+        available_count_generate: 0,
+        available_day_limit: 0,
+    });
 
     const showProcessModal = async () => {
-        if (generateImage && params?.imageTypeId) {
+        if (availableGenerationData.generate_in_process) {
+            routeNavigator.showPopout(
+                <Alert
+                    actions={[
+                        {
+                            title: 'Понятно',
+                            autoClose: true,
+                            mode: 'destructive',
+                        },
+                    ]}
+                    onClose={() => routeNavigator.hidePopout()}
+                    header="Внимание!"
+                    text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
+                />
+            );
+        } else if (generateImage && params?.imageTypeId) {
             routeNavigator.showModal(ModalTypes.MODAL_PROCESS_GENERATE_IMAGE)
             const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
             const {result, image} = await apiGenerateImage(imageUrl, params?.imageTypeId, access_token)
@@ -86,12 +112,11 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
-        dispatch(clearGenerateImage())
+        setAvailableGenerationData(PromiseWrapper(apiGetUser()))
     }, []);
 
     return (
-        <Panel id={id}>
-            <PanelHeader>Загрузите фотографию</PanelHeader>
+        <React.Fragment>
             <Group>
                 <div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
                     <Subhead style={{textAlign: 'center'}}>Выберите свою фотографию с аватарок VK</Subhead>
@@ -137,10 +162,16 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
             <Group>
                 <Banner
                     size="m"
-                    header="Сегодня вам доступно ещё 2 генерации!"
-                    subheader={<Text>Каждый день, вам доступно по 2 генерации.<br/>Чтобы увеличить лимит, оформите подписку VK Donut.</Text>}
+                    header={`Сегодня вам доступно ещё ${trueWordForm(availableGenerationData.available_count_generate, generateWordsArray)}!`}
+                    subheader={<Text>Каждый день, вам доступно по {trueWordForm(availableGenerationData.available_day_limit, generateWordsArray)}.
+                        {
+                            !userDbData?.is_vip && <React.Fragment>
+                                <br/>Чтобы увеличить лимит, оформите подписку VK Donut.
+                            </React.Fragment>
+                        }
+                    </Text>}
                     actions={
-                        <Button before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
+                        !userDbData?.is_vip && <Button before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
                             Оформить подписку VK Donut
                         </Button>
                     }
@@ -148,6 +179,23 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
             </Group>
             <LabelsList type={TypeColors.success} labels={RecomendedImageLabels} header='Рекомендации к фотографиям:' />
             <LabelsList type={TypeColors.error} labels={NoRecomendedImageLabels} header='Не рекомендуем использовать:' />
+        </React.Fragment>
+    )
+}
+
+const SelectImagePanel: React.FC<Props> = ({id}) => {
+    const dispatch = useDispatch()
+
+    useEffect(() => {
+        dispatch(clearGenerateImage())
+    }, []);
+
+    return (
+        <Panel id={id}>
+            <PanelHeader>Загрузите фотографию</PanelHeader>
+            <Suspense fallback={<PanelSpinner size="medium" />} >
+                <PanelData />
+            </Suspense>
         </Panel>
     )
 }

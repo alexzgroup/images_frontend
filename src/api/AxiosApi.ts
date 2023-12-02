@@ -5,7 +5,7 @@ import {
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType, userType
+    operationWithMessageType, userAvailableGenerationType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -74,6 +74,6 @@ export const apiGenerateImage = (image_url: string, image_type_id: string, acces
  * Получает информацию о доступных генерациях
  */
 export const apiGetUser = () => {
-    return axiosApi.get(`user`).then((r: {data: userType}) => r.data);
+    return axiosApi.get(`user`).then((r: {data: userAvailableGenerationType}) => r.data);
 };
 

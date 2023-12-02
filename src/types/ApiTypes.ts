@@ -58,8 +58,7 @@ export type monetizationDataType = {
     groups: groupType[]|[],
 }
 
-export type userType = {
-    is_vip: boolean,
+export type userAvailableGenerationType = {
     generate_in_process: boolean,
     available_count_generate: number,
     available_day_limit: number,
