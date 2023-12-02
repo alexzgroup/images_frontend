@@ -37,6 +37,10 @@ import bridge from "@vkontakte/vk-bridge";
 import {apiSubscribe} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
 import {getDonutUrl} from "../../helpers/AppHelper";
+import {useSelector} from "react-redux";
+import {RootStateType} from "../../redux/store/ConfigureStore";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {CounterDown} from "../../components/CountDown";
 
 interface Props {
     id: string;
@@ -47,6 +51,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const platform = usePlatform();
 
     const subscribeGroup = async () => {
@@ -137,8 +142,8 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                     <Card mode='shadow'>
                         <Placeholder
                             icon={<Icon48DonateOutline fill='var(--vkui--color_accent_blue)'/>}
-                            header="Больше генерации изображений в день с подпиской VK Donut!"
-                            action={<Button before={<Icon24RoubleBadgeOutline />} size="l" stretched={isMobileSize}>
+                            header="Больше генераций изображений в день с подпиской VK Donut!"
+                            action={!userDbData?.is_vip && <Button before={<Icon24RoubleBadgeOutline />} size="l" stretched={isMobileSize}>
                                 <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
                         </Button>}
                         >
@@ -162,6 +167,9 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                                     Приоритетная очередь генерации образов
                                 </MiniInfoCell>
                             </List>
+                            {
+                                (userDbData?.is_vip && userDbData.date_vip_ended) && <CounterDown date={userDbData.date_vip_ended} />
+                            }
                         </Placeholder>
                     </Card>
                     <Card mode='shadow'>

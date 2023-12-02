@@ -5,7 +5,7 @@ import {
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType
+    operationWithMessageType, userType
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -31,24 +31,49 @@ export const apiGetImageTypes = () => {
     return axiosApi.get(`image_type`).then((r: {data:{items:imageType[]}}) => r.data.items);
 };
 
+/**
+ * Отправляет информацию о подписавшихся на сообщество
+ */
 export const apiSubscribe = () => {
     return axiosApi.post(`subscribe`).then((r: {data: operationWithMessageType}) => r.data);
 };
 
+/**
+ * Подключится к монетизации
+ */
 export const apiMonetization = () => {
     return axiosApi.post(`monetization`).then((r: {data: operationResultType}) => r.data);
 };
 
+/**
+ * Информация о балансе и группах которые в монетизации
+ */
 export const apiGetMonetizationData = () => {
     return axiosApi.get(`monetization`).then((r: {data: monetizationDataType}) => r.data);
 };
 
+/**
+ * Отправляет информацию о группе которая добавила приложение к себе
+ * @param group_id
+ */
 export const apiAddAppToGroup = (group_id: number) => {
     return axiosApi.post(`add_app_to_group`, {group_id}).then((r: {data: operationWithMessageType}) => r.data);
 };
 
+/**
+ * Запрос на генерацию картинки в ИИ
+ * @param image_url
+ * @param image_type_id
+ * @param access_token
+ */
 export const apiGenerateImage = (image_url: string, image_type_id: string, access_token: string) => {
     return axiosApi.post(`generate_image`, {image_url, image_type_id, access_token}).then((r: {data: generateImageType}) => r.data);
 };
 
+/**
+ * Получает информацию о доступных генерациях
+ */
+export const apiGetUser = () => {
+    return axiosApi.get(`user`).then((r: {data: userType}) => r.data);
+};
 

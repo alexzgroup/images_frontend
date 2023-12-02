@@ -7,8 +7,9 @@ export type userApiType = {
     photo_100: string,
     sex: 0|1|2,
     vk_group_id?: number,
-    is_monetization?: number,
-    date_vip_ended?: number,
+    is_monetization: number|null,
+    date_vip_ended: string|null,
+    is_vip: boolean,
 }
 
 export type imageType = {
@@ -55,4 +56,11 @@ export type monetizationDataType = {
     subscribes: number,
     total_pays: number,
     groups: groupType[]|[],
+}
+
+export type userType = {
+    is_vip: boolean,
+    generate_in_process: boolean,
+    available_count_generate: number,
+    available_day_limit: number,
 }
