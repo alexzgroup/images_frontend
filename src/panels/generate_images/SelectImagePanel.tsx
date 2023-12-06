@@ -11,7 +11,8 @@ import {
     Image,
     Link,
     Panel,
-    PanelHeader, PanelSpinner,
+    PanelHeader,
+    PanelSpinner,
     Spacing,
     Subhead,
     Text
@@ -29,7 +30,7 @@ import {UrlConstants} from "../../constants/UrlConstants";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {clearGenerateImage, ReduxSliceImageInterface, setGenerateImageUrl} from "../../redux/slice/ImageSlice";
+import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} from "../../redux/slice/ImageSlice";
 import {apiGenerateImage, apiGetUser} from "../../api/AxiosApi";
 import {userAvailableGenerationType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
@@ -89,7 +90,7 @@ const PanelData = () => {
             const {result, image} = await apiGenerateImage(imageUrl, params?.imageTypeId, access_token)
 
             if (result) {
-                dispatch(setGenerateImageUrl(image))
+                dispatch(setGenerateUploadPhoto(image))
                 await routeNavigator.push('/generate/show-image');
             }
         }

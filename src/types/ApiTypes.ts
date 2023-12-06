@@ -42,9 +42,16 @@ export type operationWithMessageType = operationResultType & {
     message: string,
 }
 
+export enum generateStatusEnum {
+    error = 'error',
+    progress = 'progress',
+    success = 'success',
+}
+
 export type uploadPhotoType = {
     url: string,
     photo_upload_id: string,
+    status: generateStatusEnum,
 }
 
 export type generateImageType = operationResultType & {
@@ -62,4 +69,11 @@ export type userAvailableGenerationType = {
     generate_in_process: boolean,
     available_count_generate: number,
     available_day_limit: number,
+}
+
+export type socketResponseType = {
+    data: {
+        status: boolean,
+        message: string,
+    }
 }

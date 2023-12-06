@@ -22,7 +22,7 @@ export const imageSlice = createSlice({
         clearGenerateImage: state => {
             state.generateImage = null;
         },
-        setGenerateImageUrl: (state, action: PayloadAction<uploadPhotoType>) => {
+        setGenerateUploadPhoto: (state, action: PayloadAction<uploadPhotoType>) => {
             state.uploadPhoto = action.payload;
         },
     }
@@ -31,7 +31,7 @@ export const imageSlice = createSlice({
 export const {
     clearGenerateImage,
     setGenerateImage,
-    setGenerateImageUrl,
+    setGenerateUploadPhoto,
 } = imageSlice.actions
 
 export default imageSlice.reducer

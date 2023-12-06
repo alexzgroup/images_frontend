@@ -11,7 +11,7 @@ import {
     PanelSpinner,
     usePlatform
 } from '@vkontakte/vkui';
-import {Icon56DonateOutline} from '@vkontakte/icons';
+import {Icon56DonateOutline, Icon56PaletteOutline} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
@@ -20,6 +20,8 @@ export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
     MODAL_SELECT_GENERATE_IMAGE = 'modal_select_generate_image',
     MODAL_PROCESS_GENERATE_IMAGE = 'modal_process_generate_image',
+    MODAL_DONUT = 'modal_donut',
+    MODAL_GENERATED_IMAGE = 'modal_generated_image',
 }
 
 const ModalRootComponent:FC = () => {
@@ -77,6 +79,46 @@ const ModalRootComponent:FC = () => {
             >
                 <PanelSpinner size="regular" />
             </ModalPage>
+            <ModalCard
+                id={ModalTypes.MODAL_DONUT}
+                onClose={() => routeNavigator.hideModal()}
+                icon={<Icon56DonateOutline />}
+                header="Поздравляем!"
+                subheader="Вы оформили VIP статус."
+                actions={
+                    <ButtonGroup mode="horizontal" stretched>
+                        <Button
+                            key="cancel"
+                            size="l"
+                            mode="primary"
+                            stretched
+                            onClick={() => routeNavigator.hideModal()}
+                        >
+                            Закрыть
+                        </Button>
+                    </ButtonGroup>
+                }
+            />
+            <ModalCard
+                id={ModalTypes.MODAL_GENERATED_IMAGE}
+                onClose={() => routeNavigator.hideModal()}
+                icon={<Icon56PaletteOutline />}
+                header="Ваша генерация готова."
+                subheader="Перейдите по ссылке чтобы просмотреть результат."
+                actions={
+                    <ButtonGroup mode="horizontal" stretched>
+                        <Button
+                            key="cancel"
+                            size="l"
+                            mode="primary"
+                            stretched
+                            onClick={() => routeNavigator.push('/generate/show-image')}
+                        >
+                            Посмотреть результат
+                        </Button>
+                    </ButtonGroup>
+                }
+            />
         </ModalRoot>
     )
 }
