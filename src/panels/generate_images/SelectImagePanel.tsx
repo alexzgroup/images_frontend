@@ -15,7 +15,7 @@ import {
     PanelSpinner,
     Spacing,
     Subhead,
-    Text
+    Text, usePlatform
 } from '@vkontakte/vkui';
 
 import {Icon28AddOutline, Icon32DonateOutline, Icon48ArrowRightOutline} from "@vkontakte/icons";
@@ -34,7 +34,7 @@ import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} fr
 import {apiGenerateImage, apiGetUser} from "../../api/AxiosApi";
 import {userAvailableGenerationType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {trueWordForm} from "../../helpers/AppHelper";
+import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
 
 interface Props {
@@ -67,6 +67,8 @@ const PanelData = () => {
         available_count_generate: 0,
         available_day_limit: 0,
     });
+    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const platform = usePlatform();
 
     const showProcessModal = async () => {
         if (availableGenerationData.generate_in_process) {
@@ -172,8 +174,10 @@ const PanelData = () => {
                         }
                     </Text>}
                     actions={
-                        !userDbData?.is_vip && <Button before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
-                            Оформить подписку VK Donut
+                        !userDbData?.is_vip && <Button
+                            onClick={initSocket}
+                            before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
+                            <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
                         </Button>
                     }
                 />

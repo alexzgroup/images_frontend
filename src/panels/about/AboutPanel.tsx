@@ -53,6 +53,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const platform = usePlatform();
+    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const subscribeGroup = async () => {
         bridge.send('VKWebAppJoinGroup', {
@@ -143,7 +144,9 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                         <Placeholder
                             icon={<Icon48DonateOutline fill='var(--vkui--color_accent_blue)'/>}
                             header="Больше генераций изображений в день с подпиской VK Donut!"
-                            action={!userDbData?.is_vip && <Button before={<Icon24RoubleBadgeOutline />} size="l" stretched={isMobileSize}>
+                            action={!userDbData?.is_vip && <Button
+                                onClick={initSocket}
+                                before={<Icon24RoubleBadgeOutline />} size="l" stretched={isMobileSize}>
                                 <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
                         </Button>}
                         >

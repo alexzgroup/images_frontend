@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React from 'react';
 
 import {Banner, Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell, Spacing} from '@vkontakte/vkui';
 import girl_image from '../../assets/images/icons/girl_icon.png';
@@ -11,7 +11,6 @@ import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -21,10 +20,8 @@ interface Props {
 const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     return (<Panel id={id}>
-            <Button onClick={initSocket} size="l">Init Socket</Button>
             <Group mode='plain'>
                 <DivCard>
                     <Placeholder
@@ -50,7 +47,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     {
                         !!popularImageTypes.length && popularImageTypes.map((value, key) => <SimpleCell
                             key={key}
-                            onClick={() => routeNavigator.push('/generate/select-image/' + value.id)}
+                            disabled
                             before={IconImageTypeGenerator(value.id)}>{value.name}
                         </SimpleCell>)
                     }

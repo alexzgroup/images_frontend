@@ -1,4 +1,4 @@
-import React, {FC, Suspense} from 'react';
+import React, {FC, Suspense, useContext} from 'react';
 
 import {
     Button,
@@ -15,6 +15,7 @@ import {Icon56DonateOutline, Icon56PaletteOutline} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
+import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -28,6 +29,7 @@ const ModalRootComponent:FC = () => {
     const routeNavigator = useRouteNavigator();
     const { modal: activeModal } = useActiveVkuiLocation();
     const platform = usePlatform();
+    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     return (
         <ModalRoot activeModal={activeModal}>
@@ -49,6 +51,7 @@ const ModalRootComponent:FC = () => {
                             Закрыть
                         </Button>
                         <Button
+                            onClick={initSocket}
                             key="add"
                             size="l"
                             mode="primary"
