@@ -4,7 +4,8 @@ import {
     Alert,
     Banner,
     Button,
-    Caption,
+    Caption, FormItem, FormLayout,
+    FormLayoutGroup,
     Group,
     Header,
     IconButton,
@@ -12,10 +13,11 @@ import {
     Link,
     Panel,
     PanelHeader,
-    PanelSpinner,
+    PanelSpinner, Radio, RadioGroup,
     Spacing,
     Subhead,
-    Text, usePlatform
+    Text,
+    usePlatform
 } from '@vkontakte/vkui';
 
 import {Icon28AddOutline, Icon32DonateOutline, Icon48ArrowRightOutline} from "@vkontakte/icons";
@@ -31,8 +33,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} from "../../redux/slice/ImageSlice";
-import {apiGenerateImage, apiGetUser} from "../../api/AxiosApi";
-import {userAvailableGenerationType} from "../../types/ApiTypes";
+import {apiGenerateImage, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
@@ -62,16 +64,24 @@ const PanelData = () => {
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {access_token, userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const [availableGenerationData, setAvailableGenerationData] = useState<userAvailableGenerationType>({
-        generate_in_process: false,
-        available_count_generate: 0,
-        available_day_limit: 0,
+    const [imageType, setImageType] = useState<imageTypeStatisticType>({
+        generate_statistic: {
+            available_count_generate: 0,
+            generate_in_process: false,
+            available_day_limit: 0,
+        },
+        img_type_to_variant_groups: [],
+        item: {
+            id: 0,
+            name: '',
+            vip: 0,
+        }
     });
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
     const platform = usePlatform();
 
     const showProcessModal = async () => {
-        if (availableGenerationData.generate_in_process) {
+        if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
                 <Alert
                     actions={[
@@ -115,7 +125,7 @@ const PanelData = () => {
     }
 
     useEffect(() => {
-        setAvailableGenerationData(PromiseWrapper(apiGetUser()))
+        setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
     }, []);
 
     return (
@@ -142,9 +152,35 @@ const PanelData = () => {
                         <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
-                    <Button stretched size='l' onClick={showProcessModal}>Продолжить</Button>
+                    <Button disabled={!generateImage} stretched size='l' onClick={showProcessModal}>Продолжить</Button>
                 </div>
             </Group>
+            {
+                !!imageType.img_type_to_variant_groups.length &&
+                <Group header={<Header>Выберите опции генерации</Header>}>
+                    <FormLayout>
+                        <FormLayoutGroup mode="horizontal">
+                            {
+                                imageType.img_type_to_variant_groups.map((group, groupKey) => (
+                                    <FormItem top={group.group.name} key={groupKey}>
+                                        <RadioGroup>
+                                            {
+                                                group.options.map((option, keyOption) => (
+                                                    <Radio name={`groups[${group.group.id}]`}
+                                                           value={option.id}
+                                                           key={keyOption}>
+                                                        {option.name}
+                                                    </Radio>
+                                                ))
+                                            }
+                                        </RadioGroup>
+                                    </FormItem>
+                                ))
+                            }
+                        </FormLayoutGroup>
+                    </FormLayout>
+                </Group>
+            }
             <Group header={<Header>Пример генерации образа:</Header>}>
                 <div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
                     <div>
@@ -165,8 +201,8 @@ const PanelData = () => {
             <Group>
                 <Banner
                     size="m"
-                    header={`Сегодня вам доступно ещё ${trueWordForm(availableGenerationData.available_count_generate, generateWordsArray)}!`}
-                    subheader={<Text>Каждый день, вам доступно по {trueWordForm(availableGenerationData.available_day_limit, generateWordsArray)}.
+                    header={`Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`}
+                    subheader={<Text>Каждый день, вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
                         {
                             !userDbData?.is_vip && <React.Fragment>
                                 <br/>Чтобы увеличить лимит, оформите подписку VK Donut.

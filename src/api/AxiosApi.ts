@@ -2,10 +2,11 @@ import axios from 'axios';
 import {
     generateImageType,
     imageType,
+    imageTypeStatisticType,
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType, userAvailableGenerationType,
+    operationWithMessageType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -73,7 +74,7 @@ export const apiGenerateImage = (image_url: string, image_type_id: string, acces
 /**
  * Получает информацию о доступных генерациях
  */
-export const apiGetUser = () => {
-    return axiosApi.get(`user`).then((r: {data: userAvailableGenerationType}) => r.data);
+export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
+    return axiosApi.get(`image_type/${image_type_id}`).then((r: {data: imageTypeStatisticType}) => r.data);
 };
 

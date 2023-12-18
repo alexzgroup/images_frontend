@@ -16,7 +16,34 @@ export type imageType = {
     id: number,
     name: string,
     vip: 0|1,
-    labels: []|string[],
+    labels?: []|string[],
+}
+
+export type typeVariantGroupType = {
+    id: number,
+    name: string,
+}
+
+export type typeVariantType = {
+    id: number,
+    name: string,
+    type_variant_group_id: number,
+    total_generate: number,
+}
+
+export type generateStatisticType = {
+    available_count_generate: number,
+    generate_in_process: boolean,
+    available_day_limit: number
+}
+
+export type imageTypeStatisticType = {
+    generate_statistic: generateStatisticType,
+    item: imageType,
+    img_type_to_variant_groups: {
+        group: typeVariantGroupType,
+        options: typeVariantType[],
+    }[],
 }
 
 export type initUserApiType = {

@@ -55,7 +55,7 @@ export const LoadingImageTypes:FC = () => {
                                 <SimpleCell
                                     key={'image_type' + key}
                                     onClick={() => routeNavigator.push('/generate/select-image/' + value.id)}
-                                    after={LabelImageTypeGenerator(value.labels)}
+                                    after={LabelImageTypeGenerator(value.labels as never)}
                                     before={IconImageTypeGenerator(value.id)}>{value.name}</SimpleCell>
                             ))
                         }
