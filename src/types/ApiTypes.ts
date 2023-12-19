@@ -104,3 +104,10 @@ export type socketResponseType = {
         message: string,
     }
 }
+
+export type sendGenerateImageType = {
+    image_url: string,
+    image_type_id: number,
+    access_token: string,
+    options: {},
+}

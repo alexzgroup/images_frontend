@@ -6,7 +6,7 @@ import {
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType,
+    operationWithMessageType, sendGenerateImageType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -63,12 +63,10 @@ export const apiAddAppToGroup = (group_id: number) => {
 
 /**
  * Запрос на генерацию картинки в ИИ
- * @param image_url
- * @param image_type_id
- * @param access_token
+ * @param data
  */
-export const apiGenerateImage = (image_url: string, image_type_id: string, access_token: string) => {
-    return axiosApi.post(`generate_image`, {image_url, image_type_id, access_token}).then((r: {data: generateImageType}) => r.data);
+export const apiGenerateImage = (data: sendGenerateImageType) => {
+    return axiosApi.post(`generate_image`, data).then((r: {data: generateImageType}) => r.data);
 };
 
 /**

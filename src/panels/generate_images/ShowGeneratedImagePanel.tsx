@@ -14,7 +14,7 @@ interface Props {
 
 const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
-    const {generateImage, uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
 
     const shareWall = async () => {
         if (uploadPhoto && vkUserInfo) {
@@ -25,8 +25,8 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     }
 
     const shareStore = async () => {
-        if (generateImage) {
-            const storyData = getStoryBoxData({generateImage});
+        if (uploadPhoto) {
+            const storyData = getStoryBoxData({uploadPhoto});
             const {result} = await bridge.send('VKWebAppShowStoryBox', storyData);
             console.log(result);
         }

@@ -23,10 +23,10 @@ export const getWallData = ({uploadPhoto, vkUserInfo}: {
     }
 }
 
-export const getStoryBoxData = ({generateImage}: { generateImage: userImage }): ShowStoryBoxOptions => {
+export const getStoryBoxData = ({uploadPhoto}: { uploadPhoto: uploadPhotoType }): ShowStoryBoxOptions => {
     return {
         background_type: 'image',
-        url: generateImage.sizes[generateImage.sizes.length - 1].url,
+        url: uploadPhoto.url,
         attachment:
             {
                 text: 'learn_more',

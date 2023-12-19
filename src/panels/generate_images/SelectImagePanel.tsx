@@ -1,11 +1,14 @@
-import React, {Suspense, useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, Suspense, useContext, useEffect, useState} from 'react';
 
 import {
     Alert,
     Banner,
     Button,
-    Caption, FormItem, FormLayout,
+    Caption,
+    FormItem,
+    FormLayout,
     FormLayoutGroup,
+    FormStatus,
     Group,
     Header,
     IconButton,
@@ -13,7 +16,9 @@ import {
     Link,
     Panel,
     PanelHeader,
-    PanelSpinner, Radio, RadioGroup,
+    PanelSpinner,
+    Radio,
+    RadioGroup,
     Spacing,
     Subhead,
     Text,
@@ -34,7 +39,7 @@ import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSli
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} from "../../redux/slice/ImageSlice";
 import {apiGenerateImage, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {imageTypeStatisticType} from "../../types/ApiTypes";
+import {imageTypeStatisticType, sendGenerateImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
@@ -79,8 +84,11 @@ const PanelData = () => {
     });
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
     const platform = usePlatform();
+    const [formData, setFormData] = useState({})
+    const [formDataError, setFormDataError] = useState(false)
 
     const showProcessModal = async () => {
+        setFormDataError(false);
         if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
                 <Alert
@@ -97,9 +105,20 @@ const PanelData = () => {
                 />
             );
         } else if (generateImage && params?.imageTypeId) {
+            if (imageType.img_type_to_variant_groups.length !== Object.keys(formData).length) {
+                setFormDataError(true);
+                return;
+            }
+
             routeNavigator.showModal(ModalTypes.MODAL_PROCESS_GENERATE_IMAGE)
             const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
-            const {result, image} = await apiGenerateImage(imageUrl, params?.imageTypeId, access_token)
+            const data: sendGenerateImageType = {
+                image_url: imageUrl,
+                image_type_id: Number(params?.imageTypeId),
+                access_token,
+                options: formData,
+            }
+            const {result, image} = await apiGenerateImage(data)
 
             if (result) {
                 dispatch(setGenerateUploadPhoto(image))
@@ -122,6 +141,11 @@ const PanelData = () => {
             .catch((error) => {
                 console.log(error);
             });
+    }
+
+    const handleChangeOption = (e: ChangeEvent<HTMLInputElement>) => {
+        const {dataset: {id}, value} = e.target
+        setFormData( { ...formData, [String(id)]: value} )
     }
 
     useEffect(() => {
@@ -158,6 +182,12 @@ const PanelData = () => {
             {
                 !!imageType.img_type_to_variant_groups.length &&
                 <Group header={<Header>Выберите опции генерации</Header>}>
+                    {
+                        formDataError &&
+                            <FormStatus header="Ошибка отправки формы" mode="error">
+                                Необходимо выбрать варианты генерации
+                            </FormStatus>
+                    }
                     <FormLayout>
                         <FormLayoutGroup mode="horizontal">
                             {
@@ -166,7 +196,10 @@ const PanelData = () => {
                                         <RadioGroup>
                                             {
                                                 group.options.map((option, keyOption) => (
-                                                    <Radio name={`groups[${group.group.id}]`}
+                                                    <Radio
+                                                        data-id={group.group.id}
+                                                        onChange={handleChangeOption}
+                                                        name={`groups[${group.group.id}]`}
                                                            value={option.id}
                                                            key={keyOption}>
                                                         {option.name}
