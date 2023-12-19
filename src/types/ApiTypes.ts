@@ -77,6 +77,7 @@ export enum generateStatusEnum {
 
 export type uploadPhotoType = {
     url: string,
+    base64: string,
     photo_upload_id: string,
     status: generateStatusEnum,
 }

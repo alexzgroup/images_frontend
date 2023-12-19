@@ -26,7 +26,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
 
     const shareStore = async () => {
         if (uploadPhoto) {
-            const storyData = getStoryBoxData({uploadPhoto});
+            const storyData = getStoryBoxData(uploadPhoto.base64);
             const {result} = await bridge.send('VKWebAppShowStoryBox', storyData);
             console.log(result);
         }

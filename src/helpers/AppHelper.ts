@@ -1,7 +1,6 @@
 import {Platform} from "@vkontakte/vkui";
 import {uploadPhotoType} from "../types/ApiTypes";
 import {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
-import {userImage} from "../types/UserTypes";
 
 export const getDonutUrl = (platform: string):string => {
     if (platform === Platform.VKCOM) {
@@ -23,10 +22,11 @@ export const getWallData = ({uploadPhoto, vkUserInfo}: {
     }
 }
 
-export const getStoryBoxData = ({uploadPhoto}: { uploadPhoto: uploadPhotoType }): ShowStoryBoxOptions => {
+export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
     return {
         background_type: 'image',
-        url: uploadPhoto.url,
+        blob: blob,
+        locked: true,
         attachment:
             {
                 text: 'learn_more',
