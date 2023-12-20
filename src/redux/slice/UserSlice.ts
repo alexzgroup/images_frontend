@@ -26,6 +26,15 @@ export const userSlice = createSlice({
                 };
             }
         },
+        setUserDonut: (state, action: PayloadAction<string>) => {
+            if (state.userDbData) {
+                state.userDbData = {
+                    ...state.userDbData,
+                    date_vip_ended: action.payload,
+                    is_vip: true,
+                };
+            }
+        },
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.access_token = action.payload;
         },
@@ -36,6 +45,7 @@ export const {
     setUserDbData,
     setUserDbDataMonetization,
     setAccessToken,
+    setUserDonut,
 } = userSlice.actions
 
 export default userSlice.reducer

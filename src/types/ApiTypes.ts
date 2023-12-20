@@ -99,10 +99,16 @@ export type userAvailableGenerationType = {
     available_day_limit: number,
 }
 
-export type socketResponseType = {
+export type socketDonutType = {
     data: {
         status: boolean,
-        message: string,
+        date_vip_ended: string,
+    }
+}
+
+export type socketImageType = {
+    data: {
+        status: boolean,
     }
 }
 
