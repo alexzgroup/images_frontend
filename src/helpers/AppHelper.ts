@@ -42,11 +42,11 @@ export const trueWordForm = (num: number, variants: string[]): string =>
     const numWithoutTeen = numClear % 10; // сбрасываем десятки и записываем в новую переменную
 
     if (numClear > 10 && numClear < 20) // если число принадлежит отрезку [11;19]
-        return variants[2];
+        return num + ' ' + variants[2];
     if (numWithoutTeen > 1 && numWithoutTeen < 5) // иначе если число оканчивается на 2,3,4
-        return variants[1];
+        return num + ' ' + variants[1];
     if (numWithoutTeen === 1) // иначе если оканчивается на 1
-        return variants[0];
+        return num + ' ' + variants[0];
 
     return num + ' ' + variants[2];
 }
