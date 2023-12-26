@@ -5,6 +5,7 @@ import {
     Banner,
     Button,
     Caption,
+    Checkbox,
     FormItem,
     FormLayout,
     FormLayoutGroup,
@@ -17,8 +18,6 @@ import {
     Panel,
     PanelHeader,
     PanelSpinner,
-    Radio,
-    RadioGroup,
     Spacing,
     Subhead,
     Text,
@@ -60,6 +59,11 @@ const NoRecomendedImageLabels = [
     'Картинки с интернета',
 ]
 
+type FormDataOptionType = {
+    group_id: number,
+    option_id: number,
+}
+
 const PanelData = () => {
 
     const params = useParams<'imageTypeId'>();
@@ -76,6 +80,7 @@ const PanelData = () => {
             available_day_limit: 0,
         },
         img_type_to_variant_groups: [],
+        type_variant_to_img_group_variants: [],
         item: {
             id: 0,
             name: '',
@@ -84,8 +89,9 @@ const PanelData = () => {
     });
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
     const platform = usePlatform();
-    const [formData, setFormData] = useState({})
+    const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const [formDataError, setFormDataError] = useState(false)
+    const [disabledOptions, setDisabledOptions] = useState<number[]>([])
 
     const showProcessModal = async () => {
         setFormDataError(false);
@@ -105,7 +111,7 @@ const PanelData = () => {
                 />
             );
         } else if (generateImage && params?.imageTypeId) {
-            if (imageType.img_type_to_variant_groups.length !== Object.keys(formData).length) {
+            if (imageType.img_type_to_variant_groups.length && !formData.length) {
                 setFormDataError(true);
                 return;
             }
@@ -144,13 +150,40 @@ const PanelData = () => {
     }
 
     const handleChangeOption = (e: ChangeEvent<HTMLInputElement>) => {
-        const {dataset: {id}, value} = e.target
-        setFormData( { ...formData, [String(id)]: value} )
+        const {dataset: {group_id}, value: option_id, checked} = e.target
+        let data = formData;
+        
+        if (checked) {
+            data.push({group_id: Number(group_id), option_id: Number(option_id)});
+        } else {
+            data = formData.filter((item) => item.group_id !== Number(group_id) && item.option_id !== Number(option_id));
+        }
+
+        setFormData(Array.from(data, (item) => item));
     }
 
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
     }, []);
+
+    useEffect(() => {
+        let disabled = [];
+
+        if (formData.length) {
+            // найдем доступные опции
+            const lastOptionId = formData[formData.length - 1].option_id;
+            const availableOptions = imageType.type_variant_to_img_group_variants.filter((item) => item.type_variant_id === lastOptionId)
+            const imageGroups = Array.from(availableOptions, (item) => item.image_group_variant_id)
+
+            for (const typeVariantToImgGroupVariant of imageType.type_variant_to_img_group_variants) {
+                if (!imageGroups.includes(typeVariantToImgGroupVariant.image_group_variant_id)) {
+                    disabled.push(typeVariantToImgGroupVariant.type_variant_id);
+                }
+            }
+        }
+
+        setDisabledOptions(disabled);
+    }, [formData])
 
     return (
         <React.Fragment>
@@ -193,20 +226,22 @@ const PanelData = () => {
                             {
                                 imageType.img_type_to_variant_groups.map((group, groupKey) => (
                                     <FormItem top={group.group.name} key={groupKey}>
-                                        <RadioGroup>
                                             {
                                                 group.options.map((option, keyOption) => (
-                                                    <Radio
-                                                        data-id={group.group.id}
+                                                    <Checkbox
+                                                        style={{
+                                                            cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
+                                                        }}
+                                                        disabled={disabledOptions.includes(option.id)}
+                                                        key={keyOption}
+                                                        data-group_id={group.group.id}
                                                         onChange={handleChangeOption}
-                                                        name={`groups[${group.group.id}]`}
-                                                           value={option.id}
-                                                           key={keyOption}>
+                                                        value={option.id}
+                                                    >
                                                         {option.name}
-                                                    </Radio>
+                                                    </Checkbox>
                                                 ))
                                             }
-                                        </RadioGroup>
                                     </FormItem>
                                 ))
                             }

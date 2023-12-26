@@ -37,6 +37,13 @@ export type generateStatisticType = {
     available_day_limit: number
 }
 
+export type typeVariantToImgGroupVariants = {
+    image_group_variant_id: number,
+    image_type_id: number,
+    type_variant_id: number,
+    type_variant_group_id: number,
+}
+
 export type imageTypeStatisticType = {
     generate_statistic: generateStatisticType,
     item: imageType,
@@ -44,6 +51,7 @@ export type imageTypeStatisticType = {
         group: typeVariantGroupType,
         options: typeVariantType[],
     }[],
+    type_variant_to_img_group_variants: typeVariantToImgGroupVariants[]|[],
 }
 
 export type initUserApiType = {
@@ -91,12 +99,6 @@ export type monetizationDataType = {
     subscribes: number,
     total_pays: number,
     groups: groupType[]|[],
-}
-
-export type userAvailableGenerationType = {
-    generate_in_process: boolean,
-    available_count_generate: number,
-    available_day_limit: number,
 }
 
 export type socketDonutType = {
