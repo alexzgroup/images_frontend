@@ -77,6 +77,7 @@ const PanelData = () => {
         generate_statistic: {
             available_count_generate: 0,
             generate_in_process: false,
+            has_not_viewed_image: false,
             available_day_limit: 0,
         },
         img_type_to_variant_groups: [],
@@ -94,7 +95,15 @@ const PanelData = () => {
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
 
     const showProcessModal = async () => {
+        if (imageType.generate_statistic.has_not_viewed_image) {
+            routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE)
+            return;
+        }
+
         setFormDataError(false);
+        if (initSocket) {
+            initSocket()
+        }
         if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
                 <Alert
@@ -184,6 +193,12 @@ const PanelData = () => {
 
         setDisabledOptions(disabled);
     }, [formData])
+
+    useEffect(() => {
+        if (imageType.generate_statistic.has_not_viewed_image) {
+            routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE)
+        }
+    }, [imageType.generate_statistic]);
 
     return (
         <React.Fragment>

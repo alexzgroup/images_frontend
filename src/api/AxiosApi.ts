@@ -76,3 +76,9 @@ export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
     return axiosApi.get(`image_type/${image_type_id}`).then((r: {data: imageTypeStatisticType}) => r.data);
 };
 
+/**
+ * Получает сгенерированное изображение, после оповещения
+ */
+export const apiGetProcessingGenerateImage = (access_token: string) => {
+    return axiosApi.post(`processing_image`, {access_token}).then((r: {data: generateImageType}) => r.data);
+};

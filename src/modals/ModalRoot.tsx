@@ -1,4 +1,4 @@
-import React, {FC, Suspense, useContext} from 'react';
+import React, {FC, Suspense, useContext, useState} from 'react';
 
 import {
     Button,
@@ -16,6 +16,11 @@ import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
 import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {setGenerateUploadPhoto} from "../redux/slice/ImageSlice";
+import {useDispatch} from "react-redux";
+import {apiGetProcessingGenerateImage} from "../api/AxiosApi";
+import bridge from "@vkontakte/vk-bridge";
+import {setAccessToken} from "../redux/slice/UserSlice";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -30,6 +35,30 @@ const ModalRootComponent:FC = () => {
     const { modal: activeModal } = useActiveVkuiLocation();
     const platform = usePlatform();
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const dispatch = useDispatch();
+    const [loading, setLoading] = useState<boolean>(false)
+    const getProcessingGenerateImage = async () => {
+        setLoading(true);
+        bridge.send('VKWebAppGetAuthToken', {
+            app_id: Number(process.env.REACT_APP_APP_ID),
+            scope: 'photos,wall'
+        })
+            .then(async (data) => {
+                if (data.access_token) {
+                    dispatch(setAccessToken(data.access_token))
+
+                    const {image} = await apiGetProcessingGenerateImage(data.access_token);
+                    dispatch(setGenerateUploadPhoto(image))
+                    routeNavigator.push('/generate/show-image')
+                }
+
+                setLoading(false);
+            })
+            .catch((error) => {
+                console.log(error);
+                setLoading(false);
+            });
+    }
 
     return (
         <ModalRoot activeModal={activeModal}>
@@ -104,18 +133,19 @@ const ModalRootComponent:FC = () => {
             />
             <ModalCard
                 id={ModalTypes.MODAL_GENERATED_IMAGE}
-                onClose={() => routeNavigator.hideModal()}
+                onClose={() => !loading && routeNavigator.hideModal()}
                 icon={<Icon56PaletteOutline />}
                 header="Ваша генерация готова."
                 subheader="Перейдите по ссылке чтобы просмотреть результат."
                 actions={
                     <ButtonGroup mode="horizontal" stretched>
                         <Button
+                            disabled={loading}
                             key="cancel"
                             size="l"
                             mode="primary"
                             stretched
-                            onClick={() => routeNavigator.push('/generate/show-image')}
+                            onClick={() => getProcessingGenerateImage()}
                         >
                             Посмотреть результат
                         </Button>

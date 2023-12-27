@@ -34,7 +34,8 @@ export type typeVariantType = {
 export type generateStatisticType = {
     available_count_generate: number,
     generate_in_process: boolean,
-    available_day_limit: number
+    available_day_limit: number,
+    has_not_viewed_image: boolean,
 }
 
 export type typeVariantToImgGroupVariants = {
