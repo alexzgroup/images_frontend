@@ -36,6 +36,7 @@ import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStat
 import {apiInitUser} from "./api/AxiosApi";
 import {imageType, socketDonutType, socketImageType} from "./types/ApiTypes";
 import {setUserDbData, setUserDonut} from "./redux/slice/UserSlice";
+import GroupListPanel from "./panels/monetization/GroupListPanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -155,6 +156,7 @@ const App = () => {
 						<View id={VIEW_CONSTANTS.VIEW_MONETIZATION} activePanel={activePanel}>
 							<WelcomePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_WELCOME} />
 							<ProfilePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_PROFILE} />
+							<GroupListPanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST} />
 						</View>
 					</Epic>
 				</SplitCol>

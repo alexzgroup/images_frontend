@@ -121,3 +121,15 @@ export type sendGenerateImageType = {
     access_token: string,
     options: {},
 }
+
+export type AddGroupChatBootType = {
+    vk_group_id: number,
+    secret_key: string,
+    code_answer: string,
+    access_token: string,
+}
+
+export type GroupToChatBootType = {
+    server_id: number,
+    vk_group_id: number,
+}

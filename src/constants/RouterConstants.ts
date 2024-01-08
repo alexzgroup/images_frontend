@@ -13,4 +13,5 @@ export const PANEL_CONSTANTS = {
     PANEL_ABOUT_MAIN: 'panel_about_main',
     PANEL_MONETIZATION_WELCOME: 'panel_monetization_welcome',
     PANEL_MONETIZATION_PROFILE: 'panel_monetization_profile',
+    PANEL_MONETIZATION_GROUP_LIST: 'panel_monetization_group_list',
 }

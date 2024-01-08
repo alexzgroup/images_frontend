@@ -224,7 +224,9 @@ const PanelData = () => {
                         <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
-                    <Button disabled={!generateImage} stretched size='l' onClick={showProcessModal}>Продолжить</Button>
+                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showProcessModal}>
+                        {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
+                    </Button>
                 </div>
             </Group>
             {

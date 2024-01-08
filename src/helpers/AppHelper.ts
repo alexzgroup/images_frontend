@@ -10,6 +10,11 @@ export const getDonutUrl = (platform: string):string => {
     }
 }
 
+/**
+ * Генератор данных для стены
+ * @param uploadPhoto
+ * @param vkUserInfo
+ */
 export const getWallData = ({uploadPhoto, vkUserInfo}: {
     uploadPhoto: uploadPhotoType,
     vkUserInfo: UserInfo
@@ -22,6 +27,10 @@ export const getWallData = ({uploadPhoto, vkUserInfo}: {
     }
 }
 
+/**
+ * Генератор данных для истории
+ * @param blob
+ */
 export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
     return {
         background_type: 'image',
@@ -36,6 +45,11 @@ export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
     }
 }
 
+/**
+ * Склонение слов по числу
+ * @param num
+ * @param variants
+ */
 export const trueWordForm = (num: number, variants: string[]): string =>
 {
     const numClear = Math.abs(num) % 100; // берем число по модулю и сбрасываем сотни (делим на 100, а остаток присваиваем переменной $num)
@@ -50,3 +64,11 @@ export const trueWordForm = (num: number, variants: string[]): string =>
 
     return num + ' ' + variants[2];
 }
+
+/**
+ * Создает рандомный пароль
+ */
+export const generatePassword = (): string => {
+    // Create a random password
+    return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+};

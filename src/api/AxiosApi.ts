@@ -1,6 +1,7 @@
 import axios from 'axios';
 import {
-    generateImageType,
+    AddGroupChatBootType,
+    generateImageType, GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
     initUserApiType,
@@ -82,3 +83,34 @@ export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
 export const apiGetProcessingGenerateImage = (access_token: string) => {
     return axiosApi.post(`processing_image`, {access_token}).then((r: {data: generateImageType}) => r.data);
 };
+
+/**
+ * Добавляет чат-бот к группе
+ * @param data
+ */
+export const addChatBootToGroup = (data: AddGroupChatBootType) => {
+    return axiosApi.post(`chat_boot/add`, data).then((r: {data: AddGroupChatBootType}) => r.data);
+}
+
+/**
+ * Меняет настройки группы в чат боте
+ * @param data
+ */
+export const editChatBootToGroup = (data: {vk_group_id: number, server_id: number}) => {
+    return axiosApi.post(`chat_boot/edit`, data).then((r: {data: {result: boolean}}) => r.data);
+}
+
+/**
+ * Удаляет чат бот
+ * @param vk_group_id
+ */
+export const deleteChatBootToGroup = (vk_group_id: number) => {
+    return axiosApi.delete(`chat_boot/delete/${vk_group_id}`).then((r: {data: {result: boolean}}) => r.data);
+}
+
+/**
+ * Список групп подключенных к чат боту
+ */
+export const getChatBootGroups = () => {
+    return axiosApi.get(`chat_boot/group_list`).then((r: {data: GroupToChatBootType[]}) => r.data);
+}

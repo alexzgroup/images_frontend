@@ -37,6 +37,11 @@ const AppRouter = createHashRouter([
         panel: PANEL_CONSTANTS.PANEL_MONETIZATION_PROFILE,
         view: VIEW_CONSTANTS.VIEW_MONETIZATION,
     },
+    {
+        path: '/monetization/group-list',
+        panel: PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST,
+        view: VIEW_CONSTANTS.VIEW_MONETIZATION,
+    },
 ]);
 
 export default AppRouter;

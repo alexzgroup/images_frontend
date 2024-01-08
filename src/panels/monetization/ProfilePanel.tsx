@@ -12,8 +12,11 @@ import {
     Group,
     Header,
     Panel,
-    PanelHeader, PanelSpinner, Placeholder,
-    SimpleCell, Snackbar,
+    PanelHeader,
+    PanelSpinner,
+    Placeholder,
+    SimpleCell,
+    Snackbar,
     Spacing,
     Tabs,
     TabsItem,
@@ -23,7 +26,8 @@ import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContex
 import {
     Icon24MessageAddBadgeOutline,
     Icon24PaymentCardClockOutline,
-    Icon24UserAddOutline, Icon28CancelCircleFillRed,
+    Icon24UserAddOutline,
+    Icon28CancelCircleFillRed,
     Icon56ErrorTriangleOutline
 } from '@vkontakte/icons';
 import {monetizationDataType} from "../../types/ApiTypes";
@@ -33,6 +37,7 @@ import bridge from "@vkontakte/vk-bridge";
 import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice";
 import {useDispatch} from "react-redux";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import {setAccessToken} from "../../redux/slice/UserSlice";
 
 interface Props {
     id: string;
@@ -103,8 +108,20 @@ export const TotalInfo = () => {
             });
     }
 
-    const addChatBootToGroup =  () => {
-
+    const getListGroups =  () => {
+        bridge.send('VKWebAppGetAuthToken', {
+            app_id: Number(process.env.REACT_APP_APP_ID),
+            scope: 'groups'
+        })
+            .then((data) => {
+                if (data.access_token) {
+                    dispatch(setAccessToken(data.access_token))
+                    routeNavigator.push('/monetization/group-list');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
     }
 
     useEffect( () => {
@@ -148,7 +165,7 @@ export const TotalInfo = () => {
                         <Div>
                             <ButtonGroup mode='vertical' stretched>
                                 <Button onClick={addAppToGroup} before={<Icon24UserAddOutline />} stretched size='l'>Подключить сообщество</Button>
-                                <Button onClick={addChatBootToGroup} before={<Icon24MessageAddBadgeOutline />} stretched size='l'>Подключить чат-бот в сообщество</Button>
+                                <Button onClick={getListGroups} before={<Icon24MessageAddBadgeOutline />} stretched size='l'>Подключить чат-бот в сообщество</Button>
                             </ButtonGroup>
                         </Div>
                     </Card>
