@@ -38,6 +38,7 @@ import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice
 import {useDispatch} from "react-redux";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {setAccessToken} from "../../redux/slice/UserSlice";
+import PromiseWrapper from "../../api/PromiseWrapper";
 
 interface Props {
     id: string;
@@ -125,12 +126,7 @@ export const TotalInfo = () => {
     }
 
     useEffect( () => {
-        (
-            async () => {
-                const response = await apiGetMonetizationData();
-                setMonetizationData(response);
-            }
-        )()
+        setMonetizationData(PromiseWrapper(apiGetMonetizationData()));
     }, []);
 
     return (
