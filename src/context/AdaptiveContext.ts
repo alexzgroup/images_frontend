@@ -6,6 +6,9 @@ export type AdaptiveContextType = {
     isVkComPlatform?: boolean,
     isMobileSize?: boolean,
     vkUserInfo?: UserInfo,
-    initSocket?: () => void,
+    initSocket: () => void,
 }
-export const AdaptiveContext = React.createContext<AdaptiveContextType>({});
+export const AdaptiveContext = React.createContext<AdaptiveContextType>({
+    initSocket(): void {
+    }
+});

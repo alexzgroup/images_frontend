@@ -10,6 +10,7 @@ import {imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
 import {LabelImageTypeGenerator} from "../../components/LabelImageTypeGenerator";
 import {apiGetImageTypes} from "../../api/AxiosApi";
+import bridge from "@vkontakte/vk-bridge";
 
 interface Props {
     id: string;
@@ -22,6 +23,18 @@ export const LoadingImageTypes:FC = () => {
 
     useEffect(() => {
         setImageTypes(PromiseWrapper(apiGetImageTypes()));
+
+        // @ts-ignore
+        bridge.send('VKWebAppShowBannerAd', {
+            banner_location: 'bottom'
+        })
+            .then((data) => {
+                console.log(data)
+            })
+            .catch((error) => {
+                // Ошибка
+                console.log(error);
+            });
     }, []);
 
     return (

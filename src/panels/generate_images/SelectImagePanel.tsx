@@ -101,9 +101,8 @@ const PanelData = () => {
         }
 
         setFormDataError(false);
-        if (initSocket) {
-            initSocket()
-        }
+        initSocket()
+
         if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
                 <Alert
