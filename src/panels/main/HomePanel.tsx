@@ -11,6 +11,7 @@ import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {ModalTypes} from "../../modals/ModalRoot";
 
 interface Props {
     id: string;
@@ -21,6 +22,14 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
+    const openImageType = (imageTypeItem: imageType) => {
+        if (imageTypeItem.vip && !userDbData?.is_vip) {
+            routeNavigator.showModal(ModalTypes.MODAL_GET_VIP_PROFILE)
+        } else {
+            routeNavigator.push('/generate/select-image/' + imageTypeItem.id)
+        }
+    }
+
     return (<Panel id={id}>
             <Group mode='plain'>
                 <DivCard>
@@ -29,8 +38,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                         header="Ренестра - генератор изображений"
                         action={<Button onClick={() => routeNavigator.push('/generate')} size="l">Поехали</Button>}
                     >
-                        Примерь на себя свадебный наряд, стань мафией или персонажем из аниме с помощью ИИ. Более 30
-                        образов!
+                        Примерь на себя стильный образ, стань воином или фэнтези персонажем с помощью ИИ.
                     </Placeholder>
                 </DivCard>
             </Group>
@@ -47,7 +55,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     {
                         !!popularImageTypes.length && popularImageTypes.map((value, key) => <SimpleCell
                             key={key}
-                            disabled
+                            onClick={() => openImageType(value)}
                             before={IconImageTypeGenerator(value.id)}>{value.name}
                         </SimpleCell>)
                     }
@@ -65,7 +73,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     />
                 }
                 actions={userDbData?.is_monetization
-                    ? <Button hasHover={false} before={<Icon24ThumbsUpOutline/>} mode="outline" appearance="overlay">Вы подключены к монетизации</Button>
+                    ? <Button onClick={() => routeNavigator.push('/monetization/profile')} before={<Icon24ThumbsUpOutline/>} mode="outline" appearance="overlay">Перейти в кабинет</Button>
                     : <Button onClick={() => routeNavigator.push('/monetization')} before={<Icon24RoubleBadgeOutline/>} appearance="overlay">Подключиться</Button>}
             />
         </Panel>

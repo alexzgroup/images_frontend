@@ -133,3 +133,17 @@ export type GroupToChatBootType = {
     server_id: number,
     vk_group_id: number,
 }
+
+export enum AdvertisementEnum {
+    banner='banner',
+    window='window',
+}
+
+export type AdvertisementType = {
+    type: AdvertisementEnum,
+}
+
+export enum EAdsFormats {
+    REWARD = "reward",
+    INTERSTITIAL = "interstitial"
+}

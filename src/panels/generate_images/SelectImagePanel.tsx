@@ -5,7 +5,7 @@ import {
     Banner,
     Button,
     Caption,
-    Checkbox,
+    Checkbox, Div,
     FormItem,
     FormLayout,
     FormLayoutGroup,
@@ -37,8 +37,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} from "../../redux/slice/ImageSlice";
-import {apiGenerateImage, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {imageTypeStatisticType, sendGenerateImageType} from "../../types/ApiTypes";
+import {addAdvertisement, apiGenerateImage, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType, sendGenerateImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
@@ -95,6 +95,15 @@ const PanelData = () => {
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
 
     const showProcessModal = async () => {
+
+        bridge.send("VKWebAppShowNativeAds", {
+            ad_format: EAdsFormats.INTERSTITIAL,
+        }).then((data) => {
+            if (data.result) {
+                addAdvertisement({type: AdvertisementEnum.window}).then();
+            }
+        }).catch();
+
         if (imageType.generate_statistic.has_not_viewed_image) {
             routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE)
             return;
@@ -202,7 +211,7 @@ const PanelData = () => {
     return (
         <React.Fragment>
             <Group>
-                <div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
+                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
                     <Subhead style={{textAlign: 'center'}}>Выберите свою фотографию с аватарок VK</Subhead>
                     <Spacing />
                     {
@@ -226,7 +235,7 @@ const PanelData = () => {
                     <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showProcessModal}>
                         {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
                     </Button>
-                </div>
+                </Div>
             </Group>
             {
                 !!imageType.img_type_to_variant_groups.length &&
@@ -237,11 +246,11 @@ const PanelData = () => {
                                 Необходимо выбрать варианты генерации
                             </FormStatus>
                     }
-                    <FormLayout>
-                        <FormLayoutGroup mode="horizontal">
-                            {
-                                imageType.img_type_to_variant_groups.map((group, groupKey) => (
-                                    <FormItem top={group.group.name} key={groupKey}>
+                        <FormLayout>
+                            <FormLayoutGroup mode="horizontal">
+                                {
+                                    imageType.img_type_to_variant_groups.map((group, groupKey) => (
+                                        <FormItem top={group.group.name} key={groupKey}>
                                             {
                                                 group.options.map((option, keyOption) => (
                                                     <Checkbox
@@ -258,15 +267,15 @@ const PanelData = () => {
                                                     </Checkbox>
                                                 ))
                                             }
-                                    </FormItem>
-                                ))
-                            }
-                        </FormLayoutGroup>
-                    </FormLayout>
+                                        </FormItem>
+                                    ))
+                                }
+                            </FormLayoutGroup>
+                        </FormLayout>
                 </Group>
             }
             <Group header={<Header>Пример генерации образа:</Header>}>
-                <div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
+                <Div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
                     <div>
                         <Image
                             src={generateImage ? generateImage.sizes[generateImage.sizes.length - 1].url : vkUserInfo?.photo_200}
@@ -280,7 +289,7 @@ const PanelData = () => {
                             src={example_man_generated}
                             size={96} />
                     </div>
-                </div>
+                </Div>
             </Group>
             <Group>
                 <Banner

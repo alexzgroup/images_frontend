@@ -64,7 +64,7 @@ const App = () => {
 				// httpHost: process.env.REACT_APP_PUSHER_HOST,
 				// httpsPort: 6001,
 				wsHost: process.env.REACT_APP_PUSHER_HOST,
-				wssPort: 6001,
+				// wssPort: 6001,
 				forceTLS: false,
 				disableStats: true,
 				authEndpoint: process.env.REACT_APP_URL_API + "pusher/auth",
@@ -74,6 +74,7 @@ const App = () => {
 					},
 				}
 			}
+
 			const pusher = new Pusher(options.key, options);
 			const echo = new Echo({
 				...options,

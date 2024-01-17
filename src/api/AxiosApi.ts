@@ -1,6 +1,6 @@
 import axios from 'axios';
 import {
-    AddGroupChatBootType,
+    AddGroupChatBootType, AdvertisementType,
     generateImageType, GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
@@ -114,3 +114,12 @@ export const deleteChatBootToGroup = (vk_group_id: number) => {
 export const getChatBootGroups = () => {
     return axiosApi.get(`chat_boot/group_list`).then((r: {data: GroupToChatBootType[]}) => r.data);
 }
+
+/**
+ * Добавляет статистику показов рекламы
+ * @param data
+ */
+export const addAdvertisement = (data: AdvertisementType) => {
+    return axiosApi.post(`add_advertisement`, data).then((r: {data: {result: boolean}}) => r.data);
+}
+

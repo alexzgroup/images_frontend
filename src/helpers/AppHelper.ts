@@ -1,12 +1,13 @@
 import {Platform} from "@vkontakte/vkui";
 import {uploadPhotoType} from "../types/ApiTypes";
 import {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
+import {PlatformType} from "@vkontakte/vkui/dist/lib/platform";
 
-export const getDonutUrl = (platform: string):string => {
+export const getDonutUrl = (platform: PlatformType):string => {
     if (platform === Platform.VKCOM) {
         return process.env.REACT_APP_DONUT_URL_WEB;
     } else {
-        return process.env.REACT_APP_DONUT_URL_M_WEB;
+        return process.env.REACT_APP_DONUT_URL_CLIENT;
     }
 }
 

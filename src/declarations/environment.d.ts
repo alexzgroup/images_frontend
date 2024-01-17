@@ -15,6 +15,7 @@ declare global {
             REACT_APP_PUSHER_APP_KEY: string,
             REACT_APP_PUSHER_CLUSTER: string,
             REACT_APP_PUSHER_HOST: string,
+            REACT_APP_DONUT_URL_CLIENT: string,
         }
     }
 }

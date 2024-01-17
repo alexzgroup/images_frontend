@@ -5,7 +5,7 @@ import {
     Caption,
     Card,
     CardGrid,
-    Div,
+    Div, Footer,
     Group,
     Image,
     Link,
@@ -47,7 +47,7 @@ interface Props {
 }
 
 const AboutPanel: React.FC<Props> = ({id}) => {
-    const [isGroupmember, setIsGroupMember] = useState<number>(1);
+    const [isGroupMember, setIsGroupMember] = useState<number>(0);
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
@@ -55,7 +55,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
     const platform = usePlatform();
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
 
-    const subscribeGroup = async () => {
+    const subscribeGroup = () => {
         bridge.send('VKWebAppJoinGroup', {
             group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
         })
@@ -113,19 +113,18 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                             Ренестра (Renestra)
                         </SimpleCell>
                         <Div>
-                            <Caption>Приложение генерирует образы из ваших фотографий с помощью популярных AI,
-                                которые доступны по модели Open Source или по платной модели с помощью API.</Caption>
+                            <Caption>Приложение генерирует образы из ваших фотографий с помощью ИИ.</Caption>
                             <Spacing/>
                             <Caption>
-                                Начиная пользоваться приложением, вы соглашаетесь с
+                                Начиная пользоваться приложением, вы соглашаетесь с {" "}
                                 <Link href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>
-                                и
+                                {" "} и {" "}
                                 <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                             </Caption>
                         </Div>
                     </Card>
                     {
-                        !isGroupmember &&
+                        !isGroupMember &&
                             <Card>
                                 <Div>
                                     <Title level="3">Получите одну дополнительную
@@ -152,19 +151,22 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                         >
                             <List>
                                 <MiniInfoCell
-                                    style={{paddingLeft: 0}}
+                                    style={{textAlign: 'left'}}
+                                    textWrap="full"
                                     before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
                                 >
                                     Эксклюзивные образы
                                 </MiniInfoCell>
                                 <MiniInfoCell
-                                    style={{paddingLeft: 0}}
+                                    style={{textAlign: 'left'}}
+                                    textWrap="full"
                                     before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
                                 >
                                     20 генераций изображений в день!
                                 </MiniInfoCell>
                                 <MiniInfoCell
-                                    style={{paddingLeft: 0}}
+                                    style={{textAlign: 'left'}}
+                                    textWrap="full"
                                     before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
                                 >
                                     Приоритетная очередь генерации образов
@@ -205,6 +207,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                     </Card>
                 </CardGrid>
             </Group>
+            <Footer>С любовью от Омских разработчиков!</Footer>
             {snackbar}
         </Panel>
     )
