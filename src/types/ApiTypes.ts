@@ -16,6 +16,7 @@ export type imageType = {
     id: number,
     name: string,
     vip: 0|1,
+    url?: string,
     labels?: []|string[],
 }
 

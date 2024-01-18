@@ -86,6 +86,7 @@ const PanelData = () => {
             id: 0,
             name: '',
             vip: 0,
+            url: '',
         }
     });
     const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
@@ -226,9 +227,9 @@ const PanelData = () => {
                             </IconButton>
                     }
                     <Spacing />
-                    <Caption>Нажимая продолжить, вы соглашаетесь с
-                        <Link href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>
-                        и
+                    <Caption>Нажимая продолжить, вы соглашаетесь с {" "}
+                        <Link href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>{" "}
+                        и{" "}
                         <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
@@ -286,7 +287,7 @@ const PanelData = () => {
                     </div>
                     <div>
                         <Image
-                            src={example_man_generated}
+                            src={imageType.item.url || example_man_generated}
                             size={96} />
                     </div>
                 </Div>
