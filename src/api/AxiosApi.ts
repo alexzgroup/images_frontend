@@ -123,3 +123,16 @@ export const addAdvertisement = (data: AdvertisementType) => {
     return axiosApi.post(`add_advertisement`, data).then((r: {data: {result: boolean}}) => r.data);
 }
 
+/**
+ * Проверка включены ли уведомления от группы
+ */
+export const getAllowMessages = () => {
+    return axiosApi.get(`allow_messages`).then((r: {data: {result: boolean}}) => r.data);
+}
+
+/**
+ * Добавляет уведомления
+ */
+export const addAllowMessages = () => {
+    return axiosApi.post(`allow_messages/add`).then((r: {data: {result: boolean}}) => r.data);
+}

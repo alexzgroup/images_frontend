@@ -10,6 +10,7 @@ export type userApiType = {
     is_monetization: number|null,
     date_vip_ended: string|null,
     is_vip: boolean,
+    allow_messages: number,
 }
 
 export type imageType = {

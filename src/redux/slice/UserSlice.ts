@@ -38,6 +38,14 @@ export const userSlice = createSlice({
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.access_token = action.payload;
         },
+        setUserAllowMessages: (state, action: PayloadAction<number>) => {
+            if (state.userDbData) {
+                state.userDbData = {
+                    ...state.userDbData,
+                    allow_messages: action.payload,
+                };
+            }
+        },
     }
 })
 
@@ -46,6 +54,7 @@ export const {
     setUserDbDataMonetization,
     setAccessToken,
     setUserDonut,
+    setUserAllowMessages,
 } = userSlice.actions
 
 export default userSlice.reducer

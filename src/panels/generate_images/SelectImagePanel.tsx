@@ -228,9 +228,9 @@ const PanelData = () => {
                     }
                     <Spacing />
                     <Caption>Нажимая продолжить, вы соглашаетесь с {" "}
-                        <Link href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>{" "}
+                        <Link target='_blank' href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>{" "}
                         и{" "}
-                        <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
+                        <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
                     <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showProcessModal}>

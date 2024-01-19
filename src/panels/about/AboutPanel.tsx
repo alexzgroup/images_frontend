@@ -5,7 +5,8 @@ import {
     Caption,
     Card,
     CardGrid,
-    Div, Footer,
+    Div,
+    Footer,
     Group,
     Image,
     Link,
@@ -18,7 +19,8 @@ import {
     Snackbar,
     Spacing,
     Subhead,
-    Title, usePlatform
+    Title,
+    usePlatform
 } from '@vkontakte/vkui';
 import {UrlConstants} from "../../constants/UrlConstants";
 import {
@@ -41,6 +43,7 @@ import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {CounterDown} from "../../components/CountDown";
+import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 
 interface Props {
     id: string;
@@ -117,9 +120,9 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                             <Spacing/>
                             <Caption>
                                 Начиная пользоваться приложением, вы соглашаетесь с {" "}
-                                <Link href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>
+                                <Link target='_blank' href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>
                                 {" "} и {" "}
-                                <Link href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
+                                <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                             </Caption>
                         </Div>
                     </Card>
@@ -177,6 +180,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                             }
                         </Placeholder>
                     </Card>
+                    <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
                     <Card mode='shadow'>
                         <Placeholder
                             icon={<Image size={72} src={znapps_image} />}
