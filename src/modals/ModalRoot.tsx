@@ -1,4 +1,4 @@
-import React, {FC, Suspense, useContext, useState} from 'react';
+import React, {FC, Suspense, useState} from 'react';
 
 import {
     Button,
@@ -15,7 +15,6 @@ import {Icon56DonateOutline, Icon56PaletteOutline} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
 import {setGenerateUploadPhoto} from "../redux/slice/ImageSlice";
 import {useDispatch} from "react-redux";
 import {apiGetProcessingGenerateImage} from "../api/AxiosApi";
@@ -34,7 +33,6 @@ const ModalRootComponent:FC = () => {
     const routeNavigator = useRouteNavigator();
     const { modal: activeModal } = useActiveVkuiLocation();
     const platform = usePlatform();
-    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
     const dispatch = useDispatch();
     const [loading, setLoading] = useState<boolean>(false)
     const getProcessingGenerateImage = async () => {
@@ -80,7 +78,6 @@ const ModalRootComponent:FC = () => {
                             Закрыть
                         </Button>
                         <Button
-                            onClick={initSocket}
                             key="add"
                             size="l"
                             mode="primary"

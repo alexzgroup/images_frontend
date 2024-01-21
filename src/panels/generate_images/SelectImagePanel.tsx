@@ -89,7 +89,6 @@ const PanelData = () => {
             url: '',
         }
     });
-    const {initSocket} = useContext<AdaptiveContextType>(AdaptiveContext);
     const platform = usePlatform();
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const [formDataError, setFormDataError] = useState(false)
@@ -111,7 +110,6 @@ const PanelData = () => {
         }
 
         setFormDataError(false);
-        initSocket()
 
         if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
@@ -305,7 +303,6 @@ const PanelData = () => {
                     </Text>}
                     actions={
                         !userDbData?.is_vip && <Button
-                            onClick={initSocket}
                             before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
                             <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
                         </Button>

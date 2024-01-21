@@ -43,7 +43,6 @@ const App = () => {
 	const routerPopout = usePopout();
 	const routeNavigator = useRouteNavigator();
 	const [popularImageTypes, setPopularImageTypes] = useState<imageType[] | []>([]);
-	const [socketStatus, setSocketStatus] = useState<boolean>(false);
 
 	const { view: activeView } = useActiveVkuiLocation();
 	const activePanel = useGetPanelForView();
@@ -54,52 +53,50 @@ const App = () => {
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
 	const dispatch = useDispatch();
 
-	const initSocket = () => {
-		if (!socketStatus) {
-			const options = {
-				broadcaster: 'pusher',
-				key: process.env.REACT_APP_PUSHER_APP_KEY,
-				app_key: process.env.REACT_APP_PUSHER_APP_KEY,
-				cluster: process.env.REACT_APP_PUSHER_CLUSTER,
-				// httpHost: process.env.REACT_APP_PUSHER_HOST,
-				// httpsPort: 6001,
-				wsHost: process.env.REACT_APP_PUSHER_HOST,
-				// wssPort: 6001,
-				forceTLS: false,
-				disableStats: true,
-				authEndpoint: process.env.REACT_APP_URL_API + "pusher/auth",
-				auth: {
-					headers: {
-						'X-Referer': window.location.href,
-					},
-				}
-			}
+	const initSocket = (vkUserId: number) => {
+		const options = {
+			broadcaster: 'pusher',
+			key: process.env.REACT_APP_PUSHER_APP_KEY,
+			app_key: process.env.REACT_APP_PUSHER_APP_KEY,
+			cluster: process.env.REACT_APP_PUSHER_CLUSTER,
+			// httpHost: process.env.REACT_APP_PUSHER_HOST,
+			// httpsPort: 6001,
+			wsHost: process.env.REACT_APP_PUSHER_HOST,
+			// wssPort: 6001,
+			forceTLS: false,
+			disableStats: true,
+			authEndpoint: process.env.REACT_APP_URL_API + "pusher/auth",
+			auth: {
+				headers: {
+					'X-Referer': window.location.href,
+				},
+			},
+		}
 
-			const pusher = new Pusher(options.key, options);
-			const echo = new Echo({
-				...options,
-				client: pusher
+		const pusher = new Pusher(options.key, options);
+		const echo = new Echo({
+			...options,
+			client: pusher
+		});
+
+		echo.private(`users.${vkUserId}`)
+			.listen('.donut.success', (e: socketDonutType) => {
+				if (e.data.status) {
+					dispatch(setUserDonut(e.data.date_vip_ended));
+					routeNavigator.showModal(ModalTypes.MODAL_DONUT);
+				}
+			})
+			.listen('.image_generate.success', (e: socketImageType) => {
+				if (e.data.status) {
+					routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE);
+				}
+			})
+			.error((error: any) => {
+				// This is run if there's a problem joining the channel.
+				console.error(error);
 			});
 
-			echo.private(`users.${vkUserInfo?.id}`)
-				.listen('.donut.success', (e: socketDonutType) => {
-					if (e.data.status) {
-						dispatch(setUserDonut(e.data.date_vip_ended));
-						routeNavigator.showModal(ModalTypes.MODAL_DONUT);
-					}
-				})
-				.listen('.image_generate.success', (e: socketImageType) => {
-					if (e.data.status) {
-						routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE);
-					}
-				})
-				.error((error: any) => {
-					// This is run if there's a problem joining the channel.
-					console.error(error);
-				});
-
-			setSocketStatus(true);
-		}
+		//pusher.send_event()
 	}
 
 	useEffect(() => {
@@ -119,6 +116,7 @@ const App = () => {
 
 			setPopularImageTypes(popular_image_types);
 			setTimeout(() => routeNavigator.hidePopout(), 1000);
+			initSocket(userInfo.id);
 		}
 		fetchData();
 	}, []);
@@ -129,7 +127,6 @@ const App = () => {
 				isMobileSize,
 				isVkComPlatform,
 				vkUserInfo,
-				initSocket: () => initSocket(),
 			}
 		}>
 		<SplitLayout
