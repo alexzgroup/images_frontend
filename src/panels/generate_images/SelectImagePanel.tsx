@@ -180,12 +180,6 @@ const PanelData = () => {
         setDisabledOptions(disabled);
     }, [formData])
 
-    useEffect(() => {
-        if (imageType.generate_statistic.has_not_viewed_image) {
-            routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE)
-        }
-    }, [imageType.generate_statistic]);
-
     return (
         <React.Fragment>
             <Group>

@@ -152,7 +152,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                     step > 4 &&
                     <MiniInfoCell
                         textWrap="short"
-                        before={step === 5 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
+                        before={(step === 5 || !responseGenerate.loading) ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                         expandable={false}
                     >
                         Ещё немного...
