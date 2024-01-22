@@ -1,13 +1,13 @@
 import axios from 'axios';
 import {
-    AddGroupChatBootType, AdvertisementType,
+    AddGroupChatBootType, AdvertisementType, GeneratedImagesType,
     generateImageType, GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType, sendGenerateImageType,
+    operationWithMessageType, sendGenerateImageType, uploadPhotoType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -78,10 +78,10 @@ export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
 };
 
 /**
- * Получает сгенерированное изображение, после оповещения
+ * Получает сгенерированное изображение
  */
-export const apiGetProcessingGenerateImage = (access_token: string) => {
-    return axiosApi.post(`processing_image`, {access_token}).then((r: {data: generateImageType}) => r.data);
+export const apiGetGenerateImage = (id: number, access_token: string) => {
+    return axiosApi.get(`get_generate_image/${id}/${access_token}`).then((r: {data: uploadPhotoType}) => r.data);
 };
 
 /**
@@ -97,7 +97,7 @@ export const addChatBootToGroup = (data: AddGroupChatBootType) => {
  * @param data
  */
 export const editChatBootToGroup = (data: {vk_group_id: number, server_id: number}) => {
-    return axiosApi.post(`chat_boot/edit`, data).then((r: {data: {result: boolean}}) => r.data);
+    return axiosApi.post(`chat_boot/edit`, data).then((r: {data: operationResultType}) => r.data);
 }
 
 /**
@@ -105,7 +105,7 @@ export const editChatBootToGroup = (data: {vk_group_id: number, server_id: numbe
  * @param vk_group_id
  */
 export const deleteChatBootToGroup = (vk_group_id: number) => {
-    return axiosApi.delete(`chat_boot/delete/${vk_group_id}`).then((r: {data: {result: boolean}}) => r.data);
+    return axiosApi.delete(`chat_boot/delete/${vk_group_id}`).then((r: {data: operationResultType}) => r.data);
 }
 
 /**
@@ -120,19 +120,23 @@ export const getChatBootGroups = () => {
  * @param data
  */
 export const addAdvertisement = (data: AdvertisementType) => {
-    return axiosApi.post(`add_advertisement`, data).then((r: {data: {result: boolean}}) => r.data);
+    return axiosApi.post(`add_advertisement`, data).then((r: {data: operationResultType}) => r.data);
 }
 
 /**
  * Проверка включены ли уведомления от группы
  */
 export const getAllowMessages = () => {
-    return axiosApi.get(`allow_messages`).then((r: {data: {result: boolean}}) => r.data);
+    return axiosApi.get(`allow_messages`).then((r: {data: operationResultType}) => r.data);
 }
 
 /**
  * Добавляет уведомления
  */
 export const addAllowMessages = () => {
-    return axiosApi.post(`allow_messages/add`).then((r: {data: {result: boolean}}) => r.data);
+    return axiosApi.post(`allow_messages/add`).then((r: {data: operationResultType}) => r.data);
+}
+
+export const getGeneratedImages = () => {
+    return axiosApi.get(`get_generated_images`).then((r: {data: GeneratedImagesType}) => r.data.images);
 }

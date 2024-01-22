@@ -37,6 +37,8 @@ import {apiInitUser} from "./api/AxiosApi";
 import {imageType, socketDonutType, socketImageType} from "./types/ApiTypes";
 import {setUserDbData, setUserDonut} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
+import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
+import {setGenerateImageId} from "./redux/slice/ImageSlice";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -88,6 +90,7 @@ const App = () => {
 			})
 			.listen('.image_generate.success', (e: socketImageType) => {
 				if (e.data.status) {
+					dispatch(setGenerateImageId(e.data.id))
 					routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE);
 				}
 			})
@@ -125,7 +128,6 @@ const App = () => {
 		<AdaptiveContext.Provider value={
 			{
 				isMobileSize,
-				isVkComPlatform,
 				vkUserInfo,
 			}
 		}>
@@ -140,18 +142,19 @@ const App = () => {
 						activeStory={activeView}
 						tabbar={<TabBarWrapper />}
 					>
-						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel}>
+						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<HomePanel popularImageTypes={popularImageTypes} id={PANEL_CONSTANTS.PANEL_MAIN_HOME} />
 						</View>
-						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel}>
+						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />
 							<SelectImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_IMAGE} />
 							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SHOW_GENERATED_IMAGE} />
+							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
 						</View>
-						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel}>
+						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<AboutPanel id={PANEL_CONSTANTS.PANEL_ABOUT_MAIN} />
 						</View>
-						<View id={VIEW_CONSTANTS.VIEW_MONETIZATION} activePanel={activePanel}>
+						<View id={VIEW_CONSTANTS.VIEW_MONETIZATION} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<WelcomePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_WELCOME} />
 							<ProfilePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_PROFILE} />
 							<GroupListPanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST} />

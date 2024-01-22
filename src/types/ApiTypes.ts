@@ -80,21 +80,14 @@ export type operationWithMessageType = operationResultType & {
     message: string,
 }
 
-export enum generateStatusEnum {
-    error = 'error',
-    progress = 'progress',
-    success = 'success',
-}
-
 export type uploadPhotoType = {
     url: string,
     base64: string,
     photo_upload_id: string,
-    status: generateStatusEnum,
 }
 
 export type generateImageType = operationResultType & {
-    image: uploadPhotoType,
+    id: number,
 }
 
 export type monetizationDataType = {
@@ -114,6 +107,7 @@ export type socketDonutType = {
 export type socketImageType = {
     data: {
         status: boolean,
+        id: number,
     }
 }
 
@@ -121,7 +115,7 @@ export type sendGenerateImageType = {
     image_url: string,
     image_type_id: number,
     access_token: string,
-    options: {},
+    options: FormDataOptionType[]|[],
 }
 
 export type AddGroupChatBootType = {
@@ -148,4 +142,18 @@ export type AdvertisementType = {
 export enum EAdsFormats {
     REWARD = "reward",
     INTERSTITIAL = "interstitial"
+}
+
+export type FormDataOptionType = {
+    group_id: number,
+    option_id: number,
+}
+
+export type GeneratedImageType = {
+    id: number,
+    url: string,
+}
+
+export type GeneratedImagesType = {
+    images: GeneratedImageType[],
 }

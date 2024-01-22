@@ -1,4 +1,4 @@
-import React, {ReactElement, useContext, useEffect, useState} from 'react';
+import React, {ReactElement, Suspense, useContext, useEffect, useState} from 'react';
 
 import {
     Button,
@@ -14,6 +14,7 @@ import {
     MiniInfoCell,
     Panel,
     PanelHeader,
+    PanelSpinner,
     Placeholder,
     SimpleCell,
     Snackbar,
@@ -36,7 +37,7 @@ import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContex
 import znapps_image from '../../assets/images/zn_apps_icon.png';
 import girl_image from '../../assets/images/icons/girl_icon.png';
 import bridge from "@vkontakte/vk-bridge";
-import {apiSubscribe} from "../../api/AxiosApi";
+import {apiSubscribe, getGeneratedImages} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
 import {getDonutUrl} from "../../helpers/AppHelper";
 import {useSelector} from "react-redux";
@@ -44,13 +45,17 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {CounterDown} from "../../components/CountDown";
 import AllowMessagesBanner from "../../components/AllowMessagesBanner";
+import {GeneratedImageType} from "../../types/ApiTypes";
+import PromiseWrapper from "../../api/PromiseWrapper";
+import GeneratedImages from "../../components/GeneratedImages";
 
 interface Props {
     id: string;
 }
 
-const AboutPanel: React.FC<Props> = ({id}) => {
+const PanelContent: React.FC = () => {
     const [isGroupMember, setIsGroupMember] = useState<number>(0);
+    const [generatedImages, setGeneratedImages] = useState<GeneratedImageType[]>([])
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
@@ -90,18 +95,24 @@ const AboutPanel: React.FC<Props> = ({id}) => {
         );
     };
 
-    useEffect(() => {
-        (async () => {
+    const init = () => {
+        return new Promise(async (resolve, reject) => {
             const {is_member} = await bridge.send('VKWebAppGetGroupInfo', {
                 group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
             });
             setIsGroupMember(is_member);
-        })()
+
+            const images = await getGeneratedImages()
+            resolve(images);
+        })
+    }
+
+    useEffect(() => {
+        setGeneratedImages(PromiseWrapper(init()))
     }, []);
 
     return (
-        <Panel id={id}>
-            <PanelHeader>О приложении</PanelHeader>
+        <React.Fragment>
             <Group>
                 <CardGrid size="l">
                     <Card mode='shadow'>
@@ -178,6 +189,9 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                             }
                         </Placeholder>
                     </Card>
+                    <Card mode='shadow'>
+                        <GeneratedImages images={generatedImages} />
+                    </Card>
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
                     <Card mode='shadow'>
                         <Placeholder
@@ -211,6 +225,17 @@ const AboutPanel: React.FC<Props> = ({id}) => {
             </Group>
             <Footer>С любовью от Омских разработчиков!</Footer>
             {snackbar}
+        </React.Fragment>
+    )
+};
+
+const AboutPanel: React.FC<Props> = ({id}) => {
+    return (
+        <Panel id={id}>
+            <PanelHeader>О приложении</PanelHeader>
+            <Suspense fallback={<PanelSpinner size="medium" />}>
+                <PanelContent />
+            </Suspense>
         </Panel>
     )
 };

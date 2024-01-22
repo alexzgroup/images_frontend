@@ -5,7 +5,8 @@ import {
     Banner,
     Button,
     Caption,
-    Checkbox, Div,
+    Checkbox,
+    Div,
     FormItem,
     FormLayout,
     FormLayoutGroup,
@@ -36,9 +37,9 @@ import {UrlConstants} from "../../constants/UrlConstants";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {clearGenerateImage, ReduxSliceImageInterface, setGenerateUploadPhoto} from "../../redux/slice/ImageSlice";
-import {addAdvertisement, apiGenerateImage, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType, sendGenerateImageType} from "../../types/ApiTypes";
+import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
+import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {AdvertisementEnum, EAdsFormats, FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
@@ -59,11 +60,6 @@ const NoRecomendedImageLabels = [
     'Картинки с интернета',
 ]
 
-type FormDataOptionType = {
-    group_id: number,
-    option_id: number,
-}
-
 const PanelData = () => {
 
     const params = useParams<'imageTypeId'>();
@@ -72,7 +68,7 @@ const PanelData = () => {
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
-    const {access_token, userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
             available_count_generate: 0,
@@ -94,21 +90,7 @@ const PanelData = () => {
     const [formDataError, setFormDataError] = useState(false)
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
 
-    const showProcessModal = async () => {
-
-        bridge.send("VKWebAppShowNativeAds", {
-            ad_format: EAdsFormats.INTERSTITIAL,
-        }).then((data) => {
-            if (data.result) {
-                addAdvertisement({type: AdvertisementEnum.window}).then();
-            }
-        }).catch();
-
-        if (imageType.generate_statistic.has_not_viewed_image) {
-            routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE)
-            return;
-        }
-
+    const openPreloaderGenerate = () => {
         setFormDataError(false);
 
         if (imageType?.generate_statistic.generate_in_process) {
@@ -131,22 +113,19 @@ const PanelData = () => {
                 setFormDataError(true);
                 return;
             }
-
-            routeNavigator.showModal(ModalTypes.MODAL_PROCESS_GENERATE_IMAGE)
-            const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
-            const data: sendGenerateImageType = {
-                image_url: imageUrl,
-                image_type_id: Number(params?.imageTypeId),
-                access_token,
-                options: formData,
-            }
-            const {result, image} = await apiGenerateImage(data)
-
-            if (result) {
-                dispatch(setGenerateUploadPhoto(image))
-                await routeNavigator.push('/generate/show-image');
-            }
+            routeNavigator.push('/generate/preloader', {state: {formData, imageTypeId: params?.imageTypeId}})
         }
+    }
+
+    const showAds = () => {
+        bridge.send("VKWebAppShowNativeAds", {
+            ad_format: EAdsFormats.INTERSTITIAL,
+        }).then((data) => {
+            if (data.result) {
+                addAdvertisement({type: AdvertisementEnum.window}).then();
+                openPreloaderGenerate()
+            }
+        }).catch(() => openPreloaderGenerate());
     };
 
     const getUserToken = () => {
@@ -231,7 +210,7 @@ const PanelData = () => {
                         <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
-                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showProcessModal}>
+                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showAds}>
                         {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
                     </Button>
                 </Div>
