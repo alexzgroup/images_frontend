@@ -86,7 +86,7 @@ export type uploadPhotoType = {
     photo_upload_id: string,
 }
 
-export type generateImageType = operationResultType & {
+export type generateImageType = operationWithMessageType & {
     id: number,
 }
 

@@ -29,6 +29,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     const [responseGenerate, setResponseGenerate] = useState<generateImageType & {loading: boolean}>({
         loading: false,
         result: false,
+        message: '',
         id: 0,
     })
     const routeNavigator = useRouteNavigator();
@@ -85,11 +86,10 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                             },
                         ]}
                         onClose={() => {
-                            routeNavigator.hidePopout()
-                            routeNavigator.push('/');
+                            routeNavigator.hidePopout().then(() => routeNavigator.push('/'))
                         }}
                         header="Внимание!"
-                        text="Очень большая загруженность, как только Ваш результат будет готов, мы обязательно сообщим Вам об этом."
+                        text={responseGenerate.message}
                     />
                 );
             }
