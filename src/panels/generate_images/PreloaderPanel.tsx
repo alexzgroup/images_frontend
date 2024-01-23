@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, {memo, useEffect, useRef, useState} from 'react';
 
 import {Alert, Card, CardGrid, Group, MiniInfoCell, Panel, PanelHeader, Spinner} from '@vkontakte/vkui';
 import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
@@ -19,6 +19,7 @@ interface Props {
 type formDataType = {
     imageTypeId: number,
     formData: FormDataOptionType[],
+    blockWindow: boolean,
 }
 
 const PreloaderPanel: React.FC<Props> = ({id}) => {
@@ -33,10 +34,11 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
         id: 0,
     })
     const routeNavigator = useRouteNavigator();
+    let blockedWindow = useRef(true)
 
-    const blockerFunction: BlockerFunction = ({ historyAction, nextLocation }) => {
+    const blockerFunction: BlockerFunction = ({ historyAction, nextLocation, currentLocation }) => {
         // true - запрещаем переход, false - разрешаем
-        return (step < 6 && !responseGenerate.loading);
+        return blockedWindow.current;
     };
 
     // Получение параметров
@@ -60,19 +62,25 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     useEffect(() => {
         routeNavigator.block(blockerFunction);
         initGenerate();
-
+        let stepLocal = 1;
         let timerId = setInterval(() => {
-            if (step > 6) {
+            if (stepLocal > 5) {
                 clearInterval(timerId);
             }
             setStep((value) => value + 1);
-        },2000);
+            stepLocal++;
+        },2500);
 
-        return () => clearInterval(timerId);
+        return () => {
+            clearInterval(timerId)
+            routeNavigator.block(() => false);
+        }
     }, []);
 
     useEffect(() => {
-        if (step > 6 && responseGenerate.loading) {
+        if (step > 5 && responseGenerate.loading && blockedWindow.current) {
+            blockedWindow.current = false;
+
             if (responseGenerate.result) {
                 routeNavigator.push(`/generate/show-image/${responseGenerate.id}`);
             } else {
@@ -86,7 +94,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                             },
                         ]}
                         onClose={() => {
-                            routeNavigator.hidePopout().then(() => routeNavigator.push('/'))
+                            routeNavigator.hidePopout();
                         }}
                         header="Внимание!"
                         text={responseGenerate.message}
@@ -94,7 +102,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                 );
             }
         }
-    }, [step, responseGenerate.loading]);
+    }, [step, responseGenerate]);
 
     return (
         <Panel id={id}>
