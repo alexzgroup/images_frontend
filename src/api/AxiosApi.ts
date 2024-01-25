@@ -7,7 +7,7 @@ import {
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType, sendGenerateImageType, uploadPhotoType,
+    operationWithMessageType, ResponseUploadPhotoType, sendGenerateImageType, UploadPhotoType, uploadPhotoType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -80,8 +80,8 @@ export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
 /**
  * Получает сгенерированное изображение
  */
-export const apiGetGenerateImage = (id: number, access_token: string) => {
-    return axiosApi.get(`get_generate_image/${id}/${access_token}`).then((r: {data: uploadPhotoType}) => r.data);
+export const apiGetGenerateImage = (id: number) => {
+    return axiosApi.get(`get_generate_image/${id}`).then((r: {data: uploadPhotoType}) => r.data);
 };
 
 /**
@@ -137,6 +137,13 @@ export const addAllowMessages = () => {
     return axiosApi.post(`allow_messages/add`).then((r: {data: operationResultType}) => r.data);
 }
 
+/**
+ * Получает генерированные изображения
+ */
 export const getGeneratedImages = () => {
     return axiosApi.get(`get_generated_images`).then((r: {data: GeneratedImagesType}) => r.data.images);
+}
+
+export const uploadImage = (data: UploadPhotoType) => {
+    return axiosApi.post(`vk_upload_image`, data).then((r: {data: ResponseUploadPhotoType}) => r.data);
 }

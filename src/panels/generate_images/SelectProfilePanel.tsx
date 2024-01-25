@@ -10,7 +10,7 @@ import {AdvertisementEnum, imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
 import {LabelImageTypeGenerator} from "../../components/LabelImageTypeGenerator";
 import {addAdvertisement, apiGetImageTypes} from "../../api/AxiosApi";
-import bridge from "@vkontakte/vk-bridge";
+import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
@@ -45,9 +45,8 @@ export const LoadingImageTypes:FC = () => {
     useEffect(() => {
         setImageTypes(PromiseWrapper(apiGetImageTypes()));
 
-        // @ts-ignore
         bridge.send('VKWebAppShowBannerAd', {
-            banner_location: 'bottom'
+            banner_location: BannerAdLocation.BOTTOM
         })
             .then((data: any) => {
                 if (data.result) {

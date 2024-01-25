@@ -5,7 +5,7 @@ import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData, getWallData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {apiGetGenerateImage} from "../../api/AxiosApi";
+import {apiGetGenerateImage, uploadImage} from "../../api/AxiosApi";
 import {uploadPhotoType} from "../../types/ApiTypes";
 
 interface Props {
@@ -17,6 +17,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const params = useParams<'imageGeneratedId'>();
     const [uploadPhoto, setUploadPhoto] = useState<uploadPhotoType>()
+    const [photoUploadId, setPhotoUploadId] = useState<string>('');
 
     const rejectAccessToken = () => {
         routeNavigator.showPopout(
@@ -38,6 +39,32 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
         );
     }
 
+    const getPhotoUploadId = async (access_token: string) => {
+
+        const responseUploadServer = await bridge.send('VKWebAppCallAPIMethod', {
+            method: 'photos.getWallUploadServer',
+            params: {
+                v: process.env.REACT_APP_V_API,
+                access_token: access_token,
+            }});
+
+        const responseUploadImage = await uploadImage({
+            upload_url: responseUploadServer.response.upload_url,
+            generate_image_id: Number(params?.imageGeneratedId),
+        });
+
+        const responseSavePhoto = await bridge.send('VKWebAppCallAPIMethod', {
+            method: 'photos.saveWallPhoto',
+            params: {
+                v: process.env.REACT_APP_V_API,
+                access_token: access_token,
+                ...responseUploadImage,
+            }});
+
+        const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
+        setPhotoUploadId(photo.owner_id + '_' + photo.id + '_' + photo.access_key);
+    }
+
     const getUserToken = () => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
@@ -46,8 +73,9 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             .then(async (data) => {
                 if (data.access_token) {
                     if (params?.imageGeneratedId) {
-                        const response = await apiGetGenerateImage(Number(params?.imageGeneratedId), data.access_token);
+                        const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
                         setUploadPhoto(response);
+                        await getPhotoUploadId(data.access_token);
                     }
                 } else {
                     rejectAccessToken()
@@ -61,7 +89,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
 
     const shareWall = async () => {
         if (uploadPhoto && vkUserInfo) {
-            const wallData = getWallData({uploadPhoto, vkUserInfo});
+            const wallData = getWallData({photoUploadId, vkUserInfo});
             const {post_id} = await bridge.send('VKWebAppShowWallPostBox', wallData);
             console.log(post_id);
         }
@@ -83,7 +111,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
         <Panel id={id}>
             <PanelHeader>Результат генерации</PanelHeader>
             {
-                uploadPhoto
+                (photoUploadId && uploadPhoto)
                     ?
                 <Group>
                     <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 25}}>

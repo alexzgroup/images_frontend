@@ -1,5 +1,4 @@
 import {Platform} from "@vkontakte/vkui";
-import {uploadPhotoType} from "../types/ApiTypes";
 import {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
 import {PlatformType} from "@vkontakte/vkui/dist/lib/platform";
 
@@ -16,13 +15,13 @@ export const getDonutUrl = (platform: PlatformType):string => {
  * @param uploadPhoto
  * @param vkUserInfo
  */
-export const getWallData = ({uploadPhoto, vkUserInfo}: {
-    uploadPhoto: uploadPhotoType,
+export const getWallData = ({photoUploadId, vkUserInfo}: {
+    photoUploadId: string,
     vkUserInfo: UserInfo
 }): WallPostRequestOptions => {
     return {
         message: 'Это изображение сгенерировано с помощью приложения "Ренестра". Для генерации своего уникального аватара переходи по ссылке:',
-        attachments: 'https://vk.com/app' + process.env.REACT_APP_APP_ID + ',photo' + uploadPhoto.photo_upload_id,
+        attachments: 'https://vk.com/app' + process.env.REACT_APP_APP_ID + ',photo' + photoUploadId,
         owner_id: vkUserInfo.id,
         copyright: 'https://vk.com/app' + process.env.REACT_APP_APP_ID,
     }

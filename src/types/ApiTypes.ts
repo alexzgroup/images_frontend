@@ -83,7 +83,6 @@ export type operationWithMessageType = operationResultType & {
 export type uploadPhotoType = {
     url: string,
     base64: string,
-    photo_upload_id: string,
 }
 
 export type generateImageType = operationWithMessageType & {
@@ -114,7 +113,6 @@ export type socketImageType = {
 export type sendGenerateImageType = {
     image_url: string,
     image_type_id: number,
-    access_token: string,
     options: FormDataOptionType[]|[],
 }
 
@@ -156,4 +154,15 @@ export type GeneratedImageType = {
 
 export type GeneratedImagesType = {
     images: GeneratedImageType[],
+}
+
+export type UploadPhotoType = {
+    generate_image_id: number,
+    upload_url: string,
+}
+
+export type ResponseUploadPhotoType = {
+    hash: string,
+    photo: string,
+    server: number
 }

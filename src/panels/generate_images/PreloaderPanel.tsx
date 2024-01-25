@@ -10,7 +10,6 @@ import {apiGenerateImage} from "../../api/AxiosApi";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 
 interface Props {
     id: string;
@@ -23,7 +22,6 @@ type formDataType = {
 }
 
 const PreloaderPanel: React.FC<Props> = ({id}) => {
-    const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
 
     const [step, setStep] = useState<number>(1)
@@ -51,7 +49,6 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             const data: sendGenerateImageType = {
                 image_url: imageUrl,
                 image_type_id: formDataParams.imageTypeId,
-                access_token,
                 options: formDataParams.formData,
             }
             const response = await apiGenerateImage(data)
