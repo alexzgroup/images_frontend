@@ -7,6 +7,9 @@ import {getStoryBoxData, getWallData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {apiGetGenerateImage, uploadImage} from "../../api/AxiosApi";
 import {uploadPhotoType} from "../../types/ApiTypes";
+import {setAccessToken} from "../../redux/slice/UserSlice";
+import {useDispatch} from "react-redux";
+import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice";
 
 interface Props {
     id: string;
@@ -18,6 +21,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const params = useParams<'imageGeneratedId'>();
     const [uploadPhoto, setUploadPhoto] = useState<uploadPhotoType>()
     const [photoUploadId, setPhotoUploadId] = useState<string>('');
+    const dispatch = useDispatch();
 
     const rejectAccessToken = () => {
         routeNavigator.showPopout(
@@ -31,7 +35,6 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                 ]}
                 onClose={() => {
                     routeNavigator.hidePopout();
-                    getUserToken();
                 }}
                 header="Внимание!"
                 text="Для просмотра результата, разрешите доступ."
@@ -62,20 +65,30 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             }});
 
         const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
-        setPhotoUploadId(photo.owner_id + '_' + photo.id + '_' + photo.access_key);
+        const photoUploadId = photo.owner_id + '_' + photo.id + '_' + photo.access_key;
+        setPhotoUploadId(photoUploadId);
+        return photoUploadId;
     }
 
-    const getUserToken = () => {
+    const shareWall = async () => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
             scope: 'photos,wall'
         })
             .then(async (data) => {
                 if (data.access_token) {
-                    if (params?.imageGeneratedId) {
-                        const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
-                        setUploadPhoto(response);
-                        await getPhotoUploadId(data.access_token);
+                    dispatch(setAccessToken(data.access_token))
+                    dispatch(showAppLoading());
+                    let photoId = photoUploadId;
+
+                    if (!photoUploadId) {
+                        photoId = await getPhotoUploadId(data.access_token);
+                    }
+
+                    dispatch(hideAppLoading());
+                    if (uploadPhoto && vkUserInfo) {
+                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo});
+                        bridge.send('VKWebAppShowWallPostBox', wallData).catch();
                     }
                 } else {
                     rejectAccessToken()
@@ -87,14 +100,6 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             });
     }
 
-    const shareWall = async () => {
-        if (uploadPhoto && vkUserInfo) {
-            const wallData = getWallData({photoUploadId, vkUserInfo});
-            const {post_id} = await bridge.send('VKWebAppShowWallPostBox', wallData);
-            console.log(post_id);
-        }
-    }
-
     const shareStore = async () => {
         if (uploadPhoto) {
             const storyData = getStoryBoxData(uploadPhoto.base64);
@@ -104,18 +109,26 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
-        getUserToken();
+        (async () => {
+            if (params?.imageGeneratedId) {
+                const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
+                setUploadPhoto(response);
+            }
+        })()
     }, []);
 
     return (
         <Panel id={id}>
             <PanelHeader>Результат генерации</PanelHeader>
             {
-                (photoUploadId && uploadPhoto)
+                (uploadPhoto)
                     ?
                 <Group>
                     <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 25}}>
-                        <img style={{maxWidth: '100%', margin: "auto"}} src={uploadPhoto.url} alt=''/>
+                        <img
+                            style={{maxWidth: '100%', margin: "auto", height: '50vh', borderRadius: 'var(--vkui--size_border_radius--regular)'}}
+                            src={uploadPhoto.url}
+                            alt=''/>
                         <ButtonGroup mode='vertical'>
                             <Button onClick={shareWall} stretched size='l'>Поделиться с друзьями на стене</Button>
                             <Button onClick={shareStore} stretched size='l'>Поделиться с друзьями в истории</Button>
