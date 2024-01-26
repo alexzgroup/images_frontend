@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from 'react';
 
-import {Alert, Button, ButtonGroup, Group, Image, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
+import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData, getWallData} from "../../helpers/AppHelper";
@@ -115,7 +115,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                     ?
                 <Group>
                     <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 25}}>
-                        <Image size={360} src={uploadPhoto.url} alt=''/>
+                        <img style={{maxWidth: '100%', margin: "auto"}} src={uploadPhoto.url} alt=''/>
                         <ButtonGroup mode='vertical'>
                             <Button onClick={shareWall} stretched size='l'>Поделиться с друзьями на стене</Button>
                             <Button onClick={shareStore} stretched size='l'>Поделиться с друзьями в истории</Button>

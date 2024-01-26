@@ -5,11 +5,18 @@ import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {BlockerFunction} from "@remix-run/router/router";
 import {Icon20CheckCircleFillGreen} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
-import {FormDataOptionType, generateImageType, sendGenerateImageType} from "../../types/ApiTypes";
-import {apiGenerateImage} from "../../api/AxiosApi";
+import {
+    AdvertisementEnum,
+    EAdsFormats,
+    FormDataOptionType,
+    generateImageType,
+    sendGenerateImageType
+} from "../../types/ApiTypes";
+import {addAdvertisement, apiGenerateImage} from "../../api/AxiosApi";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
+import bridge from "@vkontakte/vk-bridge";
 
 interface Props {
     id: string;
@@ -57,6 +64,14 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
+        bridge.send("VKWebAppShowNativeAds", {
+            ad_format: EAdsFormats.INTERSTITIAL,
+        }).then((data) => {
+            if (data.result) {
+                addAdvertisement({type: AdvertisementEnum.window}).then();
+            }
+        }).catch();
+
         routeNavigator.block(blockerFunction);
         initGenerate();
         let stepLocal = 1;

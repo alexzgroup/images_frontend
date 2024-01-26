@@ -223,7 +223,7 @@ const PanelContent: React.FC = () => {
                     </Card>
                 </CardGrid>
             </Group>
-            <Footer>С любовью от Омских разработчиков!</Footer>
+            <Footer>Привет от Омских разработчиков!</Footer>
             {snackbar}
         </React.Fragment>
     )

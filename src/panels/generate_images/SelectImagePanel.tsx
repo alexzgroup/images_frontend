@@ -6,7 +6,7 @@ import {
     Button,
     Caption,
     Checkbox,
-    Div,
+    Div, Footer,
     FormItem,
     FormLayout,
     FormLayoutGroup,
@@ -38,8 +38,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
-import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {AdvertisementEnum, EAdsFormats, FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
+import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
@@ -117,17 +117,6 @@ const PanelData = () => {
         }
     }
 
-    const showAds = () => {
-        bridge.send("VKWebAppShowNativeAds", {
-            ad_format: EAdsFormats.INTERSTITIAL,
-        }).then((data) => {
-            if (data.result) {
-                addAdvertisement({type: AdvertisementEnum.window}).then();
-                openPreloaderGenerate()
-            }
-        }).catch(() => openPreloaderGenerate());
-    };
-
     const getUserToken = () => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
@@ -204,7 +193,7 @@ const PanelData = () => {
                         <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
-                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={showAds}>
+                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={openPreloaderGenerate}>
                         {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
                     </Button>
                 </Div>
@@ -284,6 +273,9 @@ const PanelData = () => {
             </Group>
             <LabelsList type={TypeColors.success} labels={RecomendedImageLabels} header='Рекомендации к фотографиям:' />
             <LabelsList type={TypeColors.error} labels={NoRecomendedImageLabels} header='Не рекомендуем использовать:' />
+            <Footer>
+                При генерации изображения, вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
+            </Footer>
         </React.Fragment>
     )
 }

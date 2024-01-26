@@ -19,11 +19,12 @@ export const getWallData = ({photoUploadId, vkUserInfo}: {
     photoUploadId: string,
     vkUserInfo: UserInfo
 }): WallPostRequestOptions => {
+    const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
     return {
-        message: 'Это изображение сгенерировано с помощью приложения "Ренестра". Для генерации своего уникального аватара переходи по ссылке:',
+        message: 'Это изображение сгенерировано с помощью приложения "Ренестра". Для генерации своего уникального аватара переходи по ссылке: ' + urlApp,
         attachments: 'https://vk.com/app' + process.env.REACT_APP_APP_ID + ',photo' + photoUploadId,
         owner_id: vkUserInfo.id,
-        copyright: 'https://vk.com/app' + process.env.REACT_APP_APP_ID,
+        copyright: urlApp,
     }
 }
 

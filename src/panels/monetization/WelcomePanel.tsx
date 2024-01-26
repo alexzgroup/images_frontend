@@ -7,6 +7,7 @@ import {useDispatch} from "react-redux";
 import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice";
 import {apiMonetization} from "../../api/AxiosApi";
 import {setUserDbDataMonetization} from "../../redux/slice/UserSlice";
+import monetizationImage from "../../assets/images/monetization.png";
 
 interface Props {
     id: string;
@@ -32,6 +33,9 @@ const WelcomePanel: React.FC<Props> = ({id}) => {
     return (
         <Panel id={id}>
             <PanelHeader>Монетизация</PanelHeader>
+            <Group>
+                <img style={{width: '100%'}} src={monetizationImage}  alt='' />
+            </Group>
             <Group>
                 <Placeholder
                     header='Кабинет монетизации'
