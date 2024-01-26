@@ -1,4 +1,4 @@
-import React, {FC, Suspense} from 'react';
+import React, {FC} from 'react';
 
 import {
     Button,
@@ -8,7 +8,6 @@ import {
     ModalPage,
     ModalPageHeader,
     ModalRoot,
-    PanelSpinner,
     usePlatform
 } from '@vkontakte/vkui';
 import {Icon56DonateOutline, Icon56PaletteOutline} from '@vkontakte/icons';
@@ -98,9 +97,7 @@ const ModalRootComponent:FC = () => {
                 hideCloseButton={true}
                 header={<ModalPageHeader>Выберите фотографию</ModalPageHeader>}
             >
-                <Suspense fallback={<PanelSpinner size="medium" />} >
-                    <SelectUserImage />
-                </Suspense>
+               <SelectUserImage />
             </ModalPage>
             <ModalCard
                 id={ModalTypes.MODAL_DONUT}
