@@ -103,14 +103,13 @@ const ModalRootComponent:FC = () => {
             >
                <SelectUserImage />
             </ModalPage>
-            <ModalPage
+            <ModalCard
                 id={ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER}
                 onClose={() => !windowBlocked && routeNavigator.hideModal()}
-                settlingHeight={100}
                 header={<ModalPageHeader>Подготовка к публикации</ModalPageHeader>}
             >
                 <PreloaderUploadPhoto />
-            </ModalPage>
+            </ModalCard>
             <ModalCard
                 id={ModalTypes.MODAL_DONUT}
                 onClose={() => routeNavigator.hideModal()}
