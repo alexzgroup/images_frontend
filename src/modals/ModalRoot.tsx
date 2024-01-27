@@ -17,6 +17,8 @@ import {SelectUserImage} from "../components/SelectUserImage";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
+import {PreloaderUploadPhoto} from "../components/PreloaderUploadPhoto";
+import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -24,6 +26,7 @@ export enum ModalTypes {
     MODAL_DONUT = 'modal_donut',
     MODAL_DONUT_LIMIT = 'modal_donut_limit',
     MODAL_GENERATED_IMAGE = 'modal_generated_image',
+    MODAL_UPLOAD_PHOTO_PRELOADER = 'modal_upload_photo_preloader',
 }
 
 const ModalRootComponent:FC = () => {
@@ -31,6 +34,7 @@ const ModalRootComponent:FC = () => {
     const { modal: activeModal } = useActiveVkuiLocation();
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
 
     return (
         <ModalRoot activeModal={activeModal}>
@@ -98,6 +102,14 @@ const ModalRootComponent:FC = () => {
                 header={<ModalPageHeader>Выберите фотографию</ModalPageHeader>}
             >
                <SelectUserImage />
+            </ModalPage>
+            <ModalPage
+                id={ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER}
+                onClose={() => !windowBlocked && routeNavigator.hideModal()}
+                settlingHeight={100}
+                header={<ModalPageHeader>Подготовка к публикации</ModalPageHeader>}
+            >
+                <PreloaderUploadPhoto />
             </ModalPage>
             <ModalCard
                 id={ModalTypes.MODAL_DONUT}

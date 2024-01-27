@@ -9,7 +9,8 @@ import {apiGetGenerateImage, uploadImage} from "../../api/AxiosApi";
 import {uploadPhotoType} from "../../types/ApiTypes";
 import {setAccessToken} from "../../redux/slice/UserSlice";
 import {useDispatch} from "react-redux";
-import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice";
+import {ModalTypes} from "../../modals/ModalRoot";
+import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 
 interface Props {
     id: string;
@@ -78,14 +79,17 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             .then(async (data) => {
                 if (data.access_token) {
                     dispatch(setAccessToken(data.access_token))
-                    dispatch(showAppLoading());
+
                     let photoId = photoUploadId;
 
                     if (!photoUploadId) {
+                        dispatch(setWindowBlocked(true))
+                        routeNavigator.showModal(ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER);
                         photoId = await getPhotoUploadId(data.access_token);
+                        dispatch(setWindowBlocked(false))
+                        routeNavigator.hideModal();
                     }
 
-                    dispatch(hideAppLoading());
                     if (uploadPhoto && vkUserInfo) {
                         const wallData = getWallData({photoUploadId: photoId, vkUserInfo});
                         bridge.send('VKWebAppShowWallPostBox', wallData).catch();
