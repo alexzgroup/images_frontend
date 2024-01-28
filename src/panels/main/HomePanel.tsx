@@ -44,14 +44,14 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
             </Group>
             <Group mode='plain'>
                 <DivCard>
-                    <Div style={{paddingTop: 0}}>
+                    <Div>
                         <Button
                             mode='secondary'
                             hasActive={false}
                             hasHover={false}
                             before={<Icon28DiamondOutline fill='var(--vkui--color_accent_red)'/>}>Популярные образы</Button>
                     </Div>
-                    <Separator/><Spacing />
+                    <Spacing><Separator/></Spacing>
                     {
                         !!popularImageTypes.length && popularImageTypes.map((value, key) => <SimpleCell
                             key={key}
