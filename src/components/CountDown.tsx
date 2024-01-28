@@ -15,11 +15,11 @@ export const CounterDown = ({date}: {date: string}) => {
             <Div className="counterDown">
                 <div className="counterCol">
                     <span><Title level="1" weight="2">{days}</Title> дн.</span>
-                    <span className="delimiter"></span>
+                    <div className="delimiter">:</div>
                     <span><Title level="1" weight="2">{hours}</Title>ч.</span>
-                    <span className="delimiter"></span>
+                    <div className="delimiter">:</div>
                     <span><Title level="1" weight="2">{minutes}</Title>мин.</span>
-                    <span className="delimiter"></span>
+                    <div className="delimiter">:</div>
                     <span><Title level="1" weight="2">{seconds}</Title>сек.</span>
                 </div>
             </Div>

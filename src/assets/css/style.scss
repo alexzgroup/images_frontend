@@ -7,20 +7,21 @@
   }
 }
 
-.counterCol{
+.counterCol {
   text-align: center;
   display: flex;
   align-items: center;
-  justify-content: space-around;
-  background-color: var(--vkui--color_background_negative);
-  color: #fff;
-  padding: .5em;
-  border-radius: 10px;
-  transition: all .5s ease-in-out;
-  .delimiter{
-    width: 1px;
-    height: 30px;
-    background-color: #fff;
+  justify-content: center;
+  gap: 10px;
+  & > span {
+    background-color: var(--vkui--color_accent_violet);
+    color: #fff;
+    padding: .5em;
+    border-radius: 5px;
+    transition: all .5s ease-in-out;
+  }
+  .delimiter {
+
   }
 }
 

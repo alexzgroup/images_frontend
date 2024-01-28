@@ -33,6 +33,7 @@ export const SelectUserImage:FC = () => {
                     v: process.env.REACT_APP_V_API,
                     access_token: access_token,
                     album_id: 'profile',
+                    rev: 1,
                 }});
 
             setImageData(response);
