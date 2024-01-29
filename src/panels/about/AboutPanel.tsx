@@ -193,34 +193,34 @@ const PanelContent: React.FC = () => {
                         <GeneratedImages images={generatedImages} />
                     </Card>
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
-                    <Card mode='shadow'>
-                        <Placeholder
-                            icon={<Image size={72} src={znapps_image} />}
-                            header="Приложение “Знакомства по городам”"
-                            action={<Button before={<Icon24LinkCircle />} size="l" stretched={isMobileSize}><Link target="_blank" href={process.env.REACT_APP_ZNAPPS_URL}>Открыть приложение</Link></Button>}
-                        >
-                            <List>
-                                <MiniInfoCell
-                                    style={{paddingLeft: 0}}
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    Ссылки на страницы VK
-                                </MiniInfoCell>
-                                <MiniInfoCell
-                                    style={{paddingLeft: 0}}
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    Карта города
-                                </MiniInfoCell>
-                                <MiniInfoCell
-                                    style={{paddingLeft: 0}}
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    Огромная база пользователей
-                                </MiniInfoCell>
-                            </List>
-                        </Placeholder>
-                    </Card>
+                    {/*<Card mode='shadow'>*/}
+                    {/*    <Placeholder*/}
+                    {/*        icon={<Image size={72} src={znapps_image} />}*/}
+                    {/*        header="Приложение “Знакомства по городам”"*/}
+                    {/*        action={<Button before={<Icon24LinkCircle />} size="l" stretched={isMobileSize}><Link target="_blank" href={process.env.REACT_APP_ZNAPPS_URL}>Открыть приложение</Link></Button>}*/}
+                    {/*    >*/}
+                    {/*        <List>*/}
+                    {/*            <MiniInfoCell*/}
+                    {/*                style={{paddingLeft: 0}}*/}
+                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
+                    {/*            >*/}
+                    {/*                Ссылки на страницы VK*/}
+                    {/*            </MiniInfoCell>*/}
+                    {/*            <MiniInfoCell*/}
+                    {/*                style={{paddingLeft: 0}}*/}
+                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
+                    {/*            >*/}
+                    {/*                Карта города*/}
+                    {/*            </MiniInfoCell>*/}
+                    {/*            <MiniInfoCell*/}
+                    {/*                style={{paddingLeft: 0}}*/}
+                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
+                    {/*            >*/}
+                    {/*                Огромная база пользователей*/}
+                    {/*            </MiniInfoCell>*/}
+                    {/*        </List>*/}
+                    {/*    </Placeholder>*/}
+                    {/*</Card>*/}
                 </CardGrid>
             </Group>
             <Footer>Привет от Омских разработчиков!</Footer>

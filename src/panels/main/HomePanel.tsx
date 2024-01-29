@@ -61,21 +61,21 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     }
                 </DivCard>
             </Group>
-            <Banner
-                mode="image"
-                header="Монетизация сообществ"
-                subheader="Получай 30% дохода с оформления VIP подписчиками ваших сообществ"
-                background={
-                    <div
-                        style={{
-                            background: 'url("' + rub_circle_image + '") right bottom/150px no-repeat, linear-gradient(45deg, #00A700 0%, #A0B500 100%)',
-                        }}
-                    />
-                }
-                actions={userDbData?.is_monetization
-                    ? <Button onClick={() => routeNavigator.push('/monetization/profile')} before={<Icon24ThumbsUpOutline/>} mode="outline" appearance="overlay">Перейти в кабинет</Button>
-                    : <Button onClick={() => routeNavigator.push('/monetization')} before={<Icon24RoubleBadgeOutline/>} appearance="overlay">Подключиться</Button>}
-            />
+            {/*<Banner*/}
+            {/*    mode="image"*/}
+            {/*    header="Монетизация сообществ"*/}
+            {/*    subheader="Получай 30% дохода с оформления VIP подписчиками ваших сообществ"*/}
+            {/*    background={*/}
+            {/*        <div*/}
+            {/*            style={{*/}
+            {/*                background: 'url("' + rub_circle_image + '") right bottom/150px no-repeat, linear-gradient(45deg, #00A700 0%, #A0B500 100%)',*/}
+            {/*            }}*/}
+            {/*        />*/}
+            {/*    }*/}
+            {/*    actions={userDbData?.is_monetization*/}
+            {/*        ? <Button onClick={() => routeNavigator.push('/monetization/profile')} before={<Icon24ThumbsUpOutline/>} mode="outline" appearance="overlay">Перейти в кабинет</Button>*/}
+            {/*        : <Button onClick={() => routeNavigator.push('/monetization')} before={<Icon24RoubleBadgeOutline/>} appearance="overlay">Подключиться</Button>}*/}
+            {/*/>*/}
         </Panel>
     )
 }

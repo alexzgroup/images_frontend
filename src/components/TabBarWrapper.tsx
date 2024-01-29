@@ -34,13 +34,13 @@ return (
         >
             <Icon28MagicWandOutline/>
         </TabbarItem>
-        <TabbarItem
-            onClick={() => routeNavigator.push(userDbData?.is_monetization ? '/monetization/profile' : '/monetization')}
-            selected={activeView === VIEW_CONSTANTS.VIEW_MONETIZATION}
-            text="Монетизация"
-        >
-            <Icon28MoneyCircleOutline/>
-        </TabbarItem>
+        {/*<TabbarItem*/}
+        {/*    onClick={() => routeNavigator.push(userDbData?.is_monetization ? '/monetization/profile' : '/monetization')}*/}
+        {/*    selected={activeView === VIEW_CONSTANTS.VIEW_MONETIZATION}*/}
+        {/*    text="Монетизация"*/}
+        {/*>*/}
+        {/*    <Icon28MoneyCircleOutline/>*/}
+        {/*</TabbarItem>*/}
         <TabbarItem
             onClick={() => routeNavigator.push('/about')}
             selected={activeView === VIEW_CONSTANTS.VIEW_ABOUT}
