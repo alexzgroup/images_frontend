@@ -1,9 +1,10 @@
-import React, {FC, Suspense, useEffect, useState} from 'react';
+import React, {FC, Suspense, useContext, useEffect, useState} from 'react';
 
 import {Banner, Button, Group, Header, Panel, PanelHeader, PanelSpinner, Separator, SimpleCell} from '@vkontakte/vkui';
 
 import {Icon24Arrow2SquarepathOutline} from "@vkontakte/icons";
-import banner_image from "../../assets/images/select_image_profile.png";
+import banner_man_image from "../../assets/images/select_image_profile_man.jpg";
+import banner_girl_image from "../../assets/images/select_image_profile_girl.jpg";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {AdvertisementEnum, imageType} from "../../types/ApiTypes";
@@ -15,6 +16,7 @@ import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -23,6 +25,7 @@ interface Props {
 export const LoadingImageTypes:FC = () => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const [imageTypes, setImageTypes] = useState<imageType[]|[]>([]);
 
@@ -67,12 +70,12 @@ export const LoadingImageTypes:FC = () => {
                     <Group>
                         <Banner
                             mode="image"
-                            header="Случайный стильный образ"
+                            header="Случайный образ"
                             subheader="Ежедневное обновление. Примерь на себе стильный наряд."
                             background={
                                 <div
                                     style={{
-                                        background: 'url("' + banner_image + '") center center/cover no-repeat',
+                                        background: 'url("' + (vkUserInfo?.sex === 2 ? banner_man_image : banner_girl_image) + '") center center/cover no-repeat',
                                     }}
                                 />
                             }

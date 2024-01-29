@@ -51,7 +51,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                             hasHover={false}
                             before={<Icon28DiamondOutline fill='var(--vkui--color_accent_red)'/>}>Популярные образы</Button>
                     </Div>
-                    <Spacing><Separator/></Spacing>
+                    <Separator/><Spacing/>
                     {
                         !!popularImageTypes.length && popularImageTypes.map((value, key) => <SimpleCell
                             key={key}
