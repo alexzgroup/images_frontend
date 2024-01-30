@@ -1,6 +1,7 @@
 import {Platform} from "@vkontakte/vkui";
-import {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
+import bridge, {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
 import {PlatformType} from "@vkontakte/vkui/dist/lib/platform";
+import {uploadImage} from "../api/AxiosApi";
 
 export const getDonutUrl = (platform: PlatformType):string => {
     if (platform === Platform.VKCOM) {
@@ -73,3 +74,76 @@ export const generatePassword = (): string => {
     // Create a random password
     return Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
 };
+
+/**
+ * Создает альбом для изображений
+ * @param access_token
+ */
+export const createAlbumImage = async (access_token: string) => {
+    const {response} = await bridge.send('VKWebAppCallAPIMethod', {
+        method: 'photos.getAlbums',
+        params: {
+            v: process.env.REACT_APP_V_API,
+            access_token: access_token,
+        }});
+
+    let findAlbum = null;
+    if (response.count) {
+        const find = response.items.findIndex((item: any) => item.title.search(new RegExp('Мой образ - Ренестра')) !== -1)
+        if (find > -1) {
+            findAlbum = response.items[find].id;
+        }
+    }
+
+    if (!findAlbum) {
+        const {response} = await bridge.send('VKWebAppCallAPIMethod', {
+            method: 'photos.createAlbum',
+            params: {
+                v: process.env.REACT_APP_V_API,
+                access_token: access_token,
+                title: 'Мой образ - Ренестра',
+                description: `Мой образ сгенерировало приложение Ренестра - https://vk.com/app${process.env.REACT_APP_APP_ID}`,
+            }});
+
+        if (response.id) {
+            findAlbum = response.id
+        }
+    }
+
+    return findAlbum;
+}
+
+/**
+ * Отправляет фото в альбом и загружает в ВК сервер
+ * @param access_token
+ * @param imageGeneratedId
+ */
+export const getPhotoUploadId = async (access_token: string, imageGeneratedId: number) => {
+    const albumId = await createAlbumImage(access_token);
+
+    const responseUploadServer = await bridge.send('VKWebAppCallAPIMethod', {
+        method: 'photos.getUploadServer',
+        params: {
+            v: process.env.REACT_APP_V_API,
+            access_token: access_token,
+            album_id: albumId,
+        }});
+
+    const responseUploadImage = await uploadImage({
+        upload_url: responseUploadServer.response.upload_url,
+        generate_image_id: imageGeneratedId,
+    });
+
+    const responseSavePhoto = await bridge.send('VKWebAppCallAPIMethod', {
+        method: 'photos.save',
+        params: {
+            v: process.env.REACT_APP_V_API,
+            access_token: access_token,
+            ...responseUploadImage,
+            album_id: albumId,
+            caption: `Мой образ сгенерировало приложение Ренестра - https://vk.com/app${process.env.REACT_APP_APP_ID}`,
+        }});
+
+    const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
+    return photo.owner_id + '_' + photo.id + '_' + photo.access_key;
+}

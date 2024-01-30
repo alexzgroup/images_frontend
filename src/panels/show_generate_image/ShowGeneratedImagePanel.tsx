@@ -1,16 +1,18 @@
-import React, {useContext, useEffect, useState} from 'react';
+import React, {useContext} from 'react';
 
 import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
-import {getStoryBoxData, getWallData} from "../../helpers/AppHelper";
+import {getPhotoUploadId, getStoryBoxData, getWallData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {apiGetGenerateImage, updateShareGenerateImage, uploadImage} from "../../api/AxiosApi";
-import {ShareTypeEnum, uploadPhotoType} from "../../types/ApiTypes";
+import {updateShareGenerateImage} from "../../api/AxiosApi";
+import {ShareTypeEnum} from "../../types/ApiTypes";
 import {setAccessToken} from "../../redux/slice/UserSlice";
-import {useDispatch} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
+import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
+import {RootStateType} from "../../redux/store/ConfigureStore";
 
 interface Props {
     id: string;
@@ -20,8 +22,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
     const routeNavigator = useRouteNavigator();
     const params = useParams<'imageGeneratedId'>();
-    const [uploadPhoto, setUploadPhoto] = useState<uploadPhotoType>()
-    const [photoUploadId, setPhotoUploadId] = useState<string>('');
+    const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const dispatch = useDispatch();
 
     const rejectAccessToken = () => {
@@ -43,34 +44,6 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
         );
     }
 
-    const getPhotoUploadId = async (access_token: string) => {
-
-        const responseUploadServer = await bridge.send('VKWebAppCallAPIMethod', {
-            method: 'photos.getWallUploadServer',
-            params: {
-                v: process.env.REACT_APP_V_API,
-                access_token: access_token,
-            }});
-
-        const responseUploadImage = await uploadImage({
-            upload_url: responseUploadServer.response.upload_url,
-            generate_image_id: Number(params?.imageGeneratedId),
-        });
-
-        const responseSavePhoto = await bridge.send('VKWebAppCallAPIMethod', {
-            method: 'photos.saveWallPhoto',
-            params: {
-                v: process.env.REACT_APP_V_API,
-                access_token: access_token,
-                ...responseUploadImage,
-            }});
-
-        const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
-        const photoUploadId = photo.owner_id + '_' + photo.id + '_' + photo.access_key;
-        setPhotoUploadId(photoUploadId);
-        return photoUploadId;
-    }
-
     const shareWall = async () => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
@@ -79,13 +52,13 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             .then(async (data) => {
                 if (data.access_token) {
                     dispatch(setAccessToken(data.access_token))
+                    let photoId = uploadPhoto.photoUploadId;
 
-                    let photoId = photoUploadId;
-
-                    if (!photoUploadId) {
+                    if (!photoId) {
                         dispatch(setWindowBlocked(true))
                         routeNavigator.showModal(ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER);
-                        photoId = await getPhotoUploadId(data.access_token);
+                        photoId = await getPhotoUploadId(data.access_token, Number(params?.imageGeneratedId));
+                        dispatch(setUploadPhoto({...uploadPhoto, photoUploadId: photoId}))
                         dispatch(setWindowBlocked(false))
                         routeNavigator.hideModal();
                     }
@@ -108,25 +81,17 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
             });
     }
 
-    const shareStore = async () => {
+    const shareStore = async (imageGeneratedId: number) => {
         if (uploadPhoto) {
             const storyData = getStoryBoxData(uploadPhoto.base64);
             bridge.send('VKWebAppShowStoryBox', storyData).then((r) => {
                 if (r.result) {
-                    updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_HISTORY)
+                    updateShareGenerateImage(imageGeneratedId, ShareTypeEnum.SHARE_HISTORY)
+                    routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
                 }
             });
         }
     }
-
-    useEffect(() => {
-        (async () => {
-            if (params?.imageGeneratedId) {
-                const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
-                setUploadPhoto(response);
-            }
-        })()
-    }, []);
 
     return (
         <Panel id={id}>
@@ -142,7 +107,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                             alt=''/>
                         <ButtonGroup mode='vertical'>
                             <Button onClick={shareWall} stretched size='l'>Поделиться с друзьями на стене</Button>
-                            <Button onClick={shareStore} stretched size='l'>Поделиться с друзьями в истории</Button>
+                            <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
                         </ButtonGroup>
                     </div>
                 </Group>

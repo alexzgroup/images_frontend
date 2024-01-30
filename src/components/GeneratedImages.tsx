@@ -64,7 +64,7 @@ const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
                                         {
                                             ((images.length > 4) ? images.slice(0, -(images.length - 4)) : images).map((item, key) => (
                                                 <HorizontalCell
-                                                    onClick={() => routeNavigator.push(`/generate/show-image/${item.id}`)}
+                                                    onClick={() => routeNavigator.push(`/show-generate-image/${item.id}/share-wall`)}
                                                     key={key}
                                                     size="l"
                                                 >

@@ -156,7 +156,7 @@ export type GeneratedImagesType = {
     images: GeneratedImageType[],
 }
 
-export type UploadPhotoType = {
+export type UploadPhotoToServerType = {
     generate_image_id: number,
     upload_url: string,
 }

@@ -26,7 +26,6 @@ import ModalRootComponent, {ModalTypes} from "./modals/ModalRoot";
 import './assets/css/style.scss';
 import SelectImagePanel from "./panels/generate_images/SelectImagePanel";
 import {AdaptiveContext} from "./context/AdaptiveContext";
-import ShowGeneratedImagePanel from "./panels/generate_images/ShowGeneratedImagePanel";
 import AboutPanel from "./panels/about/AboutPanel";
 import WelcomePanel from "./panels/monetization/WelcomePanel";
 import ProfilePanel from "./panels/monetization/ProfilePanel";
@@ -39,6 +38,9 @@ import {setUserDbData, setUserDonut} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
+import ShareWallImagePanel from "./panels/show_generate_image/ShareWallImagePanel";
+import ShareStoreImagePanel from "./panels/show_generate_image/ShareStoreImagePanel";
+import ShowGeneratedImagePanel from "./panels/show_generate_image/ShowGeneratedImagePanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -148,7 +150,6 @@ const App = () => {
 						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />
 							<SelectImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_IMAGE} />
-							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SHOW_GENERATED_IMAGE} />
 							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
@@ -158,6 +159,11 @@ const App = () => {
 							<WelcomePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_WELCOME} />
 							<ProfilePanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_PROFILE} />
 							<GroupListPanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_SHOW_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
+							<ShareWallImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_SHARE_WALL} />
+							<ShareStoreImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_STORY_WALL} />
+							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT} />
 						</View>
 					</Epic>
 				</SplitCol>

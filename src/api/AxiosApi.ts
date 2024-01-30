@@ -14,7 +14,7 @@ import {
     ResponseUploadPhotoType,
     sendGenerateImageType,
     ShareTypeEnum,
-    UploadPhotoType,
+    UploadPhotoToServerType,
     uploadPhotoType,
 } from "../types/ApiTypes";
 
@@ -156,7 +156,7 @@ export const getGeneratedImages = () => {
  * Загружает фото на сервер ВК
  * @param data
  */
-export const uploadImage = (data: UploadPhotoType) => {
+export const uploadImage = (data: UploadPhotoToServerType) => {
     return axiosApi.post(`generate_image/upload_vk_server`, data).then((r: {data: ResponseUploadPhotoType}) => r.data);
 }
 

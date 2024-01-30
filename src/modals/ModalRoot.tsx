@@ -143,7 +143,7 @@ const ModalRootComponent:FC = () => {
                             size="l"
                             mode="primary"
                             stretched
-                            onClick={() => routeNavigator.push(`/generate/show-image/${generateImageId}`)}
+                            onClick={() => routeNavigator.push(`/show-generate-image/${generateImageId}/share-wall`)}
                         >
                             Посмотреть результат
                         </Button>

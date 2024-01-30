@@ -94,7 +94,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             blockedWindow.current = false;
 
             if (responseGenerate.result) {
-                routeNavigator.push(`/generate/show-image/${responseGenerate.id}`);
+                routeNavigator.push(`/show-generate-image/${responseGenerate.id}/share-wall`);
             } else {
                 routeNavigator.showPopout(
                     <Alert

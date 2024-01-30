@@ -18,11 +18,6 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
     },
     {
-        path: '/generate/show-image/:imageGeneratedId',
-        panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SHOW_GENERATED_IMAGE,
-        view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
-    },
-    {
         path: '/generate/preloader',
         panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER,
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
@@ -46,6 +41,21 @@ const AppRouter = createHashRouter([
         path: '/monetization/group-list',
         panel: PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST,
         view: VIEW_CONSTANTS.VIEW_MONETIZATION,
+    },
+    {
+        path: '/show-generate-image/:imageGeneratedId/share-wall',
+        panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_SHARE_WALL,
+        view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
+    },
+    {
+        path: '/show-generate-image/:imageGeneratedId/share-story',
+        panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_STORY_WALL,
+        view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
+    },
+    {
+        path: '/show-generate-image/:imageGeneratedId',
+        panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT,
+        view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
     },
 ]);
 
