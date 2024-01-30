@@ -166,3 +166,8 @@ export type ResponseUploadPhotoType = {
     photo: string,
     server: number
 }
+
+export enum ShareTypeEnum {
+    SHARE_WALL = "share_wall",
+    SHARE_HISTORY = "share_history"
+}

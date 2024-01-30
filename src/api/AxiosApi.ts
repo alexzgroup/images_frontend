@@ -1,13 +1,21 @@
 import axios from 'axios';
 import {
-    AddGroupChatBootType, AdvertisementType, GeneratedImagesType,
-    generateImageType, GroupToChatBootType,
+    AddGroupChatBootType,
+    AdvertisementType,
+    GeneratedImagesType,
+    generateImageType,
+    GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
     initUserApiType,
     monetizationDataType,
     operationResultType,
-    operationWithMessageType, ResponseUploadPhotoType, sendGenerateImageType, UploadPhotoType, uploadPhotoType,
+    operationWithMessageType,
+    ResponseUploadPhotoType,
+    sendGenerateImageType,
+    ShareTypeEnum,
+    UploadPhotoType,
+    uploadPhotoType,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -67,7 +75,7 @@ export const apiAddAppToGroup = (group_id: number) => {
  * @param data
  */
 export const apiGenerateImage = (data: sendGenerateImageType) => {
-    return axiosApi.post(`generate_image`, data).then((r: {data: generateImageType}) => r.data);
+    return axiosApi.post(`generate_image/add`, data).then((r: {data: generateImageType}) => r.data);
 };
 
 /**
@@ -81,7 +89,7 @@ export const apiGetImageTypeWithStatistic = (image_type_id: number) => {
  * Получает сгенерированное изображение
  */
 export const apiGetGenerateImage = (id: number) => {
-    return axiosApi.get(`get_generate_image/${id}`).then((r: {data: uploadPhotoType}) => r.data);
+    return axiosApi.get(`generate_image/${id}`).then((r: {data: uploadPhotoType}) => r.data);
 };
 
 /**
@@ -141,9 +149,22 @@ export const addAllowMessages = () => {
  * Получает генерированные изображения
  */
 export const getGeneratedImages = () => {
-    return axiosApi.get(`get_generated_images`).then((r: {data: GeneratedImagesType}) => r.data.images);
+    return axiosApi.get(`generate_image`).then((r: {data: GeneratedImagesType}) => r.data.images);
 }
 
+/**
+ * Загружает фото на сервер ВК
+ * @param data
+ */
 export const uploadImage = (data: UploadPhotoType) => {
-    return axiosApi.post(`vk_upload_image`, data).then((r: {data: ResponseUploadPhotoType}) => r.data);
+    return axiosApi.post(`generate_image/upload_vk_server`, data).then((r: {data: ResponseUploadPhotoType}) => r.data);
+}
+
+/**
+ * Обновляет информацию о поделиться
+ * @param id
+ * @param share_type
+ */
+export const updateShareGenerateImage = (id: number, share_type: ShareTypeEnum) => {
+    return axiosApi.put(`generate_image/update_share_info`, {share_type, id}).then((r: {data: operationResultType}) => r.data);
 }

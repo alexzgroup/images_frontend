@@ -5,8 +5,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData, getWallData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {apiGetGenerateImage, uploadImage} from "../../api/AxiosApi";
-import {uploadPhotoType} from "../../types/ApiTypes";
+import {apiGetGenerateImage, updateShareGenerateImage, uploadImage} from "../../api/AxiosApi";
+import {ShareTypeEnum, uploadPhotoType} from "../../types/ApiTypes";
 import {setAccessToken} from "../../redux/slice/UserSlice";
 import {useDispatch} from "react-redux";
 import {ModalTypes} from "../../modals/ModalRoot";
@@ -92,7 +92,11 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
 
                     if (uploadPhoto && vkUserInfo) {
                         const wallData = getWallData({photoUploadId: photoId, vkUserInfo});
-                        bridge.send('VKWebAppShowWallPostBox', wallData).catch();
+                        bridge.send('VKWebAppShowWallPostBox', wallData).then((r) => {
+                            if (r.post_id) {
+                                updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_WALL)
+                            }
+                        }).catch();
                     }
                 } else {
                     rejectAccessToken()
@@ -107,8 +111,11 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const shareStore = async () => {
         if (uploadPhoto) {
             const storyData = getStoryBoxData(uploadPhoto.base64);
-            const {result} = await bridge.send('VKWebAppShowStoryBox', storyData);
-            console.log(result);
+            bridge.send('VKWebAppShowStoryBox', storyData).then((r) => {
+                if (r.result) {
+                    updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_HISTORY)
+                }
+            });
         }
     }
 
