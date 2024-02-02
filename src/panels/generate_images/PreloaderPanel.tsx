@@ -60,6 +60,10 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             }
             const response = await apiGenerateImage(data)
             setResponseGenerate({...response, loading: true})
+            if (response.result) {
+                blockedWindow.current = false;
+                routeNavigator.push(`/show-generate-image/${response.id}/share-wall`);
+            }
         }
     }
 
@@ -81,7 +85,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             }
             setStep((value) => value + 1);
             stepLocal++;
-        },2500);
+        },2000);
 
         return () => {
             clearInterval(timerId)

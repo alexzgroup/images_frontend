@@ -26,7 +26,7 @@ import {
 } from '@vkontakte/vkui';
 
 import {Icon28AddOutline, Icon32DonateOutline, Icon48ArrowRightOutline} from "@vkontakte/icons";
-import {TypeColors} from "../../types/ColorTypes";
+import {ColorsList, TypeColors} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
@@ -193,9 +193,29 @@ const PanelData = () => {
                         <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
                     </Caption>
                     <Spacing />
-                    <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={openPreloaderGenerate}>
-                        {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
-                    </Button>
+                    {
+                        (imageType.generate_statistic.available_count_generate < 1 && !userDbData?.is_vip)
+                        ?
+                            <React.Fragment>
+                                <Button
+                                    mode="primary" size="l">
+                                    <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку</Link>
+                                </Button>
+                                <Banner
+                                    size="m"
+                                    noPadding
+                                    mode="image"
+                                    header="У Вас закончились бесплатные генерации."
+                                    subheader="Оформите подписку, чтобы увеличить количество ежедневных генераций до 20 в день!."
+                                    background={<div style={{background: ColorsList.error}} />}
+                                    style={{width: '100%', margin: '10px 0 5px 0'}}
+                                />
+                            </React.Fragment>
+                            :
+                            <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={openPreloaderGenerate}>
+                                {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
+                            </Button>
+                    }
                 </Div>
             </Group>
             {
