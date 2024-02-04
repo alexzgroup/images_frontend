@@ -26,7 +26,7 @@ const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
 
     return (
         <Div>
-            <Header style={{paddingLeft: 0}} mode="secondary">История генерации за последние 3 часа</Header>
+            <Header multiline style={{paddingLeft: 0}} mode="secondary">История генерации за последние 24 часа</Header>
             {!!images.length ?
                 <div>
                     {

@@ -60,9 +60,27 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             }
             const response = await apiGenerateImage(data)
             setResponseGenerate({...response, loading: true})
+            blockedWindow.current = false;
+
             if (response.result) {
-                blockedWindow.current = false;
                 routeNavigator.push(`/show-generate-image/${response.id}/share-wall`);
+            } else  {
+                routeNavigator.showPopout(
+                    <Alert
+                        actions={[
+                            {
+                                title: 'Понятно',
+                                autoClose: true,
+                                mode: 'cancel',
+                            },
+                        ]}
+                        onClose={() => {
+                            routeNavigator.hidePopout();
+                        }}
+                        header="Внимание!"
+                        text={response.message}
+                    />
+                );
             }
         }
     }
@@ -92,33 +110,6 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
             routeNavigator.block(() => false);
         }
     }, []);
-
-    useEffect(() => {
-        if (step > 5 && responseGenerate.loading && blockedWindow.current) {
-            blockedWindow.current = false;
-
-            if (responseGenerate.result) {
-                routeNavigator.push(`/show-generate-image/${responseGenerate.id}/share-wall`);
-            } else {
-                routeNavigator.showPopout(
-                    <Alert
-                        actions={[
-                            {
-                                title: 'Понятно',
-                                autoClose: true,
-                                mode: 'cancel',
-                            },
-                        ]}
-                        onClose={() => {
-                            routeNavigator.hidePopout();
-                        }}
-                        header="Внимание!"
-                        text={responseGenerate.message}
-                    />
-                );
-            }
-        }
-    }, [step, responseGenerate]);
 
     return (
         <Panel id={id}>
