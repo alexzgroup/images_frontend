@@ -45,7 +45,7 @@ const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
                                             style={{height: 72}}
                                             key={key}
                                         >
-                                            <IconButton  onClick={() => routeNavigator.push(`/generate/show-image/${item.id}`)}>
+                                            <IconButton  onClick={() => routeNavigator.push(`/show-generate-image/${item.id}/share-wall`)}>
                                                 <Avatar
                                                     key={key}
                                                     fallbackIcon={<Icon56UserSquareOutline />}
