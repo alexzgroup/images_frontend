@@ -37,12 +37,12 @@ import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContex
 import znapps_image from '../../assets/images/zn_apps_icon.png';
 import girl_image from '../../assets/images/icons/girl_icon.png';
 import bridge from "@vkontakte/vk-bridge";
-import {apiSubscribe, getGeneratedImages} from "../../api/AxiosApi";
+import {getGeneratedImages} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
 import {getDonutUrl} from "../../helpers/AppHelper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface, setUserSubscribeStatus} from "../../redux/slice/UserSlice";
 import {CounterDown} from "../../components/CountDown";
 import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 import {GeneratedImageType} from "../../types/ApiTypes";
@@ -54,13 +54,13 @@ interface Props {
 }
 
 const PanelContent: React.FC = () => {
-    const [isGroupMember, setIsGroupMember] = useState<number>(0);
     const [generatedImages, setGeneratedImages] = useState<GeneratedImageType[]>([])
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const platform = usePlatform();
+    const dispatch = useDispatch();
 
     const subscribeGroup = () => {
         bridge.send('VKWebAppJoinGroup', {
@@ -68,14 +68,9 @@ const PanelContent: React.FC = () => {
         })
             .then((data) => {
                 if (data.result) {
-                    apiSubscribe().then((r) => {
-                        if (r.result) {
-                            setIsGroupMember(1);
-                            openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, r.message);
-                        } else {
-                            openSnackBar(<Icon28CancelCircleFillRed />, r.message);
-                        }
-                    })
+                    dispatch(setUserSubscribeStatus(data.result))
+                } else {
+                    openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
                 }
             })
             .catch((error) => {
@@ -97,11 +92,6 @@ const PanelContent: React.FC = () => {
 
     const init = () => {
         return new Promise(async (resolve, reject) => {
-            const {is_member} = await bridge.send('VKWebAppGetGroupInfo', {
-                group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
-            });
-            setIsGroupMember(is_member);
-
             const images = await getGeneratedImages()
             resolve(images);
         })
@@ -137,7 +127,7 @@ const PanelContent: React.FC = () => {
                         </Div>
                     </Card>
                     {
-                        !isGroupMember &&
+                        !userDbData?.subscribe &&
                             <Card>
                                 <Div>
                                     <Title level="3">Получите одну дополнительную

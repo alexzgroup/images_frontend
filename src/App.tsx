@@ -33,8 +33,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
-import {imageType, socketDonutType, socketImageType} from "./types/ApiTypes";
-import {setUserDbData, setUserDonut} from "./redux/slice/UserSlice";
+import {imageType, socketDonutType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
+import {setUserDbData, setUserDonut, setUserSubscribeStatus} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
@@ -94,6 +94,14 @@ const App = () => {
 				if (e.data.status) {
 					dispatch(setGenerateImageId(e.data.id))
 					routeNavigator.showModal(ModalTypes.MODAL_GENERATED_IMAGE);
+				}
+			})
+			.listen('.subscribe_group', (e: socketSubscribeType) => {
+				dispatch(setUserSubscribeStatus(e.data.subscribe))
+				if (e.data.subscribe) {
+					routeNavigator.showModal(ModalTypes.MODAL_SUBSCRIBE_GROUP);
+				} else {
+					routeNavigator.showModal(ModalTypes.MODAL_UNSUBSCRIBE_GROUP);
 				}
 			})
 			.error((error: any) => {

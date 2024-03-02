@@ -42,13 +42,6 @@ export const apiGetImageTypes = () => {
 };
 
 /**
- * Отправляет информацию о подписавшихся на сообщество
- */
-export const apiSubscribe = () => {
-    return axiosApi.post(`subscribe`).then((r: {data: operationWithMessageType}) => r.data);
-};
-
-/**
  * Подключится к монетизации
  */
 export const apiMonetization = () => {

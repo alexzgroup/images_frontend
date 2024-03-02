@@ -10,7 +10,7 @@ import {
     ModalRoot,
     usePlatform
 } from '@vkontakte/vkui';
-import {Icon56DonateOutline, Icon56PaletteOutline} from '@vkontakte/icons';
+import {Icon56DonateOutline, Icon56PaletteOutline, Icon56Users3Outline, Icon56InfoOutline} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
@@ -27,6 +27,8 @@ export enum ModalTypes {
     MODAL_DONUT_LIMIT = 'modal_donut_limit',
     MODAL_GENERATED_IMAGE = 'modal_generated_image',
     MODAL_UPLOAD_PHOTO_PRELOADER = 'modal_upload_photo_preloader',
+    MODAL_SUBSCRIBE_GROUP = 'modal_subscribe_group',
+    MODAL_UNSUBSCRIBE_GROUP = 'modal_unsubscribe_group',
 }
 
 const ModalRootComponent:FC = () => {
@@ -149,6 +151,20 @@ const ModalRootComponent:FC = () => {
                         </Button>
                     </ButtonGroup>
                 }
+            />
+            <ModalCard
+                id={ModalTypes.MODAL_SUBSCRIBE_GROUP}
+                onClose={() => routeNavigator.hideModal()}
+                icon={<Icon56Users3Outline />}
+                header="Поздравляем"
+                subheader="Вы успешно подписались на группу, теперь Вам доступна дополнительная генерация."
+            />
+            <ModalCard
+                id={ModalTypes.MODAL_UNSUBSCRIBE_GROUP}
+                onClose={() => routeNavigator.hideModal()}
+                icon={<Icon56InfoOutline />}
+                header="Внимание"
+                subheader="Вы вышли из группы, больше Вам не доступна дополнительная генерация."
             />
         </ModalRoot>
     )
