@@ -1,4 +1,4 @@
-import React, {ChangeEvent, Suspense, useContext, useEffect, useState} from 'react';
+import React, {ChangeEvent, ReactElement, Suspense, useContext, useEffect, useState} from 'react';
 
 import {
     Alert,
@@ -6,7 +6,8 @@ import {
     Button,
     Caption,
     Checkbox,
-    Div, Footer,
+    Div,
+    Footer,
     FormItem,
     FormLayout,
     FormLayoutGroup,
@@ -19,13 +20,18 @@ import {
     Panel,
     PanelHeader,
     PanelSpinner,
+    Snackbar,
     Spacing,
     Subhead,
-    Text,
-    usePlatform
+    Text
 } from '@vkontakte/vkui';
 
-import {Icon28AddOutline, Icon32DonateOutline, Icon48ArrowRightOutline} from "@vkontakte/icons";
+import {
+    Icon20CheckNewsfeedOutline,
+    Icon28AddOutline,
+    Icon28CancelCircleFillRed,
+    Icon48ArrowRightOutline
+} from "@vkontakte/icons";
 import {ColorsList, TypeColors} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
@@ -41,8 +47,9 @@ import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/Im
 import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
+import {trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
+import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 
 interface Props {
     id: string;
@@ -73,7 +80,6 @@ const PanelData = () => {
         generate_statistic: {
             available_count_generate: 0,
             generate_in_process: false,
-            has_not_viewed_image: false,
             available_day_limit: 0,
         },
         img_type_to_variant_groups: [],
@@ -85,10 +91,10 @@ const PanelData = () => {
             url: '',
         }
     });
-    const platform = usePlatform();
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const [formDataError, setFormDataError] = useState(false)
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
+    const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const openPreloaderGenerate = () => {
         setFormDataError(false);
@@ -146,9 +152,61 @@ const PanelData = () => {
         setFormData(Array.from(data, (item) => item));
     }
 
+    const updateStatistic = (total: number) => {
+        setImageType({
+            ...imageType,
+            generate_statistic: {
+                ...imageType.generate_statistic,
+                available_count_generate: imageType.generate_statistic.available_count_generate + total,
+                available_day_limit: imageType.generate_statistic.available_day_limit + total,
+            }
+        });
+    }
+
+    const subscribeGroup = () => {
+        bridge.send('VKWebAppJoinGroup', {
+            group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
+        })
+            .then((data) => {
+                if (!data.result) {
+                    openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const openSnackBar = (icon: JSX.Element, text: string): void => {
+        if (snackbar) return;
+        setSnackbar(
+            <Snackbar
+                onClose={() => setSnackbar(null)}
+                before={icon}
+            >
+                {text}
+            </Snackbar>,
+        );
+    };
+
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
     }, []);
+
+    useEffect(() => {
+        const removeSubscribeEvent = subscribe("USER_SUBSCRIBE", (event: GenerateStatistic) => {
+            updateStatistic(event.total);
+        });
+
+        const removeUnsubscribeEvent = subscribe("USER_UNSUBSCRIBE", (event: GenerateStatistic) => {
+            updateStatistic(event.total);
+        });
+
+        return () => {
+            removeSubscribeEvent()
+            removeUnsubscribeEvent()
+        }
+    }, [imageType.generate_statistic]);
 
     useEffect(() => {
         let disabled = [];
@@ -194,26 +252,29 @@ const PanelData = () => {
                     </Caption>
                     <Spacing />
                     {
-                        (imageType.generate_statistic.available_count_generate < 1 && !userDbData?.is_vip)
-                        ?
+                        (imageType.generate_statistic.available_count_generate < 1)
+                            ?
                             <React.Fragment>
                                 <Button
-                                    mode="primary" size="l">
-                                    <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку</Link>
+                                    disabled={userDbData?.subscribe}
+                                    onClick={subscribeGroup}
+                                    appearance={userDbData?.subscribe ? 'negative' : 'accent'}
+                                    mode={userDbData?.subscribe ? 'secondary' : 'primary' } size="l">
+                                    {userDbData?.subscribe ? 'Будет доступно завтра' : 'Получить +1 генерацию'}
                                 </Button>
                                 <Banner
                                     size="m"
                                     noPadding
                                     mode="image"
-                                    header="У Вас закончились бесплатные генерации."
-                                    subheader="Оформите подписку, чтобы увеличить количество ежедневных генераций до 20 в день!."
+                                    header="У Вас закончились генерации."
+                                    subheader={userDbData?.subscribe ? 'Возвращайтесь завтра в 00:00 по МСК!' : 'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
                                     background={<div style={{background: ColorsList.error}} />}
                                     style={{width: '100%', margin: '10px 0 5px 0'}}
                                 />
                             </React.Fragment>
                             :
-                            <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={openPreloaderGenerate}>
-                                {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
+                            <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>
+                                Продолжить
                             </Button>
                     }
                 </Div>
@@ -278,16 +339,13 @@ const PanelData = () => {
                     header={`Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`}
                     subheader={<Text>Каждый день, вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
                         {
-                            !userDbData?.is_vip && <React.Fragment>
-                                <br/>Чтобы увеличить лимит, оформите подписку VK Donut.
+                            !userDbData?.subscribe && <React.Fragment>
+                                <br/>Чтобы получить 1 дополнительную генерацию в день, подпишитесь на нашу группу.
                             </React.Fragment>
                         }
                     </Text>}
                     actions={
-                        !userDbData?.is_vip && <Button
-                            before={<Icon32DonateOutline height={24} width={24} />} mode="primary" size="m">
-                            <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
-                        </Button>
+                        !userDbData?.subscribe && <Button onClick={subscribeGroup} before={<Icon20CheckNewsfeedOutline />} size='s'>Подписаться на сообщество VK</Button>
                     }
                 />
             </Group>
@@ -296,6 +354,7 @@ const PanelData = () => {
             <Footer>
                 При генерации изображения, вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
             </Footer>
+            {snackbar}
         </React.Fragment>
     )
 }

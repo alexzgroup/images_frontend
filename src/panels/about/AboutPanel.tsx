@@ -1,4 +1,4 @@
-import React, {ReactElement, Suspense, useContext, useEffect, useState} from 'react';
+import React, {ReactElement, Suspense, useEffect, useState} from 'react';
 
 import {
     Button,
@@ -10,40 +10,24 @@ import {
     Group,
     Image,
     Link,
-    List,
-    MiniInfoCell,
     Panel,
     PanelHeader,
     PanelSpinner,
-    Placeholder,
     SimpleCell,
     Snackbar,
     Spacing,
     Subhead,
-    Title,
-    usePlatform
+    Title
 } from '@vkontakte/vkui';
 import {UrlConstants} from "../../constants/UrlConstants";
-import {
-    Icon20CheckAlt,
-    Icon20CheckNewsfeedOutline,
-    Icon24LinkCircle,
-    Icon24RoubleBadgeOutline,
-    Icon28CancelCircleFillRed,
-    Icon28CheckCircleOutline,
-    Icon48DonateOutline
-} from "@vkontakte/icons";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
-import znapps_image from '../../assets/images/zn_apps_icon.png';
+import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon28CheckCircleOutline} from "@vkontakte/icons";
 import girl_image from '../../assets/images/icons/girl_icon.png';
 import bridge from "@vkontakte/vk-bridge";
-import {apiSubscribe, getGeneratedImages} from "../../api/AxiosApi";
+import {getGeneratedImages} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
-import {getDonutUrl} from "../../helpers/AppHelper";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
-import {CounterDown} from "../../components/CountDown";
+import {ReduxSliceUserInterface, setUserSubscribeStatus} from "../../redux/slice/UserSlice";
 import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 import {GeneratedImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
@@ -54,13 +38,11 @@ interface Props {
 }
 
 const PanelContent: React.FC = () => {
-    const [isGroupMember, setIsGroupMember] = useState<number>(0);
     const [generatedImages, setGeneratedImages] = useState<GeneratedImageType[]>([])
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const platform = usePlatform();
+    const dispatch = useDispatch();
 
     const subscribeGroup = () => {
         bridge.send('VKWebAppJoinGroup', {
@@ -68,14 +50,9 @@ const PanelContent: React.FC = () => {
         })
             .then((data) => {
                 if (data.result) {
-                    apiSubscribe().then((r) => {
-                        if (r.result) {
-                            setIsGroupMember(1);
-                            openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, r.message);
-                        } else {
-                            openSnackBar(<Icon28CancelCircleFillRed />, r.message);
-                        }
-                    })
+                    dispatch(setUserSubscribeStatus(data.result))
+                } else {
+                    openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
                 }
             })
             .catch((error) => {
@@ -97,11 +74,6 @@ const PanelContent: React.FC = () => {
 
     const init = () => {
         return new Promise(async (resolve, reject) => {
-            const {is_member} = await bridge.send('VKWebAppGetGroupInfo', {
-                group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
-            });
-            setIsGroupMember(is_member);
-
             const images = await getGeneratedImages()
             resolve(images);
         })
@@ -137,7 +109,7 @@ const PanelContent: React.FC = () => {
                         </Div>
                     </Card>
                     {
-                        !isGroupMember &&
+                        !userDbData?.subscribe &&
                             <Card>
                                 <Div>
                                     <Title level="3">Получите одну дополнительную
@@ -153,74 +125,9 @@ const PanelContent: React.FC = () => {
                             </Card>
                     }
                     <Card mode='shadow'>
-                        <Placeholder
-                            icon={<Icon48DonateOutline fill='var(--vkui--color_accent_blue)'/>}
-                            header="Больше генераций изображений в день с подпиской VK Donut!"
-                            action={!userDbData?.is_vip && <Button
-                                before={<Icon24RoubleBadgeOutline />} size="l" stretched={isMobileSize}>
-                                <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку VK Donut</Link>
-                        </Button>}
-                        >
-                            <List>
-                                <MiniInfoCell
-                                    style={{textAlign: 'left'}}
-                                    textWrap="full"
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    Эксклюзивные образы
-                                </MiniInfoCell>
-                                <MiniInfoCell
-                                    style={{textAlign: 'left'}}
-                                    textWrap="full"
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    20 генераций изображений в день!
-                                </MiniInfoCell>
-                                <MiniInfoCell
-                                    style={{textAlign: 'left'}}
-                                    textWrap="full"
-                                    before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}
-                                >
-                                    Приоритетная очередь генерации образов
-                                </MiniInfoCell>
-                            </List>
-                            {
-                                (userDbData?.is_vip && userDbData.date_vip_ended) && <CounterDown date={userDbData.date_vip_ended} />
-                            }
-                        </Placeholder>
-                    </Card>
-                    <Card mode='shadow'>
                         <GeneratedImages images={generatedImages} />
                     </Card>
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
-                    {/*<Card mode='shadow'>*/}
-                    {/*    <Placeholder*/}
-                    {/*        icon={<Image size={72} src={znapps_image} />}*/}
-                    {/*        header="Приложение “Знакомства по городам”"*/}
-                    {/*        action={<Button before={<Icon24LinkCircle />} size="l" stretched={isMobileSize}><Link target="_blank" href={process.env.REACT_APP_ZNAPPS_URL}>Открыть приложение</Link></Button>}*/}
-                    {/*    >*/}
-                    {/*        <List>*/}
-                    {/*            <MiniInfoCell*/}
-                    {/*                style={{paddingLeft: 0}}*/}
-                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
-                    {/*            >*/}
-                    {/*                Ссылки на страницы VK*/}
-                    {/*            </MiniInfoCell>*/}
-                    {/*            <MiniInfoCell*/}
-                    {/*                style={{paddingLeft: 0}}*/}
-                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
-                    {/*            >*/}
-                    {/*                Карта города*/}
-                    {/*            </MiniInfoCell>*/}
-                    {/*            <MiniInfoCell*/}
-                    {/*                style={{paddingLeft: 0}}*/}
-                    {/*                before={<Icon20CheckAlt fill='var(--vkui--color_background_positive)'/>}*/}
-                    {/*            >*/}
-                    {/*                Огромная база пользователей*/}
-                    {/*            </MiniInfoCell>*/}
-                    {/*        </List>*/}
-                    {/*    </Placeholder>*/}
-                    {/*</Card>*/}
                 </CardGrid>
             </Group>
             <Footer>Привет от Омских разработчиков!</Footer>

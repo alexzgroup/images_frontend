@@ -35,6 +35,14 @@ export const userSlice = createSlice({
                 };
             }
         },
+        setUserSubscribeStatus: (state, action: PayloadAction<boolean>) => {
+            if (state.userDbData) {
+                state.userDbData = {
+                    ...state.userDbData,
+                    subscribe: action.payload,
+                };
+            }
+        },
         setAccessToken: (state, action: PayloadAction<string>) => {
             state.access_token = action.payload;
         },
@@ -54,6 +62,7 @@ export const {
     setUserDbDataMonetization,
     setAccessToken,
     setUserDonut,
+    setUserSubscribeStatus,
     setUserAllowMessages,
 } = userSlice.actions
 

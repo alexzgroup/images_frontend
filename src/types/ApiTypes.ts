@@ -11,6 +11,7 @@ export type userApiType = {
     date_vip_ended: string|null,
     is_vip: boolean,
     allow_messages: number,
+    subscribe: boolean,
 }
 
 export type imageType = {
@@ -37,7 +38,6 @@ export type generateStatisticType = {
     available_count_generate: number,
     generate_in_process: boolean,
     available_day_limit: number,
-    has_not_viewed_image: boolean,
 }
 
 export type typeVariantToImgGroupVariants = {
@@ -107,6 +107,12 @@ export type socketImageType = {
     data: {
         status: boolean,
         id: number,
+    }
+}
+
+export type socketSubscribeType = {
+    data: {
+        subscribe: boolean,
     }
 }
 
