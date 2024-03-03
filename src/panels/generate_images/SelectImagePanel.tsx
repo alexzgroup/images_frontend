@@ -23,8 +23,7 @@ import {
     Snackbar,
     Spacing,
     Subhead,
-    Text,
-    usePlatform
+    Text
 } from '@vkontakte/vkui';
 
 import {
@@ -48,7 +47,7 @@ import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/Im
 import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {getDonutUrl, trueWordForm} from "../../helpers/AppHelper";
+import {trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
 
 interface Props {
@@ -91,7 +90,6 @@ const PanelData = () => {
             url: '',
         }
     });
-    const platform = usePlatform();
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const [formDataError, setFormDataError] = useState(false)
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
@@ -238,26 +236,29 @@ const PanelData = () => {
                     </Caption>
                     <Spacing />
                     {
-                        (imageType.generate_statistic.available_count_generate < 1 && !userDbData?.is_vip)
-                        ?
+                        (imageType.generate_statistic.available_count_generate < 1)
+                            ?
                             <React.Fragment>
                                 <Button
-                                    mode="primary" size="l">
-                                    <Link target="_blank" href={getDonutUrl(platform)}>Оформить подписку</Link>
+                                    disabled={userDbData?.subscribe}
+                                    onClick={subscribeGroup}
+                                    appearance={userDbData?.subscribe ? 'negative' : 'accent'}
+                                    mode={userDbData?.subscribe ? 'secondary' : 'primary' } size="l">
+                                    {userDbData?.subscribe ? 'Будет доступно завтра' : 'Получить +1 генерацию'}
                                 </Button>
                                 <Banner
                                     size="m"
                                     noPadding
                                     mode="image"
-                                    header="У Вас закончились бесплатные генерации."
-                                    subheader="Оформите подписку, чтобы увеличить количество ежедневных генераций до 20 в день!."
+                                    header="У Вас закончились генерации."
+                                    subheader={userDbData?.subscribe ? 'Возвращайтесь завтра в 00:00 по МСК!' : 'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
                                     background={<div style={{background: ColorsList.error}} />}
                                     style={{width: '100%', margin: '10px 0 5px 0'}}
                                 />
                             </React.Fragment>
                             :
-                            <Button disabled={!generateImage || imageType.generate_statistic.available_count_generate < 1} stretched size='l' onClick={openPreloaderGenerate}>
-                                {imageType.generate_statistic.available_count_generate < 1 ? 'Нет доступных генераций' : 'Продолжить'}
+                            <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>
+                                Продолжить
                             </Button>
                     }
                 </Div>
