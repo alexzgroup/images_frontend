@@ -49,6 +49,7 @@ import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
+import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 
 interface Props {
     id: string;
@@ -151,23 +152,23 @@ const PanelData = () => {
         setFormData(Array.from(data, (item) => item));
     }
 
+    const updateStatistic = (total: number) => {
+        setImageType({
+            ...imageType,
+            generate_statistic: {
+                ...imageType.generate_statistic,
+                available_count_generate: imageType.generate_statistic.available_count_generate + total,
+                available_day_limit: imageType.generate_statistic.available_day_limit + total,
+            }
+        });
+    }
+
     const subscribeGroup = () => {
         bridge.send('VKWebAppJoinGroup', {
             group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
         })
             .then((data) => {
-                if (data.result) {
-                    if (!userDbData?.is_vip) {
-                        setImageType({
-                            ...imageType,
-                            generate_statistic: {
-                                ...imageType.generate_statistic,
-                                available_count_generate: imageType.generate_statistic.available_count_generate + 1,
-                                available_day_limit: imageType.generate_statistic.available_day_limit + 1,
-                            }
-                        });
-                    }
-                } else {
+                if (!data.result) {
                     openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
                 }
             })
@@ -191,6 +192,21 @@ const PanelData = () => {
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
     }, []);
+
+    useEffect(() => {
+        const removeSubscribeEvent = subscribe("USER_SUBSCRIBE", (event: GenerateStatistic) => {
+            updateStatistic(event.total);
+        });
+
+        const removeUnsubscribeEvent = subscribe("USER_UNSUBSCRIBE", (event: GenerateStatistic) => {
+            updateStatistic(event.total);
+        });
+
+        return () => {
+            removeSubscribeEvent()
+            removeUnsubscribeEvent()
+        }
+    }, [imageType.generate_statistic]);
 
     useEffect(() => {
         let disabled = [];

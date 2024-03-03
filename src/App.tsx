@@ -41,6 +41,7 @@ import {setGenerateImageId} from "./redux/slice/ImageSlice";
 import ShareWallImagePanel from "./panels/show_generate_image/ShareWallImagePanel";
 import ShareStoreImagePanel from "./panels/show_generate_image/ShareStoreImagePanel";
 import ShowGeneratedImagePanel from "./panels/show_generate_image/ShowGeneratedImagePanel";
+import {publish} from "./Events/CustomEvents";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -99,8 +100,10 @@ const App = () => {
 			.listen('.subscribe_group', (e: socketSubscribeType) => {
 				dispatch(setUserSubscribeStatus(e.data.subscribe))
 				if (e.data.subscribe) {
+					publish('USER_SUBSCRIBE', {total: 1});
 					routeNavigator.showModal(ModalTypes.MODAL_SUBSCRIBE_GROUP);
 				} else {
+					publish('USER_UNSUBSCRIBE', {total: -1});
 					routeNavigator.showModal(ModalTypes.MODAL_UNSUBSCRIBE_GROUP);
 				}
 			})
