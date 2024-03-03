@@ -3,25 +3,16 @@ import {Avatar, Button, Div, Header, HorizontalCell, HorizontalScroll, IconButto
 import {GeneratedImageType} from "../types/ApiTypes";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {Icon56UserSquareOutline} from "@vkontakte/icons";
-import {useSelector} from "react-redux";
-import {RootStateType} from "../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
-import {ModalTypes} from "../modals/ModalRoot";
 import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
 
 
 const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
     const routeNavigator = useRouteNavigator();
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [showAll, setShowAll] = useState<boolean>(false)
     const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openAllImages = () => {
-        if (userDbData?.is_vip) {
-            setShowAll(!showAll)
-        } else {
-            routeNavigator.showModal(ModalTypes.MODAL_DONUT_LIMIT);
-        }
+        setShowAll(!showAll)
     }
 
     return (
