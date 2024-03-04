@@ -57,6 +57,11 @@ const AppRouter = createHashRouter([
         panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT,
         view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
     },
+    {
+        path: '/offline',
+        panel: PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE,
+        view: VIEW_CONSTANTS.VIEW_SERVICE,
+    },
 ]);
 
 export default AppRouter;
