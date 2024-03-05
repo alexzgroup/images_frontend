@@ -3,6 +3,11 @@ import {PANEL_CONSTANTS, VIEW_CONSTANTS} from "../constants/RouterConstants";
 
 const AppRouter = createHashRouter([
     {
+        path: `*`,
+        panel: PANEL_CONSTANTS.PANEL_MAIN_HOME,
+        view: VIEW_CONSTANTS.VIEW_MAIN,
+    },
+    {
         path: '/',
         panel: PANEL_CONSTANTS.PANEL_MAIN_HOME,
         view: VIEW_CONSTANTS.VIEW_MAIN,
