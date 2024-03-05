@@ -76,6 +76,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                         ]}
                         onClose={() => {
                             routeNavigator.hidePopout();
+                            routeNavigator.back();
                         }}
                         header="Внимание!"
                         text={response.message}
