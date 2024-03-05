@@ -1,4 +1,4 @@
-import React, {useContext} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
@@ -93,11 +93,17 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
         }
     }
 
+    useEffect(() => {
+        if (!uploadPhoto.url) {
+            routeNavigator.push('/');
+        }
+    }, []);
+
     return (
         <Panel id={id}>
             <PanelHeader>Результат генерации</PanelHeader>
             {
-                (uploadPhoto)
+                (uploadPhoto.url)
                     ?
                 <Group>
                     <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 25}}>
