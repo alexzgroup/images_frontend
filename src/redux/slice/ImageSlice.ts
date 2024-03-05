@@ -20,7 +20,8 @@ const initialState: ReduxSliceImageInterface = {
         url: '',
         base64: '',
         photoUploadId: '',
-    }
+    },
+
 }
 
 export const imageSlice = createSlice({
