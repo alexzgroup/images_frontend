@@ -1,6 +1,6 @@
 import React from 'react';
 
-import {Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell, Spacing} from '@vkontakte/vkui';
+import {Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell} from '@vkontakte/vkui';
 import girl_image from '../../assets/images/icons/girl_icon.png';
 import {Icon28DiamondOutline} from "@vkontakte/icons";
 import DivCard from "../../components/DivCard";
@@ -30,7 +30,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
     }
 
     return (<Panel id={id}>
-            <Group mode='plain'>
+            <Group mode='plain' separator='hide'>
                 <DivCard>
                     <Placeholder
                         icon={<Image src={girl_image} size={56}/>}
@@ -50,7 +50,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                             hasHover={false}
                             before={<Icon28DiamondOutline fill='var(--vkui--color_accent_red)'/>}>Популярные образы</Button>
                     </Div>
-                    <Separator/><Spacing/>
+                    <Separator/>
                     {
                         !!popularImageTypes.length && popularImageTypes.map((value, key) => <SimpleCell
                             key={key}

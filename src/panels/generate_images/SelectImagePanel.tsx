@@ -19,7 +19,7 @@ import {
     Link,
     Panel,
     PanelHeader,
-    PanelSpinner,
+    PanelSpinner, Radio, RadioGroup,
     Snackbar,
     Spacing,
     Subhead,
@@ -294,20 +294,44 @@ const PanelData = () => {
                                     imageType.img_type_to_variant_groups.map((group, groupKey) => (
                                         <FormItem top={group.group.name} key={groupKey}>
                                             {
-                                                group.options.map((option, keyOption) => (
-                                                    <Checkbox
-                                                        style={{
-                                                            cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
-                                                        }}
-                                                        disabled={disabledOptions.includes(option.id)}
-                                                        key={keyOption}
-                                                        data-group_id={group.group.id}
-                                                        onChange={handleChangeOption}
-                                                        value={option.id}
-                                                    >
-                                                        {option.name}
-                                                    </Checkbox>
-                                                ))
+                                                imageType.img_type_to_variant_groups.length > 1
+                                                ?
+                                                    <React.Fragment>
+                                                        {
+                                                            group.options.map((option, keyOption) => (
+                                                                <Checkbox
+                                                                    style={{
+                                                                        cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
+                                                                    }}
+                                                                    disabled={disabledOptions.includes(option.id)}
+                                                                    key={keyOption}
+                                                                    data-group_id={group.group.id}
+                                                                    onChange={handleChangeOption}
+                                                                    value={option.id}
+                                                                >
+                                                                    {option.name}
+                                                                </Checkbox>
+                                                            ))
+                                                        }
+                                                    </React.Fragment>
+                                                    :
+                                                    <React.Fragment>
+                                                        <RadioGroup>
+                                                            {
+                                                                group.options.map((option, keyOption) => (
+                                                                    <Radio
+                                                                        name={'option_' + group.group.id}
+                                                                        key={keyOption}
+                                                                        data-group_id={group.group.id}
+                                                                        onChange={handleChangeOption}
+                                                                        value={option.id}
+                                                                    >
+                                                                        {option.name}
+                                                                    </Radio>
+                                                                ))
+                                                            }
+                                                        </RadioGroup>
+                                                    </React.Fragment>
                                             }
                                         </FormItem>
                                     ))
