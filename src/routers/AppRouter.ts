@@ -3,6 +3,11 @@ import {PANEL_CONSTANTS, VIEW_CONSTANTS} from "../constants/RouterConstants";
 
 const AppRouter = createHashRouter([
     {
+        path: `*`,
+        panel: PANEL_CONSTANTS.PANEL_MAIN_HOME,
+        view: VIEW_CONSTANTS.VIEW_MAIN,
+    },
+    {
         path: '/',
         panel: PANEL_CONSTANTS.PANEL_MAIN_HOME,
         view: VIEW_CONSTANTS.VIEW_MAIN,
@@ -56,6 +61,11 @@ const AppRouter = createHashRouter([
         path: '/show-generate-image/:imageGeneratedId',
         panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT,
         view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
+    },
+    {
+        path: '/offline',
+        panel: PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE,
+        view: VIEW_CONSTANTS.VIEW_SERVICE,
     },
 ]);
 

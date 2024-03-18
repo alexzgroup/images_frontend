@@ -113,7 +113,7 @@ const PanelContent: React.FC = () => {
                             <Card>
                                 <Div>
                                     <Title level="3">Получите одну дополнительную
-                                        ежедневную генерацию подписавшись
+                                        ежедневную генерацию, подписавшись
                                         на сообщество VK.</Title>
                                     <Spacing/>
                                     <Subhead style={{color: 'var(--vkui--color_text_secondary)'}}>Наше сообщество публикует
@@ -130,7 +130,7 @@ const PanelContent: React.FC = () => {
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
                 </CardGrid>
             </Group>
-            <Footer>Привет от Омских разработчиков!</Footer>
+            <Footer>Привет от омских разработчиков!</Footer>
             {snackbar}
         </React.Fragment>
     )

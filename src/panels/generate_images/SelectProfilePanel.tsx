@@ -71,7 +71,7 @@ export const LoadingImageTypes:FC = () => {
                         <Banner
                             mode="image"
                             header="Случайный образ"
-                            subheader="Ежедневное обновление. Примерь на себе стильный наряд."
+                            subheader="Ежедневное обновление. Примерь на себя стильный наряд."
                             background={
                                 <div
                                     style={{

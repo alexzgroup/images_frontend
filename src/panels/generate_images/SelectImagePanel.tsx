@@ -19,7 +19,7 @@ import {
     Link,
     Panel,
     PanelHeader,
-    PanelSpinner,
+    PanelSpinner, Radio, RadioGroup,
     Snackbar,
     Spacing,
     Subhead,
@@ -63,8 +63,8 @@ const RecomendedImageLabels = [
 
 const NoRecomendedImageLabels = [
     'Много людей на фото',
-    'Не настоящие фото',
-    'Картинки с интернета',
+    'Ненастоящие фото',
+    'Картинки из интернета',
 ]
 
 const PanelData = () => {
@@ -294,20 +294,44 @@ const PanelData = () => {
                                     imageType.img_type_to_variant_groups.map((group, groupKey) => (
                                         <FormItem top={group.group.name} key={groupKey}>
                                             {
-                                                group.options.map((option, keyOption) => (
-                                                    <Checkbox
-                                                        style={{
-                                                            cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
-                                                        }}
-                                                        disabled={disabledOptions.includes(option.id)}
-                                                        key={keyOption}
-                                                        data-group_id={group.group.id}
-                                                        onChange={handleChangeOption}
-                                                        value={option.id}
-                                                    >
-                                                        {option.name}
-                                                    </Checkbox>
-                                                ))
+                                                imageType.img_type_to_variant_groups.length > 1
+                                                ?
+                                                    <React.Fragment>
+                                                        {
+                                                            group.options.map((option, keyOption) => (
+                                                                <Checkbox
+                                                                    style={{
+                                                                        cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
+                                                                    }}
+                                                                    disabled={disabledOptions.includes(option.id)}
+                                                                    key={keyOption}
+                                                                    data-group_id={group.group.id}
+                                                                    onChange={handleChangeOption}
+                                                                    value={option.id}
+                                                                >
+                                                                    {option.name}
+                                                                </Checkbox>
+                                                            ))
+                                                        }
+                                                    </React.Fragment>
+                                                    :
+                                                    <React.Fragment>
+                                                        <RadioGroup>
+                                                            {
+                                                                group.options.map((option, keyOption) => (
+                                                                    <Radio
+                                                                        name={'option_' + group.group.id}
+                                                                        key={keyOption}
+                                                                        data-group_id={group.group.id}
+                                                                        onChange={handleChangeOption}
+                                                                        value={option.id}
+                                                                    >
+                                                                        {option.name}
+                                                                    </Radio>
+                                                                ))
+                                                            }
+                                                        </RadioGroup>
+                                                    </React.Fragment>
                                             }
                                         </FormItem>
                                     ))
@@ -336,8 +360,10 @@ const PanelData = () => {
             <Group>
                 <Banner
                     size="m"
-                    header={`Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`}
-                    subheader={<Text>Каждый день, вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
+                    header={imageType.generate_statistic.available_count_generate
+                        ? `Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
+                        : 'Доступно 0 генераций'}
+                    subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
                         {
                             !userDbData?.subscribe && <React.Fragment>
                                 <br/>Чтобы получить 1 дополнительную генерацию в день, подпишитесь на нашу группу.
@@ -352,7 +378,7 @@ const PanelData = () => {
             <LabelsList type={TypeColors.success} labels={RecomendedImageLabels} header='Рекомендации к фотографиям:' />
             <LabelsList type={TypeColors.error} labels={NoRecomendedImageLabels} header='Не рекомендуем использовать:' />
             <Footer>
-                При генерации изображения, вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
+                При генерации изображения вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
             </Footer>
             {snackbar}
         </React.Fragment>

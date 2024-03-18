@@ -4,6 +4,7 @@ export const VIEW_CONSTANTS = {
     VIEW_ABOUT: 'view_about',
     VIEW_MONETIZATION: 'view_monetization',
     VIEW_SHOW_IMAGE: 'view_show_image',
+    VIEW_SERVICE: 'view_service',
 }
 
 export const PANEL_CONSTANTS = {
@@ -19,4 +20,5 @@ export const PANEL_CONSTANTS = {
     PANEL_SHOW_IMAGE_SHARE_WALL: 'panel_show_image_share_wall',
     PANEL_SHOW_IMAGE_STORY_WALL: 'panel_show_image_story_wall',
     PANEL_SHOW_IMAGE_VIEW_RESULT: 'panel_show_image_view_result',
+    PANEL_SERVICE_OFFLINE: 'PANEL_SERVICE_OFFLINE',
 }

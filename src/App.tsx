@@ -42,6 +42,7 @@ import ShareWallImagePanel from "./panels/show_generate_image/ShareWallImagePane
 import ShareStoreImagePanel from "./panels/show_generate_image/ShareStoreImagePanel";
 import ShowGeneratedImagePanel from "./panels/show_generate_image/ShowGeneratedImagePanel";
 import {publish} from "./Events/CustomEvents";
+import OfflinePanel from "./panels/service/OfflinePanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -135,6 +136,14 @@ const App = () => {
 			initSocket(userInfo.id);
 		}
 		fetchData();
+
+		window.addEventListener("offline", function () {
+			routeNavigator.push('/offline');
+		});
+
+		window.addEventListener("online", function () {
+			routeNavigator.back();
+		});
 	}, []);
 
 	return (
@@ -153,7 +162,7 @@ const App = () => {
 				<SplitCol>
 					<Epic
 						activeStory={activeView}
-						tabbar={<TabBarWrapper />}
+						tabbar={activePanel !== PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE && <TabBarWrapper />}
 					>
 						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<HomePanel popularImageTypes={popularImageTypes} id={PANEL_CONSTANTS.PANEL_MAIN_HOME} />
@@ -175,6 +184,9 @@ const App = () => {
 							<ShareWallImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_SHARE_WALL} />
 							<ShareStoreImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_STORY_WALL} />
 							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_SERVICE} activePanel={activePanel}>
+							<OfflinePanel id={PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE} />
 						</View>
 					</Epic>
 				</SplitCol>

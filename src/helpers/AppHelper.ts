@@ -118,50 +118,15 @@ export const createAlbumImage = async (access_token: string) => {
  * @param access_token
  * @param imageGeneratedId
  */
-// export const getPhotoUploadId = async (access_token: string, imageGeneratedId: number) => {
-//     const albumId = await createAlbumImage(access_token);
-//
-//     const responseUploadServer = await bridge.send('VKWebAppCallAPIMethod', {
-//         method: 'photos.getUploadServer',
-//         params: {
-//             v: process.env.REACT_APP_V_API,
-//             access_token: access_token,
-//             album_id: albumId,
-//         }});
-//
-//     const responseUploadImage = await uploadImage({
-//         upload_url: responseUploadServer.response.upload_url,
-//         generate_image_id: imageGeneratedId,
-//     });
-//
-//     const responseSavePhoto = await bridge.send('VKWebAppCallAPIMethod', {
-//         method: 'photos.save',
-//         params: {
-//             v: process.env.REACT_APP_V_API,
-//             access_token: access_token,
-//             ...responseUploadImage,
-//             album_id: albumId,
-//             caption: `Мой образ сгенерировало приложение Ренестра - https://vk.com/app${process.env.REACT_APP_APP_ID}`,
-//         }});
-//
-//     const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
-//     return photo.owner_id + '_' + photo.id + '_' + photo.access_key;
-// }
-
-
-/**
- * @deprecated
- * Временный метод для генерации ID
- * @param access_token
- * @param imageGeneratedId
- */
 export const getPhotoUploadId = async (access_token: string, imageGeneratedId: number) => {
+    const albumId = await createAlbumImage(access_token);
 
     const responseUploadServer = await bridge.send('VKWebAppCallAPIMethod', {
-        method: 'photos.getWallUploadServer',
+        method: 'photos.getUploadServer',
         params: {
             v: process.env.REACT_APP_V_API,
             access_token: access_token,
+            album_id: albumId,
         }});
 
     const responseUploadImage = await uploadImage({
@@ -170,11 +135,13 @@ export const getPhotoUploadId = async (access_token: string, imageGeneratedId: n
     });
 
     const responseSavePhoto = await bridge.send('VKWebAppCallAPIMethod', {
-        method: 'photos.saveWallPhoto',
+        method: 'photos.save',
         params: {
             v: process.env.REACT_APP_V_API,
             access_token: access_token,
             ...responseUploadImage,
+            album_id: albumId,
+            caption: `Мой образ сгенерировало приложение Ренестра - https://vk.com/app${process.env.REACT_APP_APP_ID}`,
         }});
 
     const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};

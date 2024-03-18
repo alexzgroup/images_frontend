@@ -123,7 +123,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                                     </svg>
                                 </div>
                             </div>}
-                            header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и собери много лайков и комментариев!`}
+                            header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
                             action={
                                 <ButtonGroup mode='vertical'>
                                     <Button onClick={shareWall} stretched size={isMobileSize ? 'm' : 'l'}>Посмотреть и
