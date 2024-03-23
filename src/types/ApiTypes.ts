@@ -22,6 +22,12 @@ export type imageType = {
     labels?: []|string[],
 }
 
+export type exclusiveImageTypesType = {
+    id: number,
+    name: string,
+    url: string,
+}
+
 export type typeVariantGroupType = {
     id: number,
     name: string,

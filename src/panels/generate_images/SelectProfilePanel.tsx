@@ -1,17 +1,30 @@
 import React, {FC, Suspense, useContext, useEffect, useState} from 'react';
 
-import {Banner, Button, Group, Header, Panel, PanelHeader, PanelSpinner, Separator, SimpleCell} from '@vkontakte/vkui';
+import {
+    Banner,
+    Button,
+    Div,
+    Group,
+    Header,
+    Panel,
+    PanelHeader,
+    PanelSpinner,
+    Separator,
+    SimpleCell,
+    Spacing,
+    Subhead
+} from '@vkontakte/vkui';
 
 import {Icon24Arrow2SquarepathOutline} from "@vkontakte/icons";
 import banner_man_image from "../../assets/images/select_image_profile_man.jpg";
 import banner_girl_image from "../../assets/images/select_image_profile_girl.jpg";
-import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import {RouterLink, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {AdvertisementEnum, imageType} from "../../types/ApiTypes";
+import {AdvertisementEnum, exclusiveImageTypesType, imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
 import {LabelImageTypeGenerator} from "../../components/LabelImageTypeGenerator";
 import {addAdvertisement, apiGetImageTypes} from "../../api/AxiosApi";
-import bridge, { BannerAdLocation } from "@vkontakte/vk-bridge";
+import bridge, {BannerAdLocation} from "@vkontakte/vk-bridge";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
@@ -22,12 +35,17 @@ interface Props {
     id: string;
 }
 
+type  ImageTypeFromRequest = {
+    exclusive_image_types: exclusiveImageTypesType[],
+    items: imageType[],
+}
+
 export const LoadingImageTypes:FC = () => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
 
-    const [imageTypes, setImageTypes] = useState<imageType[]|[]>([]);
+    const [imageTypes, setImageTypes] = useState<ImageTypeFromRequest|null>(null);
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
@@ -38,11 +56,14 @@ export const LoadingImageTypes:FC = () => {
     }
 
     const openRandomImage = () => {
-        let imageTypesFiltered = imageTypes;
-        if (!userDbData?.is_vip) {
-            imageTypesFiltered = imageTypes.filter((item) => !item.vip)
+        let imageTypesFiltered = imageTypes?.items;
+        if (!userDbData?.is_vip && imageTypesFiltered) {
+            imageTypesFiltered = imageTypesFiltered.filter((item) => !item.vip)
         }
-        routeNavigator.push('/generate/select-image/' + (imageTypesFiltered[Math.floor(Math.random() * (imageTypesFiltered.length - 1))].id))
+
+        if (imageTypesFiltered) {
+            routeNavigator.push('/generate/select-image/' + (imageTypesFiltered[Math.floor(Math.random() * (imageTypesFiltered.length - 1))].id))
+        }
     }
 
     useEffect(() => {
@@ -65,7 +86,7 @@ export const LoadingImageTypes:FC = () => {
     return (
         <>
             {
-                !!imageTypes.length &&
+                !!imageTypes?.items.length &&
                 <React.Fragment>
                     <Group>
                         <Banner
@@ -84,12 +105,40 @@ export const LoadingImageTypes:FC = () => {
                                              appearance="overlay">Сгенерировать</Button>}
                         />
                     </Group>
+                    {
+                        imageTypes.exclusive_image_types.length &&
+                        <Group header={<Header mode='secondary'>Дополнительные функции</Header>}>
+                            <Div style={{
+                                display: 'grid',
+                                gridTemplate: '1fr/1fr 1fr 1fr',
+                                gap: 15
+                            }}>
+                                {
+                                    imageTypes.exclusive_image_types.map((item, key) => (
+                                        <div key={key}>
+                                            <RouterLink to={`/generate/select-image/${item.id}`}>
+                                                <div
+                                                    style={{
+                                                        paddingTop: '90%',
+                                                        backgroundImage: `url(${item.url})`,
+                                                        borderRadius: 'var(--vkui--size_border_radius_paper--regular)',
+                                                        backgroundSize: 'contain',
+                                                    }}/>
+                                            </RouterLink>
+                                            <Spacing/>
+                                            <Subhead weight='1'>{item.name}</Subhead>
+                                        </div>
+                                    ))
+                                }
+                            </Div>
+                        </Group>
+                    }
                     <Group
                         header={<Header mode='secondary'>Другие образы</Header>}
                     >
                         <Separator/>
                         {
-                            imageTypes.map((value, key) => (
+                            imageTypes.items.map((value, key) => (
                                 <SimpleCell
                                     key={'image_type' + key}
                                     onClick={() => openImageType(value)}
