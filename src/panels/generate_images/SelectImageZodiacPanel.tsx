@@ -4,18 +4,18 @@ import {
     Alert,
     Banner,
     Button,
+    CustomSelect,
     Div,
+    FormItem,
     Group,
-    MiniInfoCell,
     Panel,
     PanelHeader,
     PanelSpinner,
     Snackbar,
-    Text,
-    Title
+    Text
 } from '@vkontakte/vkui';
 
-import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon36Favorite} from "@vkontakte/icons";
+import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
@@ -59,8 +59,11 @@ const PanelData = () => {
         }
     });
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
+    const [zodiac, setZodiac] = React.useState<string>('');
+    const [zodiacSelectError, setZodiacSelectError] = React.useState<string>('');
 
     const openPreloaderGenerate = () => {
+        setZodiacSelectError('');
         if (imageType?.generate_statistic.generate_in_process) {
             routeNavigator.showPopout(
                 <Alert
@@ -77,7 +80,11 @@ const PanelData = () => {
                 />
             );
         } else if (generateImage && params?.imageTypeId) {
-            routeNavigator.push('/generate/preloader', {state: {formData: null, imageTypeId: params?.imageTypeId}})
+            if (!zodiac) {
+                setZodiacSelectError('Выберите значение');
+            } else {
+                routeNavigator.push('/generate/preloader', {state: {formData: {zodiac}, imageTypeId: params?.imageTypeId}})
+            }
         }
     }
 
@@ -153,11 +160,34 @@ const PanelData = () => {
         }
     }, [imageType.generate_statistic]);
 
+    useEffect(() => {
+        if (zodiac) {
+            setZodiacSelectError('');
+        }
+    }, [zodiac]);
+
     return (
         <React.Fragment>
             <Group>
                 <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
                     <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
+                    {
+                        imageType.zodiac &&
+                            <FormItem
+                                status={zodiac ? 'valid' : (zodiacSelectError ? 'error' : 'default')}
+                                top="Знак задиака"
+                                bottom={zodiacSelectError || ''}
+                                htmlFor="zodiac"
+                                style={{width: '100%'}}
+                            >
+                                <CustomSelect
+                                    onChange={(e) => setZodiac(e.target.value)}
+                                    id="zodiac"
+                                    placeholder="Не выбран"
+                                    options={imageType.zodiac}
+                                />
+                            </FormItem>
+                    }
                     {
                         (imageType.generate_statistic.available_count_generate < 1)
                             ?
@@ -191,19 +221,12 @@ const PanelData = () => {
                 </Div>
             </Group>
             <Group>
-                <MiniInfoCell mode="accent" before={<Icon36Favorite fill={ColorsList.primary} />} textWrap="full">
-                    <Title weight="2" level="2">
-                        Узнай как тебя охарактеризовывает твоё имя и внешность!
-                    </Title>
-                </MiniInfoCell>
-            </Group>
-            <Group>
                 <Banner
                     size="m"
                     header={imageType.generate_statistic.available_count_generate
                         ? `Сегодня вам доступна ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
                         : userDbData?.subscribe ? 'Доступно 0 генераций' : `Сегодня Вам доступна ${trueWordForm(1, generateWordsArray)}`}
-                    subheader={<Text>Каждый день вам доступна одна генерация значения имени. В 00:00 по МСК счетчик обновляется.
+                    subheader={<Text>Каждый день вам доступна одна генерация гороскопа. В 00:00 по МСК счетчик обновляется.
                         {
                             !userDbData?.subscribe && <React.Fragment>
                                 <br/>Чтобы получить генерацию, подпишитесь на нашу группу.
@@ -221,7 +244,7 @@ const PanelData = () => {
     )
 }
 
-const SelectImageNamePanel: React.FC<Props> = ({id}) => {
+const SelectImageZodiacPanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
@@ -238,4 +261,4 @@ const SelectImageNamePanel: React.FC<Props> = ({id}) => {
     )
 }
 
-export default SelectImageNamePanel;
+export default SelectImageZodiacPanel;

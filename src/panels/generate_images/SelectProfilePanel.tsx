@@ -116,7 +116,7 @@ export const LoadingImageTypes:FC = () => {
                                 {
                                     imageTypes.exclusive_image_types.map((item, key) => (
                                         <div key={key}>
-                                            <RouterLink to={`/generate/select-name-image/${item.id}`}>
+                                            <RouterLink to={`/generate/select-${item.type}-image/${item.id}`}>
                                                 <div
                                                     style={{
                                                         paddingTop: '90%',

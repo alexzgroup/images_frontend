@@ -1,8 +1,13 @@
-import React from 'react';
+import React, {ReactElement} from 'react';
 
-import {Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell} from '@vkontakte/vkui';
+import {Banner, Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell, Snackbar} from '@vkontakte/vkui';
 import girl_image from '../../assets/images/icons/girl_icon.png';
-import {Icon28DiamondOutline} from "@vkontakte/icons";
+import {
+    Icon28CancelCircleFillRed,
+    Icon28CheckCircleOutline,
+    Icon28DiamondOutline,
+    Icon28Users3
+} from "@vkontakte/icons";
 import DivCard from "../../components/DivCard";
 import {imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
@@ -11,6 +16,9 @@ import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
+import bridge from "@vkontakte/vk-bridge";
+import {apiAddAppToGroup} from "../../api/AxiosApi";
+import {ColorsList} from "../../types/ColorTypes";
 
 interface Props {
     id: string;
@@ -20,6 +28,7 @@ interface Props {
 const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
@@ -29,8 +38,42 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
         }
     }
 
+    const addAppToGroup = () => {
+        bridge.send('VKWebAppAddToCommunity')
+            .then((data) => {
+                if (data.group_id) {
+                    apiAddAppToGroup(data.group_id)
+                        .then((r) => {
+                            if (r.result) {
+                                openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Приложение подключено.')
+                            }
+                        })
+                        .catch((error) => {
+                            openSnackBar(<Icon28CancelCircleFillRed />, 'Произошла ошибка');
+                            console.error(error.message);
+                        })
+                }
+            })
+            .catch((error) => {
+                console.log(error);
+            });
+    }
+
+    const openSnackBar = (icon: JSX.Element, text: string): void => {
+        if (snackbar) return;
+        setSnackbar(
+            <Snackbar
+                onClose={() => setSnackbar(null)}
+                before={icon}
+            >
+                {text}
+            </Snackbar>,
+        );
+    };
+
+
     return (<Panel id={id}>
-            <Group mode='plain' separator='hide'>
+            <Group mode='plain'>
                 <DivCard>
                     <Placeholder
                         icon={<Image src={girl_image} size={56}/>}
@@ -60,6 +103,27 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     }
                 </DivCard>
             </Group>
+            <Banner
+                mode="image"
+                header="Подключить приложение в сообщество"
+                background={
+                    <div
+                        style={{
+                            background: 'linear-gradient(45deg, #00A700 0%, #A0B500 100%)',
+                        }}
+                    />
+                }
+                style={{
+                    padding: 0,
+                    marginBottom: 0,
+                }}
+                actions={<Button onClick={addAppToGroup}
+                                 size='l'
+                                 before={<Icon28Users3 />}
+                                 mode="outline"
+                                 appearance="overlay">Подключить</Button>}
+            />
+            {snackbar}
         </Panel>
     )
 }

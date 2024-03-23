@@ -28,6 +28,11 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
     },
     {
+        path: '/generate/select-zodiac-image/:imageTypeId',
+        panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_ZODIAC_SELECT_IMAGE,
+        view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
+    },
+    {
         path: '/generate/preloader',
         panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER,
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,

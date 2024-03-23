@@ -26,6 +26,7 @@ export type exclusiveImageTypesType = {
     id: number,
     name: string,
     url: string,
+    type: string,
 }
 
 export type typeVariantGroupType = {
@@ -61,6 +62,7 @@ export type imageTypeStatisticType = {
         options: typeVariantType[],
     }[],
     type_variant_to_img_group_variants: typeVariantToImgGroupVariants[]|[],
+    zodiac?: [],
 }
 
 export type initUserApiType = {
