@@ -23,6 +23,11 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
     },
     {
+        path: '/generate/select-name-image/:imageTypeId',
+        panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE,
+        view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
+    },
+    {
         path: '/generate/preloader',
         panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER,
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,

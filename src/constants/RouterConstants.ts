@@ -11,6 +11,7 @@ export const PANEL_CONSTANTS = {
     PANEL_MAIN_HOME: 'panel_main_home',
     PANEL_GENERATE_IMAGE_SELECT_PROFILE: 'panel_generate_image_select_profile',
     PANEL_GENERATE_IMAGE_SELECT_IMAGE: 'panel_generate_image_select_image',
+    PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE: 'panel_generate_image_name_select_image',
     PANEL_GENERATE_IMAGE_SHOW_GENERATED_IMAGE: 'panel_generate_image_show_generated_image',
     PANEL_GENERATE_IMAGE_PRELOADER: 'panel_generate_image_preloader',
     PANEL_ABOUT_MAIN: 'panel_about_main',

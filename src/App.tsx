@@ -43,6 +43,7 @@ import ShareStoreImagePanel from "./panels/show_generate_image/ShareStoreImagePa
 import ShowGeneratedImagePanel from "./panels/show_generate_image/ShowGeneratedImagePanel";
 import {publish} from "./Events/CustomEvents";
 import OfflinePanel from "./panels/service/OfflinePanel";
+import SelectImageNamePanel from "./panels/generate_images/SelectImageNamePanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -170,6 +171,7 @@ const App = () => {
 						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />
 							<SelectImagePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_IMAGE} />
+							<SelectImageNamePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE} />
 							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>

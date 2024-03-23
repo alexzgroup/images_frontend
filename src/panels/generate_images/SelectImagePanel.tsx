@@ -4,42 +4,31 @@ import {
     Alert,
     Banner,
     Button,
-    Caption,
     Checkbox,
     Div,
-    Footer,
     FormItem,
     FormLayout,
     FormLayoutGroup,
     FormStatus,
     Group,
     Header,
-    IconButton,
     Image,
-    Link,
     Panel,
     PanelHeader,
-    PanelSpinner, Radio, RadioGroup,
+    PanelSpinner,
+    Radio,
+    RadioGroup,
     Snackbar,
-    Spacing,
-    Subhead,
     Text
 } from '@vkontakte/vkui';
 
-import {
-    Icon20CheckNewsfeedOutline,
-    Icon28AddOutline,
-    Icon28CancelCircleFillRed,
-    Icon48ArrowRightOutline
-} from "@vkontakte/icons";
-import {ColorsList, TypeColors} from "../../types/ColorTypes";
+import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
+import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import example_man_generated from '../../assets/images/example_man_generated.png'
-import LabelsList from "../../components/LabelsList";
 import {useDispatch, useSelector} from "react-redux";
-import {UrlConstants} from "../../constants/UrlConstants";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
@@ -50,22 +39,12 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import {trueWordForm} from "../../helpers/AppHelper";
 import {generateWordsArray} from "../../constants/AppConstants";
 import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
+import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
+import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 
 interface Props {
     id: string;
 }
-
-const RecomendedImageLabels = [
-    'Крупный план',
-    'Чёткое изображение лица',
-    'Селфи или персональная фотография',
-]
-
-const NoRecomendedImageLabels = [
-    'Много людей на фото',
-    'Ненастоящие фото',
-    'Картинки из интернета',
-]
 
 const PanelData = () => {
 
@@ -231,26 +210,7 @@ const PanelData = () => {
         <React.Fragment>
             <Group>
                 <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
-                    <Subhead style={{textAlign: 'center'}}>Выберите свою фотографию с аватарок VK</Subhead>
-                    <Spacing />
-                    {
-                        generateImage
-                            ?
-                            <Image withBorder={false} size={128} src={generateImage.sizes[generateImage.sizes.length - 1].url}/>
-                            :
-                            <IconButton onClick={getUserToken} style={{height: 128}}>
-                                <Image withBorder={false} size={128}>
-                                    <Icon28AddOutline fill='var(--vkui--color_accent_blue)'/>
-                                </Image>
-                            </IconButton>
-                    }
-                    <Spacing />
-                    <Caption>Нажимая продолжить, вы соглашаетесь с {" "}
-                        <Link target='_blank' href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>{" "}
-                        и{" "}
-                        <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
-                    </Caption>
-                    <Spacing />
+                    <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
                     {
                         (imageType.generate_statistic.available_count_generate < 1)
                             ?
@@ -375,11 +335,7 @@ const PanelData = () => {
                     }
                 />
             </Group>
-            <LabelsList type={TypeColors.success} labels={RecomendedImageLabels} header='Рекомендации к фотографиям:' />
-            <LabelsList type={TypeColors.error} labels={NoRecomendedImageLabels} header='Не рекомендуем использовать:' />
-            <Footer>
-                При генерации изображения вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
-            </Footer>
+            <RecommendedLabels />
             {snackbar}
         </React.Fragment>
     )
