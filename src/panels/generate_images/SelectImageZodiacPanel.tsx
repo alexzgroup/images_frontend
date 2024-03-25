@@ -206,7 +206,7 @@ const PanelData = () => {
                                         size="m"
                                         noPadding
                                         mode="image"
-                                        header="У Вас закончились генерации значения имени."
+                                        header="У Вас закончились генерации гороскопов."
                                         subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
                                         background={<div style={{background: ColorsList.error}} />}
                                         style={{width: '100%', margin: '10px 0 5px 0'}}

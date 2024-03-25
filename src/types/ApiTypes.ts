@@ -91,6 +91,7 @@ export type operationWithMessageType = operationResultType & {
 export type uploadPhotoType = {
     url: string,
     base64: string,
+    type: 'default'|'name'|'zodiac',
 }
 
 export type generateImageType = operationWithMessageType & {

@@ -106,7 +106,7 @@ export const LoadingImageTypes:FC = () => {
                         />
                     </Group>
                     {
-                        imageTypes.exclusive_image_types.length &&
+                        !!imageTypes.exclusive_image_types.length &&
                         <Group header={<Header mode='secondary'>Дополнительные функции</Header>}>
                             <Div style={{
                                 display: 'grid',

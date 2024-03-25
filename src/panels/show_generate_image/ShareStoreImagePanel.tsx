@@ -5,8 +5,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {updateShareGenerateImage} from "../../api/AxiosApi";
-import {ShareTypeEnum} from "../../types/ApiTypes";
+import {addAdvertisement, updateShareGenerateImage} from "../../api/AxiosApi";
+import {AdvertisementEnum, EAdsFormats, ShareTypeEnum} from "../../types/ApiTypes";
 import {useSelector} from "react-redux";
 import {Icon56StoryCircleFillYellow} from "@vkontakte/icons";
 import {RootStateType} from "../../redux/store/ConfigureStore";
@@ -34,6 +34,19 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
         }
     }
 
+    const skipShareHistory = () => {
+        bridge.send("VKWebAppShowNativeAds", {
+            ad_format: EAdsFormats.INTERSTITIAL,
+        }).then((data) => {
+            if (data.result) {
+                addAdvertisement({type: AdvertisementEnum.window}).then();
+            }
+            routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
+        }).catch(() => {
+            routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
+        });
+    }
+
     return (
         <Panel id={id}>
             <PanelHeader>Результат</PanelHeader>
@@ -45,7 +58,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                     action={
                         <ButtonGroup mode='vertical'>
                             <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size={isMobileSize ? 'm' : 'l'}>Поделиться в истории ВК</Button>
-                            <Button mode="secondary" onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)} stretched
+                            <Button mode="secondary" onClick={skipShareHistory} stretched
                                     size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
                         </ButtonGroup>
                     }

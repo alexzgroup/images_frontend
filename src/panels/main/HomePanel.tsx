@@ -106,6 +106,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
             <Banner
                 mode="image"
                 header="Подключить приложение в сообщество"
+                subheader="Позволь своим подписчикам генерировать аватарки прямо с вашей группы. Подключайте приложение в свою группу!"
                 background={
                     <div
                         style={{
@@ -121,7 +122,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                                  size='l'
                                  before={<Icon28Users3 />}
                                  mode="outline"
-                                 appearance="overlay">Подключить</Button>}
+                                 appearance="overlay">Подключить сообщество</Button>}
             />
             {snackbar}
         </Panel>

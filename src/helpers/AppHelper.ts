@@ -16,13 +16,14 @@ export const getDonutUrl = (platform: PlatformType):string => {
  * @param uploadPhoto
  * @param vkUserInfo
  */
-export const getWallData = ({photoUploadId, vkUserInfo}: {
+export const getWallData = ({photoUploadId, vkUserInfo , wallMessage}: {
     photoUploadId: string,
-    vkUserInfo: UserInfo
+    vkUserInfo: UserInfo,
+    wallMessage: string,
 }): WallPostRequestOptions => {
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
     return {
-        message: 'Это изображение сгенерировано с помощью приложения "Ренестра". Для генерации своего уникального аватара переходи по ссылке: ' + urlApp,
+        message: wallMessage + urlApp,
         attachments: 'https://vk.com/app' + process.env.REACT_APP_APP_ID + ',photo' + photoUploadId,
         owner_id: vkUserInfo.id,
         copyright: urlApp,

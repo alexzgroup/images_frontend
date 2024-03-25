@@ -14,6 +14,7 @@ import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 import {ColorsList} from "../../types/ColorTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
+import {WallMessagesEnum} from "../../enum/MessagesEnum";
 
 interface Props {
     id: string;
@@ -65,7 +66,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                     }
 
                     if (uploadPhoto && vkUserInfo) {
-                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo});
+                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo, wallMessage: WallMessagesEnum[uploadPhoto.type]});
                         bridge.send('VKWebAppShowWallPostBox', wallData).then((r) => {
                             if (r.post_id) {
                                 updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_WALL)
@@ -85,7 +86,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
     useEffect(() => {
         (async () => {
             if (params?.imageGeneratedId) {
-                dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: ''}))
+                dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: '', type: 'default'}))
                 const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
                 dispatch(setUploadPhoto({...response, photoUploadId: '',}))
             }

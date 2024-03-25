@@ -13,6 +13,7 @@ import {ModalTypes} from "../../modals/ModalRoot";
 import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
+import {WallMessagesEnum} from "../../enum/MessagesEnum";
 
 interface Props {
     id: string;
@@ -64,7 +65,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                     }
 
                     if (uploadPhoto && vkUserInfo) {
-                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo});
+                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo, wallMessage: WallMessagesEnum[uploadPhoto.type]});
                         bridge.send('VKWebAppShowWallPostBox', wallData).then((r) => {
                             if (r.post_id) {
                                 updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_WALL)
