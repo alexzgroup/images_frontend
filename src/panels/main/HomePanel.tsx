@@ -19,6 +19,7 @@ import {ModalTypes} from "../../modals/ModalRoot";
 import bridge from "@vkontakte/vk-bridge";
 import {apiAddAppToGroup} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
+import VipBlock from "../../components/RenestraVip/VipBlock";
 
 interface Props {
     id: string;
@@ -103,27 +104,38 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     }
                 </DivCard>
             </Group>
-            <Banner
-                mode="image"
-                header="Подключить приложение в сообщество"
-                subheader="Позволь своим подписчикам генерировать аватарки прямо с вашей группы. Подключайте приложение в свою группу!"
-                background={
-                    <div
-                        style={{
-                            background: 'linear-gradient(45deg, #00A700 0%, #A0B500 100%)',
-                        }}
-                    />
-                }
-                style={{
-                    padding: 0,
-                    marginBottom: 0,
-                }}
-                actions={<Button onClick={addAppToGroup}
-                                 size='l'
-                                 before={<Icon28Users3 />}
-                                 mode="outline"
-                                 appearance="overlay">Подключить сообщество</Button>}
-            />
+            {
+                !userDbData?.is_vip &&
+                    <Group mode='plain'>
+                        <Div>
+                            <VipBlock />
+                        </Div>
+                    </Group>
+            }
+            <Div>
+                <Banner
+                    mode="image"
+                    header="Подключить приложение в сообщество"
+                    subheader="Позволь своим подписчикам генерировать аватарки прямо с вашей группы. Подключайте приложение в свою группу!"
+                    background={
+                        <div
+                            style={{
+                                background: 'linear-gradient(45deg, #00A700 0%, #A0B500 100%)',
+                            }}
+                        />
+                    }
+                    style={{
+                        padding: 0,
+                        margin: 0,
+                        marginBottom: 10,
+                    }}
+                    actions={<Button onClick={addAppToGroup}
+                                     size='l'
+                                     before={<Icon28Users3 />}
+                                     mode="outline"
+                                     appearance="overlay">Подключить сообщество</Button>}
+                />
+            </Div>
             {snackbar}
         </Panel>
     )

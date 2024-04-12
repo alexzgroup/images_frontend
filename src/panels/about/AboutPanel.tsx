@@ -32,6 +32,7 @@ import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 import {GeneratedImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import GeneratedImages from "../../components/GeneratedImages";
+import VipBlock from "../../components/RenestraVip/VipBlock";
 
 interface Props {
     id: string;
@@ -127,6 +128,14 @@ const PanelContent: React.FC = () => {
                     <Card mode='shadow'>
                         <GeneratedImages images={generatedImages} />
                     </Card>
+                    {
+                        !userDbData?.is_vip &&
+                            <Card mode='shadow'>
+                                <div style={{padding: 5}}>
+                                    <VipBlock />
+                                </div>
+                            </Card>
+                    }
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
                 </CardGrid>
             </Group>
