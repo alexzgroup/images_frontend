@@ -27,12 +27,14 @@ import {getGeneratedImages} from "../../api/AxiosApi";
 import {ColorsList} from "../../types/ColorTypes";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface, setUserSubscribeStatus} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface, setUserSubscribeStatus, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
 import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 import {GeneratedImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import GeneratedImages from "../../components/GeneratedImages";
 import VipBlock from "../../components/RenestraVip/VipBlock";
+import {CounterDown} from "../../components/CountDown";
+import RenestraTitleWithVip from "../../components/RenestraVip/RenestraTitleWithVip";
 
 interface Props {
     id: string;
@@ -80,6 +82,32 @@ const PanelContent: React.FC = () => {
         })
     }
 
+    const actionSubscription = () => {
+        const resumeAction = !!userDbData?.voice_subscribe?.pending_cancel;
+        bridge.send('VKWebAppShowSubscriptionBox',
+            {
+                action: resumeAction ? 'resume' : 'cancel',
+                subscription_id: String(userDbData?.voice_subscribe?.subscription_id),
+            })
+            .then( (data) => {
+                if (resumeAction) {
+                    openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Вы восстановили подпсику!');
+                } else {
+                    openSnackBar(<Icon28CancelCircleFillRed />, 'Вы отменили подпсику!');
+                }
+
+                dispatch(setUserVoiceSubscription({
+                    subscription_id: Number(data.subscriptionId),
+                    pending_cancel: Number(!userDbData?.voice_subscribe?.pending_cancel),
+                }));
+
+                console.log('Success resume or cancel subscription!', data);
+            })
+            .catch( (e) => {
+                console.log('Error resume or cancel subscription!', e);
+            })
+    }
+
     useEffect(() => {
         setGeneratedImages(PromiseWrapper(init()))
     }, []);
@@ -125,12 +153,30 @@ const PanelContent: React.FC = () => {
                                 </Div>
                             </Card>
                     }
+                    {
+                        (userDbData?.is_vip && userDbData.date_vip_ended) &&
+                        <Card mode='shadow'>
+                            <div className="vip-block">
+                                <RenestraTitleWithVip />
+                                <Subhead>Оставшееся время VIP статуса:</Subhead>
+                                <CounterDown date={userDbData.date_vip_ended}/>
+                                    {
+                                        userDbData?.voice_subscribe?.status !== 'cancelled' &&
+                                            <Button style={{color: 'black'}} className="gold_button" onClick={actionSubscription} stretched>
+                                                {
+                                                    !!userDbData?.voice_subscribe?.pending_cancel ? 'Возобновить подписку' : 'Отменить подписку'
+                                                }
+                                            </Button>
+                                    }
+                            </div>
+                        </Card>
+                    }
                     <Card mode='shadow'>
-                        <GeneratedImages images={generatedImages} />
+                        <GeneratedImages images={generatedImages}/>
                     </Card>
                     {
                         !userDbData?.is_vip &&
-                            <Card mode='shadow'>
+                        <Card mode='shadow'>
                                 <div style={{padding: 5}}>
                                     <VipBlock />
                                 </div>

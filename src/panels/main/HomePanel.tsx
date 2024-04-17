@@ -33,7 +33,7 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
-            routeNavigator.showModal(ModalTypes.MODAL_GET_VIP_PROFILE)
+            routeNavigator.showModal(ModalTypes.MODAL_PAY_VOICE)
         } else {
             routeNavigator.push('/generate/select-image/' + imageTypeItem.id)
         }

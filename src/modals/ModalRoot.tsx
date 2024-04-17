@@ -27,13 +27,16 @@ import {
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
 import {PreloaderUploadPhoto} from "../components/PreloaderUploadPhoto";
 import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
 import golden_light from '../assets/images/golden_light.png';
 import RenestraTitleWithVip from "../components/RenestraVip/RenestraTitleWithVip";
+import bridge from "@vkontakte/vk-bridge";
+import {getVoiceSubscription} from "../api/AxiosApi";
+import {setUserVoiceSubscription} from "../redux/slice/UserSlice";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -53,6 +56,27 @@ const ModalRootComponent:FC = () => {
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
+    const dispatch = useDispatch();
+
+    const openVoicePayModal = async () => {
+        const voiceSubscriptionId = await getVoiceSubscription();
+
+        bridge.send('VKWebAppShowSubscriptionBox', {
+            action: 'create',
+            item: String(voiceSubscriptionId), // Идентификатор подписки в приложении
+        })
+            .then((data) => {
+                dispatch(setUserVoiceSubscription({
+                    subscription_id: Number(data.subscriptionId),
+                    pending_cancel: 0,
+                }));
+                routeNavigator.showModal(ModalTypes.MODAL_DONUT);
+                console.log('Success payment', data);
+            })
+            .catch((e) => {
+                console.log('Error payment', e);
+            })
+    }
 
     return (
         <ModalRoot activeModal={activeModal}>
@@ -205,9 +229,9 @@ const ModalRootComponent:FC = () => {
                                 образы</Cell>
                             <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>Отсутствие рекламы</Cell>
                         </List>
-                        <Headline level='1'>Попробовать бесплатно на 1 день</Headline>
-                        <Headline level='2'>далее 20 голосов в месяц!</Headline>
-                        <Button className="gold_button" style={{width: '100%', marginTop: 5}}>
+                        <Headline level='1'>Всего 20 голосов в месяц.</Headline>
+                        <Headline level='2'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Headline>
+                        <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
                             <div style={{color: 'black'}}>Оформить подписку</div>
                         </Button>
                     </div>

@@ -33,8 +33,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
-import {imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
-import {setUserDbData, setUserSubscribeStatus} from "./redux/slice/UserSlice";
+import {imageType, socketImageType, socketSubscribeType, socketVoiceSubscriptionType} from "./types/ApiTypes";
+import {setUserDbData, setUserSubscribeStatus, setUserVip} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
@@ -88,6 +88,9 @@ const App = () => {
 		});
 
 		echo.private(`users.${vkUserId}`)
+			.listen('.voice_subscribe.success', (e: socketVoiceSubscriptionType) => {
+				dispatch(setUserVip({date_vip_ended: e.data.date_vip_ended, is_vip: !!e.data.date_vip_ended}));
+			})
 			.listen('.image_generate.success', (e: socketImageType) => {
 				if (e.data.status) {
 					dispatch(setGenerateImageId(e.data.id))

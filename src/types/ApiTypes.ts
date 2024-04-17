@@ -12,6 +12,14 @@ export type userApiType = {
     is_vip: boolean,
     allow_messages: number,
     subscribe: boolean,
+    voice_subscribe: voiceSubscribeType|null,
+}
+
+export type voiceSubscribeType = {
+    cancel_reason?: string|null,
+    status?: 'new'|'chargeable'|'active'|'cancelled',
+    subscription_id: number,
+    pending_cancel: number|null,
 }
 
 export type imageType = {
@@ -108,6 +116,12 @@ export type monetizationDataType = {
 export type socketDonutType = {
     data: {
         status: boolean,
+        date_vip_ended: string,
+    }
+}
+
+export type socketVoiceSubscriptionType = {
+    data: {
         date_vip_ended: string,
     }
 }

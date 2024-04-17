@@ -23,15 +23,21 @@
 .counterCol {
   text-align: center;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 10px;
-  & > span {
-    background-color: var(--vkui--color_accent_violet);
-    color: #fff;
-    padding: .5em;
-    border-radius: 5px;
-    transition: all .5s ease-in-out;
+  color: white;
+  font-size: 14px;
+  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  h1 {
+    font-size: 42px;
+    margin-bottom: 5px;
+  }
+  .delimiter {
+    font-size: 32px;
+    font-weight: bold;
   }
 }
 
@@ -134,7 +140,7 @@
 
   &::before {
     content: "";
-    width: 104%;
+    width: calc(100% + var(--vkui--size_base_padding_horizontal--regular) * 2);
     height: 102%;
     border-radius: 10px;
     background-image: linear-gradient(var(--rotateGold), #f9f295, #E0AA3e 43%, #e0aa3e);
@@ -144,6 +150,10 @@
     left: -2%;
     animation: spin 2.5s linear infinite;
     opacity: var(--opacity);
+    
+    @media screen and (max-width: 480px) {
+      width: 104%;
+    }
   }
 
   &::after {

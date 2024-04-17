@@ -161,3 +161,10 @@ export const uploadImage = (data: UploadPhotoToServerType) => {
 export const updateShareGenerateImage = (id: number, share_type: ShareTypeEnum) => {
     return axiosApi.put(`generate_image/update_share_info`, {share_type, id}).then((r: {data: operationResultType}) => r.data);
 }
+
+/**
+ * Получает id новой подписки
+ */
+export const getVoiceSubscription = () => {
+    return axiosApi.get(`get_voice_subscription_id`).then((r: {data: number}) => r.data);
+}

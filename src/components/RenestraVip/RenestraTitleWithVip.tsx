@@ -8,7 +8,7 @@ export const RenestraTitleWithVip = () =>
     return (
         <div style={{display: 'flex', gap: 5, alignItems: 'center'}} className="renestra-vip-title">
             <Title level={isMobileSize ? '2' : '1'}>Renestra</Title>
-            <div className="gold_button" style={{fontSize: 14, padding: '2px 10px', fontWeight: 'normal', borderRadius: 7, alignSelf: 'flex-end'}}>
+            <div className="gold_button" style={{fontSize: 14, padding: '2px 10px', fontWeight: 'normal', borderRadius: 7, alignSelf: 'center'}}>
                 VIP
             </div>
         </div>
