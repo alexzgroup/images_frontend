@@ -33,8 +33,8 @@ import {GeneratedImageType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import GeneratedImages from "../../components/GeneratedImages";
 import VipBlock from "../../components/RenestraVip/VipBlock";
-import {CounterDown} from "../../components/CountDown";
 import RenestraTitleWithVip from "../../components/RenestraVip/RenestraTitleWithVip";
+import vipLogo from "../../assets/images/vip_logo.png";
 
 interface Props {
     id: string;
@@ -83,7 +83,7 @@ const PanelContent: React.FC = () => {
     }
 
     const actionSubscription = () => {
-        const resumeAction = !!userDbData?.voice_subscribe?.pending_cancel;
+        const resumeAction = userDbData?.voice_subscribe?.pending_cancel;
         bridge.send('VKWebAppShowSubscriptionBox',
             {
                 action: resumeAction ? 'resume' : 'cancel',
@@ -98,7 +98,7 @@ const PanelContent: React.FC = () => {
 
                 dispatch(setUserVoiceSubscription({
                     subscription_id: Number(data.subscriptionId),
-                    pending_cancel: Number(!userDbData?.voice_subscribe?.pending_cancel),
+                    pending_cancel: resumeAction ? null : 1,
                 }));
 
                 console.log('Success resume or cancel subscription!', data);
@@ -154,20 +154,59 @@ const PanelContent: React.FC = () => {
                             </Card>
                     }
                     {
-                        (userDbData?.is_vip && userDbData.date_vip_ended) &&
+                        (userDbData?.is_vip) &&
                         <Card mode='shadow'>
                             <div className="vip-block">
-                                <RenestraTitleWithVip />
-                                <Subhead>Оставшееся время VIP статуса:</Subhead>
-                                <CounterDown date={userDbData.date_vip_ended}/>
+                                <div style={{
+                                    display: "flex",
+                                    justifyContent: 'space-between',
+                                    flexFlow: 'row wrap',
+                                }}
+                                >
+                                    <div style={{
+                                        flexGrow: 1,
+                                        flexBasis: '100%',
+                                    }}>
+                                        <RenestraTitleWithVip/>
+                                        <Spacing />
+                                        <Title className="golden_text" level="1">У Вас активен VIP статус!</Title>
+                                    </div>
+                                    <div style={{
+                                        display: "flex",
+                                        flexGrow: 1,
+                                        flexBasis: '100%',
+                                    }}>
+                                        <div style={{
+                                            flexGrow: 1,
+                                            flexBasis: '50%',
+                                            alignSelf: 'center'
+                                        }}>
+                                            <Title style={{color: 'white'}} level="3">Вы получили:</Title>
+                                            <Spacing />
+                                            <p>20 генераций в день</p>
+                                            <p>Эксклюзивные образы</p>
+                                            <p>и другие преимущества!</p>
+                                        </div>
+                                        <div style={{
+                                            alignSelf: 'start',
+                                            flexGrow: 1,
+                                            flexBasis: '50%',
+                                            textAlign: 'right'
+                                        }}>
+                                            <img style={{
+                                                maxWidth: '100%',
+                                                maxHeight: '120px',
+                                            }} src={vipLogo} alt="vip logo"/>
+                                        </div>
+                                    </div>
+                                </div>
+                                <Spacing/>
+                                <Button style={{color: 'black'}} className="gold_button" onClick={actionSubscription}
+                                        stretched>
                                     {
-                                        userDbData?.voice_subscribe?.status !== 'cancelled' &&
-                                            <Button style={{color: 'black'}} className="gold_button" onClick={actionSubscription} stretched>
-                                                {
-                                                    !!userDbData?.voice_subscribe?.pending_cancel ? 'Возобновить подписку' : 'Отменить подписку'
-                                                }
-                                            </Button>
+                                        !!userDbData?.voice_subscribe?.pending_cancel ? 'Возобновить подписку' : 'Отменить подписку'
                                     }
+                                </Button>
                             </div>
                         </Card>
                     }
@@ -177,10 +216,10 @@ const PanelContent: React.FC = () => {
                     {
                         !userDbData?.is_vip &&
                         <Card mode='shadow'>
-                                <div style={{padding: 5}}>
-                                    <VipBlock />
-                                </div>
-                            </Card>
+                            <div style={{padding: 5}}>
+                                <VipBlock/>
+                            </div>
+                        </Card>
                     }
                     <AllowMessagesBanner callbackSuccess={() => openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Уведомления подключены.')} />
                 </CardGrid>

@@ -8,7 +8,6 @@ export type userApiType = {
     sex: 0|1|2,
     vk_group_id?: number,
     is_monetization: number|null,
-    date_vip_ended: string|null,
     is_vip: boolean,
     allow_messages: number,
     subscribe: boolean,
@@ -16,8 +15,6 @@ export type userApiType = {
 }
 
 export type voiceSubscribeType = {
-    cancel_reason?: string|null,
-    status?: 'new'|'chargeable'|'active'|'cancelled',
     subscription_id: number,
     pending_cancel: number|null,
 }
@@ -111,19 +108,6 @@ export type monetizationDataType = {
     subscribes: number,
     total_pays: number,
     groups: groupType[]|[],
-}
-
-export type socketDonutType = {
-    data: {
-        status: boolean,
-        date_vip_ended: string,
-    }
-}
-
-export type socketVoiceSubscriptionType = {
-    data: {
-        date_vip_ended: string,
-    }
 }
 
 export type socketImageType = {

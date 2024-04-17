@@ -78,6 +78,12 @@
 }
 
 //vip blocks
+.golden_text {
+  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
 .vip-block {
   border-radius: var(--vkui--size_border_radius_paper--regular);
   background: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);

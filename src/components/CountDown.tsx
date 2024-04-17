@@ -17,7 +17,7 @@ export const CounterDown = ({date}: {date: string}) => {
     const routeNavigator = useRouteNavigator();
 
     const stopTimer = () => {
-        dispatch(setUserVip({date_vip_ended: '', is_vip: false}));
+        dispatch(setUserVip({is_vip: false}));
         routeNavigator.showPopout(
             <Alert
                 actions={[

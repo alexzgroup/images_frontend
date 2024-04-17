@@ -36,7 +36,7 @@ import golden_light from '../assets/images/golden_light.png';
 import RenestraTitleWithVip from "../components/RenestraVip/RenestraTitleWithVip";
 import bridge from "@vkontakte/vk-bridge";
 import {getVoiceSubscription} from "../api/AxiosApi";
-import {setUserVoiceSubscription} from "../redux/slice/UserSlice";
+import {setUserVip, setUserVoiceSubscription} from "../redux/slice/UserSlice";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -68,8 +68,9 @@ const ModalRootComponent:FC = () => {
             .then((data) => {
                 dispatch(setUserVoiceSubscription({
                     subscription_id: Number(data.subscriptionId),
-                    pending_cancel: 0,
+                    pending_cancel: null,
                 }));
+                dispatch(setUserVip({is_vip: true}))
                 routeNavigator.showModal(ModalTypes.MODAL_DONUT);
                 console.log('Success payment', data);
             })
