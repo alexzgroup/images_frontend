@@ -11,6 +11,7 @@ import {useSelector} from "react-redux";
 import {Icon56StoryCircleFillYellow} from "@vkontakte/icons";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 
 interface Props {
     id: string;
@@ -19,6 +20,8 @@ interface Props {
 const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
     const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+
     const params = useParams<'imageGeneratedId'>();
     const routeNavigator = useRouteNavigator();
 
@@ -35,16 +38,17 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
     }
 
     const skipShareHistory = () => {
-        bridge.send("VKWebAppShowNativeAds", {
-            ad_format: EAdsFormats.INTERSTITIAL,
-        }).then((data) => {
-            if (data.result) {
-                addAdvertisement({type: AdvertisementEnum.window}).then();
-            }
-            routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
-        }).catch(() => {
-            routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
-        });
+        if (!userDbData?.is_vip) {
+            bridge.send("VKWebAppShowNativeAds", {
+                ad_format: EAdsFormats.INTERSTITIAL,
+            }).then((data) => {
+                if (data.result) {
+                    addAdvertisement({type: AdvertisementEnum.window}).then();
+                }
+            }).catch(() => {});
+        }
+
+        routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
     }
 
     return (

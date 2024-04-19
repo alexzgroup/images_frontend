@@ -69,18 +69,20 @@ export const LoadingImageTypes:FC = () => {
     useEffect(() => {
         setImageTypes(PromiseWrapper(apiGetImageTypes()));
 
-        bridge.send('VKWebAppShowBannerAd', {
-            banner_location: BannerAdLocation.BOTTOM
-        })
-            .then((data: any) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.banner}).then();
-                }
+        if (!userDbData?.is_vip) {
+            bridge.send('VKWebAppShowBannerAd', {
+                banner_location: BannerAdLocation.BOTTOM
             })
-            .catch((error) => {
-                // Ошибка
-                console.log(error);
-            });
+                .then((data: any) => {
+                    if (data.result) {
+                        addAdvertisement({type: AdvertisementEnum.banner}).then();
+                    }
+                })
+                .catch((error) => {
+                    // Ошибка
+                    console.log(error);
+                });
+        }
     }, []);
 
     return (

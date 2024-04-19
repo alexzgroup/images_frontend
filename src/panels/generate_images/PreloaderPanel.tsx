@@ -28,6 +28,7 @@ import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/Im
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import bridge from "@vkontakte/vk-bridge";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 
 interface Props {
     id: string;
@@ -41,6 +42,7 @@ type formDataType = {
 
 const PreloaderPanel: React.FC<Props> = ({id}) => {
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
     const [step, setStep] = useState<number>(1)
     const [responseGenerate, setResponseGenerate] = useState<generateImageType & {loading: boolean}>({
@@ -102,13 +104,15 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
 
     useEffect(() => {
         if (formDataParams?.imageTypeId && generateImage) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch();
+            if (!userDbData?.is_vip) {
+                bridge.send("VKWebAppShowNativeAds", {
+                    ad_format: EAdsFormats.INTERSTITIAL,
+                }).then((data) => {
+                    if (data.result) {
+                        addAdvertisement({type: AdvertisementEnum.window}).then();
+                    }
+                }).catch();
+            }
 
             routeNavigator.block(blockerFunction);
             initGenerate();
