@@ -4,7 +4,6 @@ import {
     Button,
     ButtonGroup,
     Cell,
-    Headline,
     Link,
     List,
     ModalCard,
@@ -224,20 +223,20 @@ const ModalRootComponent:FC = () => {
                     <img width={320} style={{margin: 'auto', display: 'block'}} src={golden_light} alt="golden_light"/>
                     <RenestraTitleWithVip/>
                     <Title level="2">Оформление подписки VIP!</Title>
-                        <List>
-                            <Cell disabled before={<Icon36CameraOutline fill='FFAA38'/>}>20 генераций в день</Cell>
-                            <Cell disabled before={<Icon28AccessibilityOutline width={36} height={36} fill='FFAA38'/>}>Приоритетная
-                                очередь</Cell>
-                            <Cell disabled before={<Icon28PaletteOutline width={36} height={36} fill='FFAA38'/>}>Эксклюзивные
-                                образы</Cell>
-                            <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>Отсутствие рекламы</Cell>
-                        </List>
-                        <Headline level='1'>Всего 20 голосов в месяц.</Headline>
-                        <Headline level='2'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Headline>
-                        <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
-                            <div style={{color: 'black'}}>Оформить подписку</div>
-                        </Button>
-                    </div>
+                    <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
+                        <div style={{color: 'black'}}>Оформить подписку</div>
+                    </Button>
+                    <Title className="golden_text" level='2'>Всего 20 голосов в месяц.</Title>
+                    <List>
+                        <Cell disabled before={<Icon36CameraOutline fill='FFAA38'/>}>20 генераций в день</Cell>
+                        <Cell disabled before={<Icon28AccessibilityOutline width={36} height={36} fill='FFAA38'/>}>Приоритетная
+                            очередь</Cell>
+                        <Cell disabled before={<Icon28PaletteOutline width={36} height={36} fill='FFAA38'/>}>Эксклюзивные
+                            образы</Cell>
+                        <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>Отсутствие рекламы</Cell>
+                    </List>
+                    <Title className="golden_text" style={{textAlign: 'center'}} level='3'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Title>
+                </div>
             </ModalPage>
         </ModalRoot>
 )

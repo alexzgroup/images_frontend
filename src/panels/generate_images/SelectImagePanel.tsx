@@ -213,7 +213,7 @@ const PanelData = () => {
     return (
         <React.Fragment>
             <Group>
-                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
+                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
                     <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
                     {
                         (imageType.generate_statistic.available_count_generate < 1)
@@ -266,10 +266,11 @@ const PanelData = () => {
                                                     <div className="gold_light">
                                                         <div className="vip-block">
                                                             <Title level="3" style={{textAlign: 'left', color: 'white'}}>У вас закончились генерации!</Title>
-                                                            <Subhead style={{textAlign: 'left', margin: '10px 0'}}>
+                                                            <Subhead style={{textAlign: 'left'}}>
                                                                 Для того, чтобы увеличить лимит генераций до 20 в день, вы можете оформить VIP подписку.
                                                             </Subhead>
-                                                            <RenestraTitleWithLogo/>
+                                                            <Spacing />
+                                                            <RenestraTitleWithLogo />
                                                         </div>
                                                     </div>
                                                 </React.Fragment>
