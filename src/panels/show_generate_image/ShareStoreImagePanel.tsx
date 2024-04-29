@@ -58,7 +58,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                 <Placeholder
                     stretched
                     icon={<div className="pulseLine"><Icon56StoryCircleFillYellow height={98} width={98} /></div>}
-                    header={`${vkUserInfo?.first_name}, так же не забудьте поделиться в истории ВКонтакте!`}
+                    header={`${vkUserInfo?.first_name}, также не забудьте поделиться в истории ВКонтакте!`}
                     action={
                         <ButtonGroup mode='vertical'>
                             <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size={isMobileSize ? 'm' : 'l'}>Поделиться в истории ВК</Button>

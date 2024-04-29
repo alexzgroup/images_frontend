@@ -175,7 +175,7 @@ const PanelData = () => {
                         imageType.zodiac &&
                             <FormItem
                                 status={zodiac ? 'valid' : (zodiacSelectError ? 'error' : 'default')}
-                                top="Знак задиака"
+                                top="Знак зодиака"
                                 bottom={zodiacSelectError || ''}
                                 htmlFor="zodiac"
                                 style={{width: '100%'}}
