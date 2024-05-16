@@ -33,8 +33,8 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
-import {imageType, socketDonutType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
-import {setUserDbData, setUserDonut, setUserSubscribeStatus} from "./redux/slice/UserSlice";
+import {imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
+import {setUserDbData, setUserSubscribeStatus} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
@@ -88,12 +88,6 @@ const App = () => {
 		});
 
 		echo.private(`users.${vkUserId}`)
-			.listen('.donut.success', (e: socketDonutType) => {
-				if (e.data.status) {
-					dispatch(setUserDonut(e.data.date_vip_ended));
-					routeNavigator.showModal(ModalTypes.MODAL_DONUT);
-				}
-			})
 			.listen('.image_generate.success', (e: socketImageType) => {
 				if (e.data.status) {
 					dispatch(setGenerateImageId(e.data.id))

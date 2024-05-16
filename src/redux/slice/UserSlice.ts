@@ -1,5 +1,5 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {userApiType} from "../../types/ApiTypes";
+import {userApiType, voiceSubscribeType} from "../../types/ApiTypes";
 
 export interface ReduxSliceUserInterface {
     userDbData?: userApiType|null,
@@ -26,12 +26,19 @@ export const userSlice = createSlice({
                 };
             }
         },
-        setUserDonut: (state, action: PayloadAction<string>) => {
+        setUserVip: (state, action: PayloadAction<{is_vip: boolean}>) => {
             if (state.userDbData) {
                 state.userDbData = {
                     ...state.userDbData,
-                    date_vip_ended: action.payload,
-                    is_vip: true,
+                    is_vip: action.payload.is_vip,
+                };
+            }
+        },
+        setUserVoiceSubscription: (state, action: PayloadAction<voiceSubscribeType>) => {
+            if (state.userDbData) {
+                state.userDbData = {
+                    ...state.userDbData,
+                    voice_subscribe: action.payload,
                 };
             }
         },
@@ -61,8 +68,9 @@ export const {
     setUserDbData,
     setUserDbDataMonetization,
     setAccessToken,
-    setUserDonut,
     setUserSubscribeStatus,
+    setUserVoiceSubscription,
+    setUserVip,
     setUserAllowMessages,
 } = userSlice.actions
 

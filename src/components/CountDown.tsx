@@ -1,6 +1,9 @@
 import React from 'react';
 import Countdown from 'react-countdown';
-import {Div, Title} from "@vkontakte/vkui";
+import {Alert, Div, Title} from "@vkontakte/vkui";
+import {useDispatch} from "react-redux";
+import {setUserVip} from "../redux/slice/UserSlice";
+import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 
 type countDownType = {
     days: number,
@@ -10,17 +13,38 @@ type countDownType = {
 }
 
 export const CounterDown = ({date}: {date: string}) => {
+    const dispatch = useDispatch();
+    const routeNavigator = useRouteNavigator();
+
+    const stopTimer = () => {
+        dispatch(setUserVip({is_vip: false}));
+        routeNavigator.showPopout(
+            <Alert
+                actions={[
+                    {
+                        title: 'Понятно',
+                        autoClose: true,
+                        mode: 'destructive',
+                    },
+                ]}
+                onClose={() => routeNavigator.hidePopout()}
+                header="Внимание!"
+                text="У Вас закончился VIP статус, для возобновления подписки, продлите или переоформите ее."
+            />
+        );
+    }
+
     const renderer = ({ days, hours, minutes, seconds }: countDownType) => {
         return (
             <Div className="counterDown">
                 <div className="counterCol">
-                    <span><Title level="1" weight="2">{days}</Title> дн.</span>
+                    <span><Title level="1" weight="1">{days}</Title>дней</span>
                     <div className="delimiter">:</div>
-                    <span><Title level="1" weight="2">{hours}</Title>ч.</span>
+                    <span><Title level="1" weight="1">{hours}</Title>часов</span>
                     <div className="delimiter">:</div>
-                    <span><Title level="1" weight="2">{minutes}</Title>мин.</span>
+                    <span><Title level="1" weight="1">{minutes}</Title>минут</span>
                     <div className="delimiter">:</div>
-                    <span><Title level="1" weight="2">{seconds}</Title>сек.</span>
+                    <span><Title level="1" weight="1">{seconds}</Title>секунд</span>
                 </div>
             </Div>
         );
@@ -28,6 +52,7 @@ export const CounterDown = ({date}: {date: string}) => {
 
     return (
         <Countdown
+            onComplete={stopTimer}
             date={new Date(date)}
             renderer={renderer}
         />

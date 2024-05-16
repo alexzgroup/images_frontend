@@ -19,7 +19,10 @@ import {
     Radio,
     RadioGroup,
     Snackbar,
-    Text
+    Spacing,
+    Subhead,
+    Text,
+    Title
 } from '@vkontakte/vkui';
 
 import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
@@ -41,6 +44,8 @@ import {generateWordsArray} from "../../constants/AppConstants";
 import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
+import {ButtonGold} from "../../components/RenestraVip/ButtonGold";
+import RenestraTitleWithLogo from "../../components/RenestraVip/RenestraTitleWithLogo";
 
 interface Props {
     id: string;
@@ -49,11 +54,10 @@ interface Props {
 const PanelData = () => {
 
     const params = useParams<'imageTypeId'>();
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
@@ -209,28 +213,69 @@ const PanelData = () => {
     return (
         <React.Fragment>
             <Group>
-                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
+                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
                     <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
                     {
                         (imageType.generate_statistic.available_count_generate < 1)
                             ?
                             <React.Fragment>
-                                <Button
-                                    disabled={userDbData?.subscribe}
-                                    onClick={subscribeGroup}
-                                    appearance={userDbData?.subscribe ? 'negative' : 'accent'}
-                                    mode={userDbData?.subscribe ? 'secondary' : 'primary' } size="l">
-                                    {userDbData?.subscribe ? 'Будет доступно завтра' : 'Получить +1 генерацию'}
-                                </Button>
-                                <Banner
-                                    size="m"
-                                    noPadding
-                                    mode="image"
-                                    header="У Вас закончились генерации."
-                                    subheader={userDbData?.subscribe ? 'Возвращайтесь завтра в 00:00 по МСК!' : 'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
-                                    background={<div style={{background: ColorsList.error}} />}
-                                    style={{width: '100%', margin: '10px 0 5px 0'}}
-                                />
+                                {
+                                    !userDbData?.subscribe ?
+                                        <React.Fragment>
+                                            <Button
+                                                onClick={subscribeGroup}
+                                                appearance={'accent'}
+                                                mode={'primary' } size="l">
+                                                Получить +1 генерацию
+                                            </Button>
+                                            <Banner
+                                                size="m"
+                                                noPadding
+                                                mode="image"
+                                                header="У Вас закончились генерации."
+                                                subheader={'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
+                                                background={<div style={{background: ColorsList.error}} />}
+                                                style={{width: '100%', margin: '10px 0 5px 0'}}
+                                            />
+                                        </React.Fragment>
+                                        :
+                                        (
+                                            userDbData?.is_vip ?
+                                                <React.Fragment>
+                                                    <Button
+                                                        disabled
+                                                        appearance='negative'
+                                                        mode='secondary'
+                                                        size="l">
+                                                        Будет доступно завтра
+                                                    </Button>
+                                                    <Banner
+                                                        size="m"
+                                                        noPadding
+                                                        mode="image"
+                                                        header="У Вас закончились генерации."
+                                                        subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
+                                                        background={<div style={{background: ColorsList.error}} />}
+                                                        style={{width: '100%', margin: '10px 0 5px 0'}}
+                                                    />
+                                                </React.Fragment>
+                                                :
+                                                <React.Fragment>
+                                                    <ButtonGold style={{width: isMobileSize ? '100%' : 'auto'}}>Оформить подписку VIP</ButtonGold>
+                                                    <Spacing />
+                                                    <div className="gold_light">
+                                                        <div className="vip-block">
+                                                            <Title level="3" style={{textAlign: 'left', color: 'white'}}>У вас закончились генерации!</Title>
+                                                            <Subhead style={{textAlign: 'left'}}>
+                                                                Для того, чтобы увеличить лимит генераций до 20 в день, вы можете оформить VIP подписку.
+                                                            </Subhead>
+                                                            <Spacing />
+                                                            <RenestraTitleWithLogo />
+                                                        </div>
+                                                    </div>
+                                                </React.Fragment>
+                                        )
+                                }
                             </React.Fragment>
                             :
                             <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>

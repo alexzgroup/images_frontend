@@ -156,7 +156,7 @@ const PanelData = () => {
     return (
         <React.Fragment>
             <Group>
-                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', maxWidth: 480, margin: 'auto'}}>
+                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
                     <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
                     {
                         (imageType.generate_statistic.available_count_generate < 1)

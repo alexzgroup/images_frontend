@@ -1,3 +1,16 @@
+@font-face {
+  font-family: 'FloridaVibesByTurbologo';
+  src: url('../fonts/FloridaVibesByTurbologo.otf');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@property --rotateGold {
+  syntax: "<angle>";
+  initial-value: 132deg;
+  inherits: false;
+}
+
 .vkuiButton {
   .vkuiLink {
     color: currentColor;
@@ -10,15 +23,21 @@
 .counterCol {
   text-align: center;
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
   gap: 10px;
-  & > span {
-    background-color: var(--vkui--color_accent_violet);
-    color: #fff;
-    padding: .5em;
-    border-radius: 5px;
-    transition: all .5s ease-in-out;
+  color: white;
+  font-size: 14px;
+  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  h1 {
+    font-size: 42px;
+    margin-bottom: 5px;
+  }
+  .delimiter {
+    font-size: 32px;
+    font-weight: bold;
   }
 }
 
@@ -55,6 +74,141 @@
     border-radius: 50%;
     z-index: 1;
     animation: pulseLine 3s cubic-bezier(1, 0.5, 0, 0.5) infinite;
+  }
+}
+
+//vip blocks
+.golden_text {
+  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.vip-block {
+  border-radius: var(--vkui--size_border_radius_paper--regular);
+  background: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
+  padding: 10px;
+  box-sizing: border-box;
+  p {
+    font-size: 14px;
+    margin: 5px 0px;
+    line-height: 1;
+    text-align: left;
+    color: white;
+  }
+  h5 {
+    color: white;
+  }
+}
+
+.vip-modal-page {
+  .vkuiModalPage__in {
+    background: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
+    padding: 15px;
+  }
+  h2, span {
+    color: white;
+  }
+  h4 {
+    background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1;
+    font-size: 14px;
+  }
+}
+
+.renestra-vip-title {
+  h1, h2 {
+    font-family: FloridaVibesByTurbologo, serif;
+    line-height: 1;
+    font-weight: normal;
+  }
+  h1 {
+    font-size: 48px;
+  }
+  h2 {
+    font-size: 32px;
+  }
+  h1, h2, h5 {
+    color: white;
+  }
+}
+
+.gold_light {
+  position: relative;
+  box-sizing: border-box;
+  z-index: 1;
+  padding: 5px 0px;
+
+  --card-height: 50vh;
+  --opacity: .75;
+
+  &::before {
+    content: "";
+    width: calc(100% + var(--vkui--size_base_padding_horizontal--regular) * 2);
+    height: 102%;
+    border-radius: 10px;
+    background-image: linear-gradient(var(--rotateGold), #f9f295, #E0AA3e 43%, #e0aa3e);
+    position: absolute;
+    z-index: -1;
+    top: -1%;
+    left: -2%;
+    animation: spin 2.5s linear infinite;
+    opacity: var(--opacity);
+    
+    @media screen and (max-width: 480px) {
+      width: 104%;
+    }
+  }
+
+  &::after {
+    position: absolute;
+    content: "";
+    top: calc(var(--card-height) / 18);
+    left: 0;
+    right: 0;
+    z-index: -1;
+    height: 100%;
+    width: 100%;
+    margin: 0 auto;
+    transform: scale(0.8);
+    filter: blur(calc(var(--card-height) / 6));
+    background-image: linear-gradient(var(--rotateGold), #f9f295, #E0AA3e 43%, #e0aa3e);
+    opacity: var(--opacity);
+    transition: opacity .5s;
+    animation: spin 2.5s linear infinite;
+  }
+}
+
+.gold_button {
+  padding: 5px 16px;
+  /* Золотой градиент */
+  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  border-radius: 10px;
+  font-weight: bold;
+  font-size: 16px;
+  color: black;
+}
+
+@keyframes spin {
+  0% {
+    --rotateGold: 0deg;
+  }
+  100% {
+    --rotateGold: 360deg;
+  }
+}
+
+@keyframes animateGlow {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
   }
 }
 
@@ -109,4 +263,12 @@
   0%{background-position:0% 50%}
   50%{background-position:100% 50%}
   100%{background-position:0% 50%}
+}
+
+@media only screen and (max-width: 480px) {
+  .vip-block {
+    p {
+      font-size: 12px;
+    }
+  }
 }

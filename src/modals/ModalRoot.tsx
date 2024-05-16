@@ -3,22 +3,40 @@ import React, {FC} from 'react';
 import {
     Button,
     ButtonGroup,
+    Cell,
     Link,
+    List,
     ModalCard,
     ModalPage,
     ModalPageHeader,
     ModalRoot,
+    Title,
     usePlatform
 } from '@vkontakte/vkui';
-import {Icon56DonateOutline, Icon56PaletteOutline, Icon56Users3Outline, Icon56InfoOutline} from '@vkontakte/icons';
+import {
+    Icon28AccessibilityOutline,
+    Icon28PaletteOutline,
+    Icon36AdvertisingOutline,
+    Icon36CameraOutline,
+    Icon56DonateOutline,
+    Icon56InfoOutline,
+    Icon56PaletteOutline,
+    Icon56Users3Outline
+} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
 import {SelectUserImage} from "../components/SelectUserImage";
-import {useSelector} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
 import {PreloaderUploadPhoto} from "../components/PreloaderUploadPhoto";
 import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
+import golden_light from '../assets/images/golden_light.png';
+import RenestraTitleWithVip from "../components/RenestraVip/RenestraTitleWithVip";
+import bridge from "@vkontakte/vk-bridge";
+import {getVoiceSubscription} from "../api/AxiosApi";
+import {setUserVip, setUserVoiceSubscription} from "../redux/slice/UserSlice";
+import {publish} from "../Events/CustomEvents";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -29,6 +47,7 @@ export enum ModalTypes {
     MODAL_UPLOAD_PHOTO_PRELOADER = 'modal_upload_photo_preloader',
     MODAL_SUBSCRIBE_GROUP = 'modal_subscribe_group',
     MODAL_UNSUBSCRIBE_GROUP = 'modal_unsubscribe_group',
+    MODAL_PAY_VOICE = 'modal_pay_voice',
 }
 
 const ModalRootComponent:FC = () => {
@@ -37,6 +56,29 @@ const ModalRootComponent:FC = () => {
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
+    const dispatch = useDispatch();
+
+    const openVoicePayModal = async () => {
+        const voiceSubscriptionId = await getVoiceSubscription();
+
+        bridge.send('VKWebAppShowSubscriptionBox', {
+            action: 'create',
+            item: String(voiceSubscriptionId), // Идентификатор подписки в приложении
+        })
+            .then((data) => {
+                dispatch(setUserVoiceSubscription({
+                    subscription_id: Number(data.subscriptionId),
+                    pending_cancel: null,
+                }));
+                dispatch(setUserVip({is_vip: true}))
+                publish('USER_SUBSCRIBE', {total: 20});
+                routeNavigator.showModal(ModalTypes.MODAL_DONUT);
+                console.log('Success payment', data);
+            })
+            .catch((e) => {
+                console.log('Error payment', e);
+            })
+    }
 
     return (
         <ModalRoot activeModal={activeModal}>
@@ -166,8 +208,38 @@ const ModalRootComponent:FC = () => {
                 header="Внимание"
                 subheader="Вы вышли из группы, больше Вам не доступна дополнительная генерация."
             />
+            <ModalPage
+                nav={ModalTypes.MODAL_PAY_VOICE}
+                onClose={() => routeNavigator.hideModal()}
+                settlingHeight={100}
+                className="vip-modal-page"
+            >
+                <div style={{
+                    display: 'flex',
+                    flexFlow: 'column',
+                    alignItems: 'center',
+                    gap: 5
+                }}>
+                    <img width={320} style={{margin: 'auto', display: 'block'}} src={golden_light} alt="golden_light"/>
+                    <RenestraTitleWithVip/>
+                    <Title level="2">Оформление подписки VIP!</Title>
+                    <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
+                        <div style={{color: 'black'}}>Оформить подписку</div>
+                    </Button>
+                    <Title className="golden_text" level='2'>Всего 20 голосов в месяц.</Title>
+                    <List>
+                        <Cell disabled before={<Icon36CameraOutline fill='FFAA38'/>}>20 генераций в день</Cell>
+                        <Cell disabled before={<Icon28AccessibilityOutline width={36} height={36} fill='FFAA38'/>}>Приоритетная
+                            очередь</Cell>
+                        <Cell disabled before={<Icon28PaletteOutline width={36} height={36} fill='FFAA38'/>}>Эксклюзивные
+                            образы</Cell>
+                        <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>Отсутствие рекламы</Cell>
+                    </List>
+                    <Title className="golden_text" style={{textAlign: 'center'}} level='3'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Title>
+                </div>
+            </ModalPage>
         </ModalRoot>
-    )
+)
 }
 
 export default ModalRootComponent;

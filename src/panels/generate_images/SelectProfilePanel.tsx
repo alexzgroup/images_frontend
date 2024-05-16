@@ -49,7 +49,7 @@ export const LoadingImageTypes:FC = () => {
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
-            routeNavigator.showModal(ModalTypes.MODAL_GET_VIP_PROFILE)
+            routeNavigator.showModal(ModalTypes.MODAL_PAY_VOICE)
         } else {
             routeNavigator.push('/generate/select-image/' + imageTypeItem.id)
         }
@@ -69,18 +69,20 @@ export const LoadingImageTypes:FC = () => {
     useEffect(() => {
         setImageTypes(PromiseWrapper(apiGetImageTypes()));
 
-        bridge.send('VKWebAppShowBannerAd', {
-            banner_location: BannerAdLocation.BOTTOM
-        })
-            .then((data: any) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.banner}).then();
-                }
+        if (!userDbData?.is_vip) {
+            bridge.send('VKWebAppShowBannerAd', {
+                banner_location: BannerAdLocation.BOTTOM
             })
-            .catch((error) => {
-                // Ошибка
-                console.log(error);
-            });
+                .then((data: any) => {
+                    if (data.result) {
+                        addAdvertisement({type: AdvertisementEnum.banner}).then();
+                    }
+                })
+                .catch((error) => {
+                    // Ошибка
+                    console.log(error);
+                });
+        }
     }, []);
 
     return (

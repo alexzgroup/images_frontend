@@ -8,10 +8,15 @@ export type userApiType = {
     sex: 0|1|2,
     vk_group_id?: number,
     is_monetization: number|null,
-    date_vip_ended: string|null,
     is_vip: boolean,
     allow_messages: number,
     subscribe: boolean,
+    voice_subscribe: voiceSubscribeType|null,
+}
+
+export type voiceSubscribeType = {
+    subscription_id: number,
+    pending_cancel: number|null,
 }
 
 export type imageType = {
@@ -103,13 +108,6 @@ export type monetizationDataType = {
     subscribes: number,
     total_pays: number,
     groups: groupType[]|[],
-}
-
-export type socketDonutType = {
-    data: {
-        status: boolean,
-        date_vip_ended: string,
-    }
 }
 
 export type socketImageType = {
