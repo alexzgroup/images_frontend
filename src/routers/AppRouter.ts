@@ -77,6 +77,16 @@ const AppRouter = createHashRouter([
         panel: PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE,
         view: VIEW_CONSTANTS.VIEW_SERVICE,
     },
+    {
+        path: '/friends',
+        panel: PANEL_CONSTANTS.PANEL_FRIENDS,
+        view: VIEW_CONSTANTS.VIEW_FRIENDS,
+    },
+    {
+        path: '/profile',
+        panel: PANEL_CONSTANTS.PANEL_PROFILE,
+        view: VIEW_CONSTANTS.VIEW_PROFILE,
+    },
 ]);
 
 export default AppRouter;

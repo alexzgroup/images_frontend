@@ -45,6 +45,7 @@ import {publish} from "./Events/CustomEvents";
 import OfflinePanel from "./panels/service/OfflinePanel";
 import SelectImageNamePanel from "./panels/generate_images/SelectImageNamePanel";
 import SelectImageZodiacPanel from "./panels/generate_images/SelectImageZodiacPanel";
+import FriendsPanel from "./panels/friends/FriendsPanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -169,6 +170,9 @@ const App = () => {
 							<SelectImageNamePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE} />
 							<SelectImageZodiacPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_ZODIAC_SELECT_IMAGE} />
 							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_FRIENDS} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
+							<FriendsPanel id={PANEL_CONSTANTS.PANEL_FRIENDS} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<AboutPanel id={PANEL_CONSTANTS.PANEL_ABOUT_MAIN} />
