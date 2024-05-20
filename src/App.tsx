@@ -3,12 +3,10 @@ import bridge, {UserInfo} from '@vkontakte/vk-bridge';
 import {
 	AdaptivityProps,
 	Epic,
-	Platform,
 	ScreenSpinner,
 	SplitCol,
 	SplitLayout,
 	useAdaptivityWithJSMediaQueries,
-	usePlatform,
 	View,
 	ViewWidth
 } from '@vkontakte/vkui';
@@ -20,7 +18,6 @@ import HomePanel from './panels/main/HomePanel';
 import {useActiveVkuiLocation, useGetPanelForView, usePopout, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import TabBarWrapper from "./components/TabBarWrapper";
 import {PANEL_CONSTANTS, VIEW_CONSTANTS} from "./constants/RouterConstants";
-import {DEV_USER_VK_IDS} from "./constants/UserConstants";
 import SelectProfilePanel from "./panels/generate_images/SelectProfilePanel";
 import ModalRootComponent, {ModalTypes} from "./modals/ModalRoot";
 import './assets/css/style.scss';
@@ -46,6 +43,9 @@ import OfflinePanel from "./panels/service/OfflinePanel";
 import SelectImageNamePanel from "./panels/generate_images/SelectImageNamePanel";
 import SelectImageZodiacPanel from "./panels/generate_images/SelectImageZodiacPanel";
 import FriendsPanel from "./panels/friends/FriendsPanel";
+import ProfileInfoPanel from "./panels/profile/ProfileInfoPanel";
+import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGeneratePanel";
+import FriendPanel from "./panels/friends/FriendPanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -55,8 +55,6 @@ const App = () => {
 
 	const { view: activeView } = useActiveVkuiLocation();
 	const activePanel = useGetPanelForView();
-	const platform = usePlatform();
-	const isVkComPlatform = platform === Platform.VKCOM;
 	const view:AdaptivityProps = useAdaptivityWithJSMediaQueries();
 	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
@@ -117,10 +115,6 @@ const App = () => {
 		async function fetchData() {
 			const userInfo = await bridge.send('VKWebAppGetUserInfo');
 
-			if (DEV_USER_VK_IDS.includes(userInfo.id) && !isVkComPlatform) {
-				import("./eruda").then(({ default: eruda }) => {});
-			}
-
 			setUser(userInfo);
 			const {popular_image_types, user} = await apiInitUser();
 
@@ -173,6 +167,11 @@ const App = () => {
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_FRIENDS} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<FriendsPanel id={PANEL_CONSTANTS.PANEL_FRIENDS} />
+							<FriendPanel id={PANEL_CONSTANTS.PANEL_FRIEND} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_PROFILE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
+							<ProfileInfoPanel id={PANEL_CONSTANTS.PANEL_PROFILE_INFO} />
+							<ProfileHistoryGeneratePanel id={PANEL_CONSTANTS.PANEL_PROFILE_HISTORY_GENERATE} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<AboutPanel id={PANEL_CONSTANTS.PANEL_ABOUT_MAIN} />
