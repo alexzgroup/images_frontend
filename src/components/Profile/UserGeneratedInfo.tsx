@@ -1,5 +1,5 @@
 import React from "react";
-import {Avatar, MiniInfoCell, RichCell, Title} from "@vkontakte/vkui";
+import {Avatar, Caption, MiniInfoCell, RichCell, Title} from "@vkontakte/vkui";
 import {Icon20ClockOutline, Icon20Like, Icon20PalleteOutline} from "@vkontakte/icons";
 import {UserWithGeneratedInfoType} from "../../types/ApiTypes";
 import {ColorsList} from "../../types/ColorTypes";
@@ -10,13 +10,19 @@ const UserGenerateInfo: React.FC<{user: UserWithGeneratedInfoType}> = ({user}) =
         text={
             <React.Fragment>
                 <MiniInfoCell style={{paddingLeft: 0}} before={<Icon20Like fill={ColorsList.primary} />}>
-                    Любимый образ: <span style={{color: 'black'}}>{user.popular_image_type_name}</span>
+                    <Caption level="1">
+                        Любимый образ: <b>{user.popular_image_type_name}</b>
+                    </Caption>
                 </MiniInfoCell>
                 <MiniInfoCell style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 0}} before={<Icon20ClockOutline fill={ColorsList.primary} />}>
-                    Последняя генерация: <span style={{color: 'black'}}>{user.last_date_generate}</span>
+                    <Caption level="1">
+                        Последняя генерация:: <b>{user.last_date_generate}</b>
+                    </Caption>
                 </MiniInfoCell>
                 <MiniInfoCell style={{paddingLeft: 0}} before={<Icon20PalleteOutline fill={ColorsList.primary} />}>
-                    Всего генераций: <span style={{color: 'black'}}>{user.total_generate}</span>
+                    <Caption level="1">
+                        Всего генераций: <b>{user.total_generate}</b>
+                    </Caption>
                 </MiniInfoCell>
             </React.Fragment>
         }

@@ -12,7 +12,7 @@ import {AppConfigureStore} from "./redux/store/ConfigureStore";
 bridge.send("VKWebAppInit");
 
 ReactDOM.render(
-    <ConfigProvider>
+    <ConfigProvider appearance="dark">
       <AdaptivityProvider>
         <AppRoot>
           <RouterProvider router={AppRouter}>

@@ -112,8 +112,9 @@ const Content:React.FC = () => {
                 <img style={{width: '50%', borderRadius: 10, objectFit: 'contain'}} src={uploadPhoto.url} alt='Renestra'/>
             </div>
             <Spacing />
-            <Subhead weight="2">Образ: <span
-                style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.image_type.name}</span></Subhead>
+            {
+                uploadPhoto.image_type.name && <Subhead weight="2">Образ: <span style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.image_type.name}</span></Subhead>
+            }
             <Subhead weight="2">Создан: <span
                 style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.created_at}</span></Subhead>
             <Subhead weight="1" style={{width: '100%', textAlign: 'center'}}>Поделиться с друзьями</Subhead>

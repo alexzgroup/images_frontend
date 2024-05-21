@@ -52,7 +52,7 @@ export const LoadingImageTypes:FC = () => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
             routeNavigator.showModal(ModalTypes.MODAL_PAY_VOICE)
         } else {
-            routeNavigator.push('/generate/select-image/' + imageTypeItem.id)
+            routeNavigator.push('/generate/select-default-image/' + imageTypeItem.id)
         }
     }
 
@@ -63,7 +63,7 @@ export const LoadingImageTypes:FC = () => {
         }
 
         if (imageTypesFiltered) {
-            routeNavigator.push('/generate/select-image/' + (imageTypesFiltered[Math.floor(Math.random() * (imageTypesFiltered.length - 1))].id))
+            routeNavigator.push('/generate/select-default-image/' + (imageTypesFiltered[Math.floor(Math.random() * (imageTypesFiltered.length - 1))].id))
         }
     }
 
@@ -143,8 +143,9 @@ export const LoadingImageTypes:FC = () => {
                                 <div style={{ display: 'flex' }}>
                                     {
                                         imageTypes.favorite_image_types.map((item, key) => (
-                                            <HorizontalCell key={item.id} size="l" header={item.name} subtitle={item.description}>
-                                                <RouterLink to={`/generate/select-${item.type}-image/${item.id}`}>
+                                            <HorizontalCell
+                                                onClick={() => routeNavigator.push(`/generate/select-${item.type}-image/${item.id}`)}
+                                                key={item.id} size="l" header={item.name} subtitle={item.description}>
                                                     <img style={{
                                                         width: 220,
                                                         height: 124,
@@ -153,7 +154,6 @@ export const LoadingImageTypes:FC = () => {
                                                         border: 'var(--vkui--size_border--regular) solid var(--vkui--color_image_border_alpha)',
                                                         objectFit: 'cover',
                                                     }} src={item.url}  alt='Ренестра' />
-                                                </RouterLink>
                                             </HorizontalCell>
                                         ))
                                     }

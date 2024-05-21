@@ -41,7 +41,6 @@ type FriendType = UserGetFriendsFriend & {
 const FriendsPanel: React.FC<Props> = ({id}) => {
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [offset, setOffset] = useState<number>(0);
-    const [appFriends, setAppFriends] = React.useState<[]>([]);
     const [allFriends, setAllFriends] = React.useState<FriendType[] | []>([]);
     const [hasFriendsPermission, setHasFriendsPermission] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
@@ -49,6 +48,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch();
     const routeNavigator = useRouteNavigator();
     const totalFriends = useRef(0);
+    const appFriendsIds = useRef([]);
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
 
     const openSnackBar = (icon: JSX.Element, text: string): void => {
@@ -78,8 +78,10 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
             }
         });
 
+        console.log(appFriendsIds.current, response.items);
+
         const users = response.items.map((item) => Object.assign(item, {
-            installApp: appFriends.includes(item.id as never),
+            installApp: appFriendsIds.current.includes(item.id as never),
         }))
 
         totalFriends.current = response.count;
@@ -105,7 +107,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
                             access_token: data.access_token,
                         }
                     }).then(({response}: {response: []}) => {
-                        setAppFriends(response);
+                        appFriendsIds.current = response;
                         getFriends(data.access_token).finally(() => setIsLoading(false));
                     });
                 }

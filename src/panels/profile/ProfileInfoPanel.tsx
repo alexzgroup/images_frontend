@@ -209,7 +209,7 @@ const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
                     />
             }
             {
-                user?.total_generate &&
+                (!!user?.total_generate) &&
                     <Group header={<Header
                         aside={<RouterLink to={"/profile/history-generated/" + user.id}>Показать все</RouterLink>}>История
                         генераций</Header>}>

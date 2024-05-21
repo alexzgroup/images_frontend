@@ -30,7 +30,8 @@ const FriendsListContent: React.FC = () => {
                     user_ids: appUserIds.join(','),
                 });
 
-                resolve( Array.isArray(loadUsers) ? loadUsers : [loadUsers]);
+                // @ts-ignore
+                resolve( loadUsers['result'] ? loadUsers['result'] : [loadUsers]);
             } else {
                 resolve([]);
             }

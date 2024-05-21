@@ -18,7 +18,7 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
     },
     {
-        path: '/generate/select-image/:imageTypeId',
+        path: '/generate/select-default-image/:imageTypeId',
         panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_IMAGE,
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,
     },
