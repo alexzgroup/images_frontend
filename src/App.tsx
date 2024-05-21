@@ -1,12 +1,14 @@
 import React, {useEffect, useState} from 'react';
-import bridge, {UserInfo} from '@vkontakte/vk-bridge';
+import bridge, {GetLaunchParamsResponse, UserInfo} from '@vkontakte/vk-bridge';
 import {
 	AdaptivityProps,
 	Epic,
+	Platform,
 	ScreenSpinner,
 	SplitCol,
 	SplitLayout,
 	useAdaptivityWithJSMediaQueries,
+	usePlatform,
 	View,
 	ViewWidth
 } from '@vkontakte/vkui';
@@ -18,6 +20,7 @@ import HomePanel from './panels/main/HomePanel';
 import {useActiveVkuiLocation, useGetPanelForView, usePopout, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import TabBarWrapper from "./components/TabBarWrapper";
 import {PANEL_CONSTANTS, VIEW_CONSTANTS} from "./constants/RouterConstants";
+import {DEV_USER_VK_IDS} from "./constants/UserConstants";
 import SelectProfilePanel from "./panels/generate_images/SelectProfilePanel";
 import ModalRootComponent, {ModalTypes} from "./modals/ModalRoot";
 import './assets/css/style.scss';
@@ -55,6 +58,8 @@ const App = () => {
 
 	const { view: activeView } = useActiveVkuiLocation();
 	const activePanel = useGetPanelForView();
+	const platform = usePlatform();
+	const isVkComPlatform = platform === Platform.VKCOM;
 	const view:AdaptivityProps = useAdaptivityWithJSMediaQueries();
 	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
@@ -115,8 +120,21 @@ const App = () => {
 		async function fetchData() {
 			const userInfo = await bridge.send('VKWebAppGetUserInfo');
 
+			if (DEV_USER_VK_IDS.includes(userInfo.id) && !isVkComPlatform) {
+				import("./eruda").then(({ default: eruda }) => {});
+			}
+
 			setUser(userInfo);
 			const {popular_image_types, user} = await apiInitUser();
+
+			const launchParams: GetLaunchParamsResponse & {
+				vk_has_profile_button?: number,
+				vk_profile_id?: number,
+			} = await bridge.send('VKWebAppGetLaunchParams');
+
+			if (launchParams.vk_ref === 'third_party_profile_buttons' && launchParams.vk_profile_id) {
+				routeNavigator.replace('/friend/' + launchParams.vk_profile_id)
+			}
 
 			dispatch(setUserDbData(user));
 			dispatch(hideAppLoading());

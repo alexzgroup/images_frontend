@@ -32,6 +32,7 @@ import {generateWordsArray} from "../../constants/AppConstants";
 import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
+import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 
 interface Props {
     id: string;
@@ -230,7 +231,7 @@ const SelectImageNamePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

@@ -1,3 +1,5 @@
+import {UserInfo} from "@vkontakte/vk-bridge";
+
 export type userApiType = {
     balance: number,
     bdate: string,
@@ -96,7 +98,12 @@ export type operationWithMessageType = operationResultType & {
 export type uploadPhotoType = {
     url: string,
     base64: string,
-    type: 'default'|'name'|'zodiac',
+    created_at: string,
+    image_type: {
+        type: 'default'|'name'|'zodiac',
+        name: string,
+        sex?: number,
+    }
 }
 
 export type generateImageType = operationWithMessageType & {
@@ -184,3 +191,12 @@ export enum ShareTypeEnum {
     SHARE_WALL = "share_wall",
     SHARE_HISTORY = "share_history"
 }
+
+export type GenerateProfileInfoType = {
+    popular_image_type_name: string,
+    last_date_generate: string,
+    total_generate: number,
+    history_generate: GeneratedImageType[],
+}
+
+export type UserWithGeneratedInfoType = UserInfo & GenerateProfileInfoType

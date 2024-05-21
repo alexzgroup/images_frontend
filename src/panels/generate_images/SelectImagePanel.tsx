@@ -46,6 +46,7 @@ import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels"
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import {ButtonGold} from "../../components/RenestraVip/ButtonGold";
 import RenestraTitleWithLogo from "../../components/RenestraVip/RenestraTitleWithLogo";
+import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 
 interface Props {
     id: string;
@@ -395,7 +396,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

@@ -20,7 +20,11 @@ const initialState: ReduxSliceImageInterface = {
         url: '',
         base64: '',
         photoUploadId: '',
-        type: 'default',
+        created_at: '',
+        image_type: {
+            type: 'default',
+            name: '',
+        }
     },
 
 }

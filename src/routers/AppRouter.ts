@@ -83,8 +83,18 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_FRIENDS,
     },
     {
+        path: '/friend/:userId',
+        panel: PANEL_CONSTANTS.PANEL_FRIEND,
+        view: VIEW_CONSTANTS.VIEW_FRIENDS,
+    },
+    {
         path: '/profile',
-        panel: PANEL_CONSTANTS.PANEL_PROFILE,
+        panel: PANEL_CONSTANTS.PANEL_PROFILE_INFO,
+        view: VIEW_CONSTANTS.VIEW_PROFILE,
+    },
+    {
+        path: '/profile/history-generated/:userId',
+        panel: PANEL_CONSTANTS.PANEL_PROFILE_HISTORY_GENERATE,
         view: VIEW_CONSTANTS.VIEW_PROFILE,
     },
 ]);

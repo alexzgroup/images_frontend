@@ -26,6 +26,7 @@ import {ColorsList} from "../../types/ColorTypes";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import InfiniteScroll from "react-infinite-scroll-loader-y";
 import {RootStateType} from "../../redux/store/ConfigureStore";
+import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 
 
 interface Props {
@@ -46,6 +47,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
     const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
+    const routeNavigator = useRouteNavigator();
     const totalFriends = useRef(0);
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
 
@@ -115,7 +117,6 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
     }
 
     const shareWallPost = (userId: number) => {
-
         bridge.send('VKWebAppShowWallPostBox', {
             owner_id: userId,
             message: 'В данном приложении можно сгенерировать себя в различных образах себе на аватарку, заходи скорее! ' + urlApp,
@@ -201,7 +202,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
                                                             before={<Avatar size={48} src={item.photo_200} />}
                                                             after={
                                                                 item.installApp ?
-                                                                    <IconButton>
+                                                                    <IconButton onClick={() => routeNavigator.push('/profile/' + item.id)}>
                                                                         <Icon28UserCircleOutline />
                                                                     </IconButton>
                                                                     :

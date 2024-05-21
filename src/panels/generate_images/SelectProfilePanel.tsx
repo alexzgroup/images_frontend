@@ -5,7 +5,7 @@ import {
     Button,
     Div,
     Group,
-    Header,
+    Header, HorizontalCell, HorizontalScroll,
     Panel,
     PanelHeader,
     PanelSpinner,
@@ -37,6 +37,7 @@ interface Props {
 
 type  ImageTypeFromRequest = {
     exclusive_image_types: exclusiveImageTypesType[],
+    favorite_image_types: (exclusiveImageTypesType & {description: string})[] ,
     items: imageType[],
 }
 
@@ -133,6 +134,31 @@ export const LoadingImageTypes:FC = () => {
                                     ))
                                 }
                             </Div>
+                        </Group>
+                    }
+                    {
+                        !!imageTypes.favorite_image_types.length &&
+                        <Group header={<Header mode='secondary'>Избранные образы</Header>}>
+                            <HorizontalScroll>
+                                <div style={{ display: 'flex' }}>
+                                    {
+                                        imageTypes.favorite_image_types.map((item, key) => (
+                                            <HorizontalCell key={item.id} size="l" header={item.name} subtitle={item.description}>
+                                                <RouterLink to={`/generate/select-${item.type}-image/${item.id}`}>
+                                                    <img style={{
+                                                        width: 220,
+                                                        height: 124,
+                                                        borderRadius: 10,
+                                                        boxSizing: 'border-box',
+                                                        border: 'var(--vkui--size_border--regular) solid var(--vkui--color_image_border_alpha)',
+                                                        objectFit: 'cover',
+                                                    }} src={item.url}  alt='Ренестра' />
+                                                </RouterLink>
+                                            </HorizontalCell>
+                                        ))
+                                    }
+                                </div>
+                            </HorizontalScroll>
                         </Group>
                     }
                     <Group
