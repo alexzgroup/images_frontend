@@ -1,5 +1,5 @@
 import React, {Suspense, useEffect, useState} from "react";
-import {Div, Group, Header, Image, Panel, PanelHeader, PanelSpinner} from "@vkontakte/vkui";
+import {Div, Group, Header, Image, Panel, PanelHeader, PanelSpinner, Placeholder} from "@vkontakte/vkui";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {UserWithGeneratedInfoType} from "../../types/ApiTypes";
 import bridge from "@vkontakte/vk-bridge";
@@ -10,6 +10,8 @@ import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 import {setGenerateImageId} from "../../redux/slice/ImageSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {useDispatch} from "react-redux";
+import {Icon56ErrorTriangleOutline} from "@vkontakte/icons";
+import {ColorsList} from "../../types/ColorTypes";
 
 const PanelContent: React.FC = () => {
     const [user, setUser] = useState<UserWithGeneratedInfoType>();
@@ -48,7 +50,8 @@ const PanelContent: React.FC = () => {
                 }
             </Group>
             {
-                user?.total_generate &&
+                (!!user?.total_generate)
+                    ?
                     <Group header={<Header
                         aside={<RouterLink to={"/profile/history-generated/" + user.id}>Показать все</RouterLink>}>История генераций</Header>}>
                         <Div style={{display: 'flex', gap: 5, flexGrow: 1, flexWrap: 'wrap', justifyContent: 'flex-start'}}>
@@ -65,6 +68,11 @@ const PanelContent: React.FC = () => {
                             }
                         </Div>
                     </Group>
+                    :
+                    <Placeholder
+                        icon={<Icon56ErrorTriangleOutline fill={ColorsList.error} />}
+                        header="У пользователя пока нет генераций!"
+                    />
             }
         </React.Fragment>
     )

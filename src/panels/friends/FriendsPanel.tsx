@@ -1,4 +1,4 @@
-import React, {ReactElement, useEffect, useRef, useState} from 'react';
+import React, {ReactElement, Suspense, useEffect, useRef} from 'react';
 
 import {
     Avatar,
@@ -10,10 +10,11 @@ import {
     PanelHeader,
     PanelSpinner,
     Placeholder,
-    SimpleCell, Snackbar,
+    SimpleCell,
+    Snackbar,
     Spinner
 } from '@vkontakte/vkui';
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import bridge, {UserGetFriendsFriend} from "@vkontakte/vk-bridge";
 import {
     Icon28CheckCircleOutline,
@@ -23,10 +24,10 @@ import {
     Icon56UsersOutline
 } from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
-import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
+import {setAccessToken} from "../../redux/slice/UserSlice";
 import InfiniteScroll from "react-infinite-scroll-loader-y";
-import {RootStateType} from "../../redux/store/ConfigureStore";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import PromiseWrapper from "../../api/PromiseWrapper";
 
 
 interface Props {
@@ -34,21 +35,22 @@ interface Props {
 }
 
 type FriendType = UserGetFriendsFriend & {
-    installApp: boolean,
-    can_post: 0|1,
+    can_post: 0 | 1,
 }
 
-const FriendsPanel: React.FC<Props> = ({id}) => {
-    const [isLoading, setIsLoading] = useState<boolean>(true);
-    const [offset, setOffset] = useState<number>(0);
-    const [allFriends, setAllFriends] = React.useState<FriendType[] | []>([]);
+const PanelContent: React.FC = () => {
+    const [anyFriends, setAnyFriends] = React.useState<FriendType[]>([]);
+    const [appFriends, setAppFriends] = React.useState<FriendType[]>([]);
+    const [hasMore, setHasMore] = React.useState<boolean>(true);
+
     const [hasFriendsPermission, setHasFriendsPermission] = React.useState(false);
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
-    const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
     const routeNavigator = useRouteNavigator();
-    const totalFriends = useRef(0);
+
     const appFriendsIds = useRef([]);
+    const allAnyFriends = useRef<FriendType[]>([]);
+
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
 
     const openSnackBar = (icon: JSX.Element, text: string): void => {
@@ -63,42 +65,20 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
         );
     };
 
-    const getFriends = async (access_token: string) => {
-        const {response}: { response: {
-                count: number,
-                items: (UserGetFriendsFriend & {can_post: 0|1})[]|[],
-            } } = await bridge.send('VKWebAppCallAPIMethod', {
-            method: 'friends.get',
-            params: {
-                v: process.env.REACT_APP_V_API,
-                access_token: access_token,
-                fields: 'photo_200,can_post',
-                count: 20,
-                offset: offset,
-            }
-        });
-
-        console.log(appFriendsIds.current, response.items);
-
-        const users = response.items.map((item) => Object.assign(item, {
-            installApp: appFriendsIds.current.includes(item.id as never),
-        }))
-
-        totalFriends.current = response.count;
-        setAllFriends([...allFriends, ...users]);
-        setOffset((value) => value + 20);
+    const getFriends = (page: number, { offset, limit }: {offset: number, limit: number}) => {
+        const users = allAnyFriends.current.slice(offset, limit * (page + 1));
+        setAnyFriends([...anyFriends, ...users]);
+        setHasMore(allAnyFriends.current.length > limit * (page + 1));
     }
 
-    const getToken = () => {
+    const getToken = (resolve: any = () => null) => {
         bridge.send('VKWebAppGetAuthToken', {
             app_id: Number(process.env.REACT_APP_APP_ID),
             scope: 'friends'
         })
-            .then( (data) => {
+            .then((data) => {
                 if (data.access_token) {
                     dispatch(setAccessToken(data.access_token))
-                    setHasFriendsPermission(true);
-                    setIsLoading(true);
 
                     bridge.send('VKWebAppCallAPIMethod', {
                         method: 'friends.getAppUsers',
@@ -106,14 +86,46 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
                             v: process.env.REACT_APP_V_API,
                             access_token: data.access_token,
                         }
-                    }).then(({response}: {response: []}) => {
+                    }).then(async ({response}: { response: [] }) => {
                         appFriendsIds.current = response;
-                        getFriends(data.access_token).finally(() => setIsLoading(false));
+
+                        const {response: dataAllFriends}: {
+                            response: {
+                                count: number,
+                                items: FriendType[],
+                            }
+                        } = await bridge.send('VKWebAppCallAPIMethod', {
+                            method: 'friends.get',
+                            params: {
+                                v: process.env.REACT_APP_V_API,
+                                access_token: data.access_token,
+                                fields: 'photo_200,can_post',
+                                order: 'hints',
+                            }
+                        });
+
+                        if (dataAllFriends.count) {
+                            const appFriends = dataAllFriends.items.filter((item) => response.includes(item.id as never))
+                            const anyFriends = dataAllFriends.items.filter((item) => !response.includes(item.id as never))
+                            allAnyFriends.current = anyFriends;
+
+                            setAppFriends(appFriends);
+                            setAnyFriends(anyFriends.slice(0, 20));
+
+                            if (anyFriends.length <= 20) {
+                                setHasMore(false);
+                            }
+                        } else {
+                            setHasMore(false);
+                        }
+
+                        setHasFriendsPermission(true);
+                        resolve(true)
                     });
                 }
             })
-            .catch( (error) => {
-                setIsLoading(false);
+            .catch((error) => {
+                resolve(false)
                 console.log(error);
             });
     }
@@ -126,7 +138,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
         })
             .then((data) => {
                 if (data.post_id) {
-                    openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Запись опубликована');
+                    openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success}/>, 'Запись опубликована');
                 }
             })
             .catch((error) => {
@@ -142,7 +154,7 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
             .then((data) => {
                 // @ts-ignore
                 if (!!data.result.length) {
-                    openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success} />, 'Запись опубликована');
+                    openSnackBar(<Icon28CheckCircleOutline fill={ColorsList.success}/>, 'Запись опубликована');
                 }
             })
             .catch((error) => {
@@ -151,91 +163,117 @@ const FriendsPanel: React.FC<Props> = ({id}) => {
             });
     }
 
-    useEffect(() => {
-        bridge.send('VKWebAppCheckAllowedScopes', {
-            scopes: 'friends',
-        })
-            .then((data) => {
-                if (data.result) {
-                    const findScope = data.result.find(item => item.scope === 'friends' && item.allowed);
-                    setHasFriendsPermission(!!findScope);
-                    getToken();
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                setIsLoading(false);
+    const init = () => {
+        return new Promise(async (resolve) => {
+            const {result: scopes} = await bridge.send('VKWebAppCheckAllowedScopes', {
+                scopes: 'friends',
             });
+
+            const findScope = scopes.find(item => item.scope === 'friends' && item.allowed);
+
+            if (!!findScope) {
+                getToken((value: boolean) => resolve(value));
+            } else {
+                resolve(false);
+            }
+        })
+    }
+
+    useEffect(() => {
+        setHasFriendsPermission(PromiseWrapper(init()))
     }, []);
 
-    return (<Panel id={id}>
-            <PanelHeader>Друзья</PanelHeader>
+    return (
+        <React.Fragment>
             {
-                isLoading ? <PanelSpinner size="medium" /> :
+                hasFriendsPermission ?
                     <React.Fragment>
                         {
-                            hasFriendsPermission ?
-                                <React.Fragment>
+                            (!appFriends.length && !anyFriends.length) &&
+                            <Placeholder
+                                stretched
+                                icon={<Icon56ErrorTriangleOutline fill={ColorsList.error}/>}
+                                header="У Вас не найдено друзей!"
+                            />
+                        }
+                        {
+                            (!!appFriends.length) &&
+                            <Group
+                                header={<Header>Список друзей</Header>}
+                                separator="show">
+                                {
+                                    appFriends.map((item, i) => (
+                                        <SimpleCell
+                                            key={i}
+                                            onClick={() => routeNavigator.push('/friend/' + item.id)}
+                                            before={<Avatar size={48} src={item.photo_200}/>}
+                                            after={
+                                                <IconButton>
+                                                    <Icon28UserCircleOutline/>
+                                                </IconButton>
+                                            }
+                                            subtitle="Перейти в профиль"
+                                        >
+                                            {item.first_name + " " + item.last_name}
+                                        </SimpleCell>
+                                    ))
+                                }
+                            </Group>
+                        }
+                        {
+                            (!!anyFriends.length) &&
+                            <Group
+                                header={<Header>Пригласить друзей</Header>}
+                                separator="show">
+                                <InfiniteScroll dataLength={anyFriends.length}
+                                                batchSize={20}
+                                                loadMore={getFriends}
+                                                hasMore={hasMore}
+                                                loader={<Spinner size="regular"/>}
+                                >
                                     {
-                                        !allFriends.length &&
-                                            <Placeholder
-                                                stretched
-                                                icon={<Icon56ErrorTriangleOutline fill={ColorsList.error} />}
-                                                header="У Вас не найдено друзей!"
-                                            />
-                                    }
-                                    {
-                                        !!allFriends.length &&
-                                        <Group
-                                            header={<Header>Список друзей</Header>}
-                                            separator="show">
-
-                                            <InfiniteScroll dataLength={allFriends.length}
-                                                            batchSize={20}
-                                                            loadMore={() => getFriends(access_token)}
-                                                            hasMore={totalFriends.current > allFriends.length}
-                                                            loader={<Spinner size="regular" />}
-                                            >
-                                                {
-                                                    allFriends.map((item, i) => (
-                                                        <SimpleCell
-                                                            disabled
-                                                            key={i}
-                                                            before={<Avatar size={48} src={item.photo_200} />}
-                                                            after={
-                                                                item.installApp ?
-                                                                    <IconButton onClick={() => routeNavigator.push('/profile/' + item.id)}>
-                                                                        <Icon28UserCircleOutline />
-                                                                    </IconButton>
-                                                                    :
-                                                                    <IconButton onClick={() => item.can_post ? shareWallPost(item.id) : shareMessage()}>
-                                                                        <Icon28UserAddBadgeOutline />
-                                                                    </IconButton>
-                                                            }
-                                                            subtitle={item.installApp ? "Перейти в профиль" : "Пригласить"}
-                                                        >
-                                                            {item.first_name + " " + item.last_name}
-                                                        </SimpleCell>
-                                                    ))
+                                        anyFriends.map((item, i) => (
+                                            <SimpleCell
+                                                key={i}
+                                                onClick={() => item.can_post ? shareWallPost(item.id) : shareMessage()}
+                                                before={<Avatar size={48} src={item.photo_200}/>}
+                                                after={
+                                                    <IconButton>
+                                                        <Icon28UserAddBadgeOutline/>
+                                                    </IconButton>
                                                 }
-                                            </InfiniteScroll>
-                                        </Group>
+                                                subtitle="Пригласить"
+                                            >
+                                                {item.first_name + " " + item.last_name}
+                                            </SimpleCell>
+                                        ))
                                     }
-                                </React.Fragment>
-                                :
-                                <Group>
-                                    <Placeholder
-                                        icon={<Icon56UsersOutline fill={ColorsList.primary} />}
-                                        header="Здесь отображаются твои друзья и их генерации."
-                                        action={<Button onClick={getToken} size="l">Посмотреть друзей</Button>}
-                                    >
-                                        Разрешите доступ к своим друзьям, чтобы посмотреть их профили и изображения!
-                                    </Placeholder>
-                                </Group>
+                                </InfiniteScroll>
+                            </Group>
                         }
                     </React.Fragment>
+                    :
+                    <Group>
+                        <Placeholder
+                            icon={<Icon56UsersOutline fill={ColorsList.primary}/>}
+                            header="Здесь отображаются твои друзья и их генерации."
+                            action={<Button onClick={getToken} size="l">Посмотреть друзей</Button>}
+                        >
+                            Разрешите доступ к своим друзьям, чтобы посмотреть их профили и изображения!
+                        </Placeholder>
+                    </Group>
             }
             {snackbar}
+        </React.Fragment>
+    )
+}
+
+const FriendsPanel: React.FC<Props> = ({id}) => {
+    return (<Panel id={id}>
+            <PanelHeader>Друзья</PanelHeader>
+            <Suspense fallback={<PanelSpinner size="regular"/>}>
+                <PanelContent/>
+            </Suspense>
         </Panel>
     )
 }
