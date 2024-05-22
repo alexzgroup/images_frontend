@@ -63,7 +63,7 @@ const Content:React.FC = () => {
                     }
 
                     if (uploadPhoto && vkUserInfo) {
-                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo, wallMessage: WallMessagesEnum[uploadPhoto.image_type.type]});
+                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo, wallMessage: WallMessagesEnum[uploadPhoto.type]});
                         bridge.send('VKWebAppShowWallPostBox', wallData).then((r) => {
                             if (r.post_id) {
                                 updateShareGenerateImage(generateImageId, ShareTypeEnum.SHARE_WALL)
@@ -93,7 +93,7 @@ const Content:React.FC = () => {
 
     const init = () => {
         return new Promise(async (resolve) => {
-            dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: '', created_at: '', image_type: {type: 'default', name: ''}}))
+            dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: '', created_at: '',type: 'default',  image_type: {name: ''}}))
             const response = await apiGetGenerateImage(Number(generateImageId));
             dispatch(setUploadPhoto({...response, photoUploadId: '',}))
 

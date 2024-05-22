@@ -99,8 +99,8 @@ export type uploadPhotoType = {
     url: string,
     base64: string,
     created_at: string,
+    type: 'default'|'name'|'zodiac',
     image_type: {
-        type: 'default'|'name'|'zodiac',
         name: string,
         sex?: number,
     }
