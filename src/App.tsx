@@ -34,7 +34,7 @@ import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
 import {imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
-import {setUserDbData, setUserSubscribeStatus} from "./redux/slice/UserSlice";
+import {setUserDbData, setUserSubscribeStatus, setVkHasProfileButton} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
@@ -138,6 +138,8 @@ const App = () => {
 
 			dispatch(setUserDbData(user));
 			dispatch(hideAppLoading());
+			dispatch(setVkHasProfileButton(Number(launchParams.vk_has_profile_button)))
+
 			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
 
 			setPopularImageTypes(popular_image_types);

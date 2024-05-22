@@ -15,7 +15,7 @@ import {
     Title
 } from "@vkontakte/vkui";
 import {RouterLink, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import bridge, {GetLaunchParamsResponse, UserInfo} from "@vkontakte/vk-bridge";
+import bridge, {UserInfo} from "@vkontakte/vk-bridge";
 import {
     Icon20CheckNewsfeedOutline,
     Icon28CancelCircleFillRed,
@@ -54,15 +54,6 @@ const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
 
     const init = () => {
         return new Promise(async (resolve) => {
-            let init_vk_has_profile_button = vk_has_profile_button;
-            if (typeof vk_has_profile_button === "undefined") {
-                const launchParams: GetLaunchParamsResponse & {
-                    vk_has_profile_button?: number,
-                } = await bridge.send('VKWebAppGetLaunchParams');
-                init_vk_has_profile_button = Number(launchParams.vk_has_profile_button);
-                dispatch(setVkHasProfileButton(init_vk_has_profile_button))
-            }
-
             const {result: scopes} = await bridge.send('VKWebAppCheckAllowedScopes', {
                 scopes: 'friends',
             });
