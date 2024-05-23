@@ -213,6 +213,18 @@ const ModalRootComponent:FC = () => {
                 icon={<Icon56Users3Outline />}
                 header="Поздравляем"
                 subheader="Вы успешно подписались на группу, теперь Вам доступна дополнительная генерация."
+                actions={
+                    <ButtonGroup mode="vertical" stretched>
+                        <Button
+                            size="l"
+                            mode="secondary"
+                            stretched
+                            onClick={() => routeNavigator.hideModal()}
+                        >
+                            Закрыть
+                        </Button>
+                    </ButtonGroup>
+                }
             />
             <ModalCard
                 id={ModalTypes.MODAL_UNSUBSCRIBE_GROUP}
