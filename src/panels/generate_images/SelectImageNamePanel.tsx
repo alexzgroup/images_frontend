@@ -194,7 +194,7 @@ const PanelData = () => {
             <Group>
                 <MiniInfoCell mode="accent" before={<Icon36Favorite fill={ColorsList.primary} />} textWrap="full">
                     <Title weight="2" level="2">
-                        Узнай как тебя охарактеризовывает твоё имя и внешность!
+                        Узнай, как тебя охарактеризовывает твоё имя и внешность!
                     </Title>
                 </MiniInfoCell>
             </Group>

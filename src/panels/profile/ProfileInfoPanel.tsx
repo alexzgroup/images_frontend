@@ -195,7 +195,7 @@ const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
                     <Banner
                         size="m"
                         header="Кто из друзей уже в приложении?"
-                        subheader="Узнай кто из друзей уже воспользовался приложением. Посмотри результаты генерации своих друзей!"
+                        subheader="Узнай, кто из друзей уже воспользовался приложением. Посмотри результаты генерации своих друзей!"
                         actions={<Button onClick={getToken} mode="primary" size="m">Посмотреть друзей</Button>}
                     />
             }

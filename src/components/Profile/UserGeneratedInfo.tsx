@@ -16,7 +16,7 @@ const UserGenerateInfo: React.FC<{user: UserWithGeneratedInfoType}> = ({user}) =
                 </MiniInfoCell>
                 <MiniInfoCell style={{paddingLeft: 0, paddingTop: 0, paddingBottom: 0}} before={<Icon20ClockOutline fill={ColorsList.primary} />}>
                     <Caption level="1">
-                        Последняя генерация:: <b>{user.last_date_generate}</b>
+                        Последняя генерация: <b>{user.last_date_generate}</b>
                     </Caption>
                 </MiniInfoCell>
                 <MiniInfoCell style={{paddingLeft: 0}} before={<Icon20PalleteOutline fill={ColorsList.primary} />}>

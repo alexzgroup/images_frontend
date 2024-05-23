@@ -1,5 +1,5 @@
 import React, {Suspense, useEffect, useState} from "react";
-import {Div, Group, Image, Panel, PanelHeader, PanelSpinner} from "@vkontakte/vkui";
+import {Div, Group, Image, Panel, PanelHeader, PanelSpinner, Placeholder} from "@vkontakte/vkui";
 import {GeneratedImageType} from "../../types/ApiTypes";
 import {getGeneratedImages} from "../../api/AxiosApi";
 import PromiseWrapper from "../../api/PromiseWrapper";
@@ -8,6 +8,8 @@ import {setGenerateImageId} from "../../redux/slice/ImageSlice";
 import {useDispatch} from "react-redux";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
+import {Icon56ErrorTriangleOutline} from "@vkontakte/icons";
+import {ColorsList} from "../../types/ColorTypes";
 
 
 const PanelContent: React.FC = () => {
@@ -34,19 +36,28 @@ const PanelContent: React.FC = () => {
 
     return (
         <Group>
-            <Div style={{display: 'flex', gap: 5, flexGrow: 1, flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-                {
-                    generatedImages.map((item, key) => (
-                        <div key={key} onClick={() => showGeneratedImage(item.id)}>
-                            <Image
-                                size={96}
-                                src={item.url}
-                                borderRadius="m"
-                            />
-                        </div>
-                    ))
-                }
-            </Div>
+            {
+                (!!generatedImages.length)
+                    ?
+                        <Div style={{display: 'flex', gap: 5, flexGrow: 1, flexWrap: 'wrap', justifyContent: 'flex-start'}}>
+                            {
+                                generatedImages.map((item, key) => (
+                                    <div key={key} onClick={() => showGeneratedImage(item.id)}>
+                                        <Image
+                                            size={96}
+                                            src={item.url}
+                                            borderRadius="m"
+                                        />
+                                    </div>
+                                ))
+                            }
+                        </Div>
+                    :
+                        <Placeholder
+                            icon={<Icon56ErrorTriangleOutline fill={ColorsList.error} />}
+                            header="У пользователя пока нет генераций!"
+                        />
+            }
         </Group>
     )
 }

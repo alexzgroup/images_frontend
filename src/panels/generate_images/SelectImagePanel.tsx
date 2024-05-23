@@ -367,7 +367,7 @@ const PanelData = () => {
                 <Banner
                     size="m"
                     header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
+                        ? `Сегодня вам ${imageType.generate_statistic.available_count_generate === 1 ? 'доступна' : 'доступно'} ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
                         : 'Доступно 0 генераций'}
                     subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
                         {

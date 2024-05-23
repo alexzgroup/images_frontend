@@ -41,7 +41,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                     routeNavigator.hidePopout();
                 }}
                 header="Внимание!"
-                text="Для публикации результата, разрешите доступ."
+                text="Для публикации результата разрешите доступ."
             />
         );
     }
