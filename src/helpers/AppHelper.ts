@@ -148,3 +148,14 @@ export const getPhotoUploadId = async (access_token: string, imageGeneratedId: n
     const photo = responseSavePhoto.response[0] as {access_key: string, owner_id: number, id: number};
     return photo.owner_id + '_' + photo.id + '_' + photo.access_key;
 }
+
+/**
+ * Получает параметр запуска из обьекта страницы приложения
+ * @param key
+ */
+export const getURlParam = (key: string) => {
+    const searchParams = new URLSearchParams(
+        window.location.search
+    );
+    return searchParams.get(key);
+}

@@ -49,6 +49,7 @@ import FriendsPanel from "./panels/friends/FriendsPanel";
 import ProfileInfoPanel from "./panels/profile/ProfileInfoPanel";
 import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGeneratePanel";
 import FriendPanel from "./panels/friends/FriendPanel";
+import {getURlParam} from "./helpers/AppHelper";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -129,11 +130,10 @@ const App = () => {
 
 			const launchParams: GetLaunchParamsResponse & {
 				vk_has_profile_button?: number,
-				vk_profile_id?: number,
 			} = await bridge.send('VKWebAppGetLaunchParams');
 
-			if (launchParams.vk_ref === 'third_party_profile_buttons' && launchParams.vk_profile_id) {
-				routeNavigator.replace('/friend/' + launchParams.vk_profile_id)
+			if (getURlParam('vk_ref') === 'third_party_profile_buttons' && getURlParam('vk_profile_id')) {
+				routeNavigator.replace('/friend/' + getURlParam('vk_profile_id'))
 			}
 
 			dispatch(setUserDbData(user));
