@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import bridge, {UserInfo} from '@vkontakte/vk-bridge';
+import bridge, {GetLaunchParamsResponse, UserInfo} from '@vkontakte/vk-bridge';
 import {
 	AdaptivityProps,
 	Epic,
@@ -34,7 +34,7 @@ import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
 import {imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
-import {setUserDbData, setUserSubscribeStatus} from "./redux/slice/UserSlice";
+import {setUserDbData, setUserSubscribeStatus, setVkHasProfileButton} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {setGenerateImageId} from "./redux/slice/ImageSlice";
@@ -45,6 +45,10 @@ import {publish} from "./Events/CustomEvents";
 import OfflinePanel from "./panels/service/OfflinePanel";
 import SelectImageNamePanel from "./panels/generate_images/SelectImageNamePanel";
 import SelectImageZodiacPanel from "./panels/generate_images/SelectImageZodiacPanel";
+import FriendsPanel from "./panels/friends/FriendsPanel";
+import ProfileInfoPanel from "./panels/profile/ProfileInfoPanel";
+import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGeneratePanel";
+import FriendPanel from "./panels/friends/FriendPanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -123,8 +127,19 @@ const App = () => {
 			setUser(userInfo);
 			const {popular_image_types, user} = await apiInitUser();
 
+			const launchParams: GetLaunchParamsResponse & {
+				vk_has_profile_button?: number,
+				vk_profile_id?: number,
+			} = await bridge.send('VKWebAppGetLaunchParams');
+
+			if (launchParams.vk_ref === 'third_party_profile_buttons' && launchParams.vk_profile_id) {
+				routeNavigator.replace('/friend/' + launchParams.vk_profile_id)
+			}
+
 			dispatch(setUserDbData(user));
 			dispatch(hideAppLoading());
+			dispatch(setVkHasProfileButton(Number(launchParams.vk_has_profile_button)))
+
 			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
 
 			setPopularImageTypes(popular_image_types);
@@ -169,6 +184,14 @@ const App = () => {
 							<SelectImageNamePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE} />
 							<SelectImageZodiacPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_ZODIAC_SELECT_IMAGE} />
 							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_FRIENDS} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
+							<FriendsPanel id={PANEL_CONSTANTS.PANEL_FRIENDS} />
+							<FriendPanel id={PANEL_CONSTANTS.PANEL_FRIEND} />
+						</View>
+						<View id={VIEW_CONSTANTS.VIEW_PROFILE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
+							<ProfileInfoPanel id={PANEL_CONSTANTS.PANEL_PROFILE_INFO} />
+							<ProfileHistoryGeneratePanel id={PANEL_CONSTANTS.PANEL_PROFILE_HISTORY_GENERATE} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_ABOUT} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<AboutPanel id={PANEL_CONSTANTS.PANEL_ABOUT_MAIN} />

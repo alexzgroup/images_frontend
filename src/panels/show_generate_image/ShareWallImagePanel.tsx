@@ -41,7 +41,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                     routeNavigator.hidePopout();
                 }}
                 header="Внимание!"
-                text="Для публикации результата, разрешите доступ."
+                text="Для публикации результата разрешите доступ."
             />
         );
     }
@@ -86,7 +86,7 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
     useEffect(() => {
         (async () => {
             if (params?.imageGeneratedId) {
-                dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: '', type: 'default'}))
+                dispatch(setUploadPhoto({url: '', base64: '', photoUploadId: '', created_at: '',type: 'default', image_type: { name: ''}}))
                 const response = await apiGetGenerateImage(Number(params?.imageGeneratedId));
                 dispatch(setUploadPhoto({...response, photoUploadId: '',}))
             }

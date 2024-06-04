@@ -3,7 +3,7 @@ import React, {FC} from 'react';
 import {
     Button,
     ButtonGroup,
-    Cell,
+    Cell, Div,
     Link,
     List,
     ModalCard,
@@ -37,6 +37,7 @@ import bridge from "@vkontakte/vk-bridge";
 import {getVoiceSubscription} from "../api/AxiosApi";
 import {setUserVip, setUserVoiceSubscription} from "../redux/slice/UserSlice";
 import {publish} from "../Events/CustomEvents";
+import GenerateImageResultShare from "../components/GenerateImage/GenerateImageResultShare";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -48,6 +49,7 @@ export enum ModalTypes {
     MODAL_SUBSCRIBE_GROUP = 'modal_subscribe_group',
     MODAL_UNSUBSCRIBE_GROUP = 'modal_unsubscribe_group',
     MODAL_PAY_VOICE = 'modal_pay_voice',
+    MODAL_SHOW_GENERATED_IMAGE = 'modal_show_generated_image',
 }
 
 const ModalRootComponent:FC = () => {
@@ -82,6 +84,17 @@ const ModalRootComponent:FC = () => {
 
     return (
         <ModalRoot activeModal={activeModal}>
+            <ModalPage
+                id={ModalTypes.MODAL_SHOW_GENERATED_IMAGE}
+                onClose={() => routeNavigator.hideModal()}
+                settlingHeight={100}
+                hideCloseButton={true}
+                header={<ModalPageHeader><Title level="3">Просмотр</Title></ModalPageHeader>}
+            >
+                <Div>
+                    <GenerateImageResultShare />
+                </Div>
+            </ModalPage>
             <ModalCard
                 id={ModalTypes.MODAL_GET_VIP_PROFILE}
                 onClose={() => routeNavigator.hideModal()}
@@ -200,6 +213,18 @@ const ModalRootComponent:FC = () => {
                 icon={<Icon56Users3Outline />}
                 header="Поздравляем"
                 subheader="Вы успешно подписались на группу, теперь Вам доступна дополнительная генерация."
+                actions={
+                    <ButtonGroup mode="vertical" stretched>
+                        <Button
+                            size="l"
+                            mode="secondary"
+                            stretched
+                            onClick={() => routeNavigator.hideModal()}
+                        >
+                            Закрыть
+                        </Button>
+                    </ButtonGroup>
+                }
             />
             <ModalCard
                 id={ModalTypes.MODAL_UNSUBSCRIBE_GROUP}

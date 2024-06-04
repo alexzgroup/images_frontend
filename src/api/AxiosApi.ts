@@ -3,7 +3,7 @@ import {
     AddGroupChatBootType,
     AdvertisementType, exclusiveImageTypesType,
     GeneratedImagesType,
-    generateImageType,
+    generateImageType, GenerateProfileInfoType,
     GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
@@ -38,7 +38,7 @@ export const apiInitUser = () => {
  * Получаем типы генераций
  */
 export const apiGetImageTypes = () => {
-    return axiosApi.get(`image_type`).then((r: {data:{items:imageType[], exclusive_image_types: exclusiveImageTypesType[]}}) => r.data);
+    return axiosApi.get(`image_type`).then((r: {data:{items:imageType[], exclusive_image_types: exclusiveImageTypesType[], favorite_image_types: (exclusiveImageTypesType & {description: string})[]}}) => r.data);
 };
 
 /**
@@ -141,8 +141,16 @@ export const addAllowMessages = () => {
 /**
  * Получает генерированные изображения
  */
-export const getGeneratedImages = () => {
-    return axiosApi.get(`generate_image`).then((r: {data: GeneratedImagesType}) => r.data.images);
+export const getGeneratedImages = (userId: number) => {
+    return axiosApi.get(`generate_image/all/` + userId).then((r: {data: GeneratedImagesType}) => r.data.images);
+}
+
+/**
+ * Получает информацию по генерациям для профиля с сокращенной историей генераций
+ * @param userId
+ */
+export const getUserProfileGenerateInfo = (userId: number) => {
+    return axiosApi.get(`generate_image/profile_info/` + userId).then((r: {data: GenerateProfileInfoType}) => r.data);
 }
 
 /**
@@ -167,4 +175,11 @@ export const updateShareGenerateImage = (id: number, share_type: ShareTypeEnum) 
  */
 export const getVoiceSubscription = () => {
     return axiosApi.get(`get_voice_subscription_id`).then((r: {data: number}) => r.data);
+}
+
+/**
+ * Добавляет событие добавления кнопки MVP
+ */
+export const addMvpButton = () => {
+    return axiosApi.post(`add_user_to_mvp`).then((r: {data: operationResultType}) => r.data);
 }

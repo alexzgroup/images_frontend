@@ -5,6 +5,8 @@ export const VIEW_CONSTANTS = {
     VIEW_MONETIZATION: 'view_monetization',
     VIEW_SHOW_IMAGE: 'view_show_image',
     VIEW_SERVICE: 'view_service',
+    VIEW_PROFILE: 'view_profile',
+    VIEW_FRIENDS: 'view_friends',
 }
 
 export const PANEL_CONSTANTS = {
@@ -23,4 +25,8 @@ export const PANEL_CONSTANTS = {
     PANEL_SHOW_IMAGE_STORY_WALL: 'panel_show_image_story_wall',
     PANEL_SHOW_IMAGE_VIEW_RESULT: 'panel_show_image_view_result',
     PANEL_SERVICE_OFFLINE: 'PANEL_SERVICE_OFFLINE',
+    PANEL_FRIENDS: 'panel_friends',
+    PANEL_FRIEND: 'panel_friend',
+    PANEL_PROFILE_INFO: 'panel_profile_info',
+    PANEL_PROFILE_HISTORY_GENERATE: 'panel_profile_history_generate',
 }

@@ -46,6 +46,7 @@ import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels"
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import {ButtonGold} from "../../components/RenestraVip/ButtonGold";
 import RenestraTitleWithLogo from "../../components/RenestraVip/RenestraTitleWithLogo";
+import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 
 interface Props {
     id: string;
@@ -366,7 +367,7 @@ const PanelData = () => {
                 <Banner
                     size="m"
                     header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам доступно ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
+                        ? `Сегодня вам ${imageType.generate_statistic.available_count_generate === 1 ? 'доступна' : 'доступно'} ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
                         : 'Доступно 0 генераций'}
                     subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
                         {
@@ -395,7 +396,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

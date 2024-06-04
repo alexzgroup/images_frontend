@@ -4,6 +4,7 @@ import {userApiType, voiceSubscribeType} from "../../types/ApiTypes";
 export interface ReduxSliceUserInterface {
     userDbData?: userApiType|null,
     access_token: string,
+    vk_has_profile_button?: number,
 }
 
 // Define the initial state using that type
@@ -61,6 +62,9 @@ export const userSlice = createSlice({
                 };
             }
         },
+        setVkHasProfileButton: (state, action: PayloadAction<number>) => {
+            state.vk_has_profile_button = action.payload;
+        },
     }
 })
 
@@ -72,6 +76,7 @@ export const {
     setUserVoiceSubscription,
     setUserVip,
     setUserAllowMessages,
+    setVkHasProfileButton,
 } = userSlice.actions
 
 export default userSlice.reducer

@@ -1,4 +1,4 @@
-import React, {ReactElement, Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useEffect, useState} from 'react';
 
 import {
     Alert,
@@ -10,28 +10,25 @@ import {
     Panel,
     PanelHeader,
     PanelSpinner,
-    Snackbar,
     Text,
     Title
 } from '@vkontakte/vkui';
 
-import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon36Favorite} from "@vkontakte/icons";
+import {Icon36Favorite} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {useDispatch, useSelector} from "react-redux";
 import bridge from "@vkontakte/vk-bridge";
-import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
+import {setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {trueWordForm} from "../../helpers/AppHelper";
-import {generateWordsArray} from "../../constants/AppConstants";
-import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
+import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 
 interface Props {
     id: string;
@@ -42,7 +39,6 @@ const PanelData = () => {
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
             available_count_generate: 0,
@@ -58,7 +54,6 @@ const PanelData = () => {
             url: '',
         }
     });
-    const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const openPreloaderGenerate = () => {
         if (imageType?.generate_statistic.generate_in_process) {
@@ -97,61 +92,9 @@ const PanelData = () => {
             });
     }
 
-    const updateStatistic = (total: number) => {
-        setImageType({
-            ...imageType,
-            generate_statistic: {
-                ...imageType.generate_statistic,
-                available_count_generate: imageType.generate_statistic.available_count_generate + total,
-                available_day_limit: imageType.generate_statistic.available_day_limit + total,
-            }
-        });
-    }
-
-    const subscribeGroup = () => {
-        bridge.send('VKWebAppJoinGroup', {
-            group_id: Number(process.env.REACT_APP_APP_GROUP_ID)
-        })
-            .then((data) => {
-                if (!data.result) {
-                    openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
-    const openSnackBar = (icon: JSX.Element, text: string): void => {
-        if (snackbar) return;
-        setSnackbar(
-            <Snackbar
-                onClose={() => setSnackbar(null)}
-                before={icon}
-            >
-                {text}
-            </Snackbar>,
-        );
-    };
-
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
     }, []);
-
-    useEffect(() => {
-        const removeSubscribeEvent = subscribe("USER_SUBSCRIBE", (event: GenerateStatistic) => {
-            updateStatistic(event.total);
-        });
-
-        const removeUnsubscribeEvent = subscribe("USER_UNSUBSCRIBE", (event: GenerateStatistic) => {
-            updateStatistic(event.total);
-        });
-
-        return () => {
-            removeSubscribeEvent()
-            removeUnsubscribeEvent()
-        }
-    }, [imageType.generate_statistic]);
 
     return (
         <React.Fragment>
@@ -164,24 +107,22 @@ const PanelData = () => {
                             <React.Fragment>
                                 <Button
                                     stretched
-                                    disabled={userDbData?.subscribe}
-                                    onClick={subscribeGroup}
-                                    appearance={userDbData?.subscribe ? 'negative' : 'accent'}
-                                    mode={userDbData?.subscribe ? 'secondary' : 'primary' } size="l">
-                                    {userDbData?.subscribe ? 'Будет доступно завтра' : 'Получить +1 генерацию'}
+                                    disabled
+                                    appearance='negative'
+                                    mode='secondary'
+                                    size="l"
+                                >
+                                    Будет доступно завтра
                                 </Button>
-                                {
-                                    userDbData?.subscribe &&
-                                    <Banner
-                                        size="m"
-                                        noPadding
-                                        mode="image"
-                                        header="У Вас закончились генерации значения имени."
-                                        subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
-                                        background={<div style={{background: ColorsList.error}} />}
-                                        style={{width: '100%', margin: '10px 0 5px 0'}}
-                                    />
-                                }
+                                <Banner
+                                    size="m"
+                                    noPadding
+                                    mode="image"
+                                    header="У Вас закончились генерации значения имени."
+                                    subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
+                                    background={<div style={{background: ColorsList.error}}/>}
+                                    style={{width: '100%', margin: '10px 0 5px 0'}}
+                                />
                             </React.Fragment>
                             :
                             <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>
@@ -193,7 +134,7 @@ const PanelData = () => {
             <Group>
                 <MiniInfoCell mode="accent" before={<Icon36Favorite fill={ColorsList.primary} />} textWrap="full">
                     <Title weight="2" level="2">
-                        Узнай как тебя охарактеризовывает твоё имя и внешность!
+                        Узнай, как тебя охарактеризовывает твоё имя и внешность!
                     </Title>
                 </MiniInfoCell>
             </Group>
@@ -201,22 +142,12 @@ const PanelData = () => {
                 <Banner
                     size="m"
                     header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам доступна ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
-                        : userDbData?.subscribe ? 'Доступно 0 генераций' : `Сегодня Вам доступна ${trueWordForm(1, generateWordsArray)}`}
-                    subheader={<Text>Каждый день вам доступна одна генерация значения имени. В 00:00 по МСК счетчик обновляется.
-                        {
-                            !userDbData?.subscribe && <React.Fragment>
-                                <br/>Чтобы получить генерацию, подпишитесь на нашу группу.
-                            </React.Fragment>
-                        }
-                    </Text>}
-                    actions={
-                        !userDbData?.subscribe && <Button onClick={subscribeGroup} before={<Icon20CheckNewsfeedOutline />} size='s'>Подписаться на сообщество VK</Button>
-                    }
+                        ? `Сегодня вам доступна ещё 1 генерация!`
+                        : 'Доступно 0 генераций'}
+                    subheader={<Text>Каждый день вам доступна одна генерация значения имени. В 00:00 по МСК счетчик обновляется.</Text>}
                 />
             </Group>
             <RecommendedLabels />
-            {snackbar}
         </React.Fragment>
     )
 }
@@ -230,7 +161,7 @@ const SelectImageNamePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>
