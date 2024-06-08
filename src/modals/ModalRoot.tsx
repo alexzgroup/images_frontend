@@ -34,10 +34,11 @@ import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
 import golden_light from '../assets/images/golden_light.png';
 import RenestraTitleWithVip from "../components/RenestraVip/RenestraTitleWithVip";
 import bridge from "@vkontakte/vk-bridge";
-import {getVoiceSubscription} from "../api/AxiosApi";
-import {setUserVip, setUserVoiceSubscription} from "../redux/slice/UserSlice";
+import {addAdvertisement, getVoiceSubscription} from "../api/AxiosApi";
+import {ReduxSliceUserInterface, setUserVip, setUserVoiceSubscription} from "../redux/slice/UserSlice";
 import {publish} from "../Events/CustomEvents";
 import GenerateImageResultShare from "../components/GenerateImage/GenerateImageResultShare";
+import {AdvertisementEnum, EAdsFormats} from "../types/ApiTypes";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -58,6 +59,8 @@ const ModalRootComponent:FC = () => {
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+
     const dispatch = useDispatch();
 
     const openVoicePayModal = async () => {
@@ -82,11 +85,24 @@ const ModalRootComponent:FC = () => {
             })
     }
 
+    const closeShowGenerateModal = () => {
+        routeNavigator.hideModal()
+        if (!userDbData?.is_vip) {
+            bridge.send("VKWebAppShowNativeAds", {
+                ad_format: EAdsFormats.INTERSTITIAL,
+            }).then((data) => {
+                if (data.result) {
+                    addAdvertisement({type: AdvertisementEnum.window}).then();
+                }
+            }).catch(() => {});
+        }
+    }
+
     return (
         <ModalRoot activeModal={activeModal}>
             <ModalPage
                 id={ModalTypes.MODAL_SHOW_GENERATED_IMAGE}
-                onClose={() => routeNavigator.hideModal()}
+                onClose={closeShowGenerateModal}
                 settlingHeight={100}
                 hideCloseButton={true}
                 header={<ModalPageHeader><Title level="3">Просмотр</Title></ModalPageHeader>}
