@@ -5,7 +5,6 @@ import {
     Div,
     Group,
     Header,
-    Image,
     Panel,
     PanelHeader,
     PanelSpinner,
@@ -14,7 +13,7 @@ import {
     Subhead,
     Title
 } from "@vkontakte/vkui";
-import {RouterLink, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import {RouterLink} from "@vkontakte/vk-mini-apps-router";
 import bridge, {UserInfo} from "@vkontakte/vk-bridge";
 import {
     Icon20CheckNewsfeedOutline,
@@ -41,15 +40,14 @@ import FriendsList from "../../components/Users/FriendsList";
 import AllowMessagesBanner from "../../components/AllowMessagesBanner";
 import VipBlock from "../../components/RenestraVip/VipBlock";
 import GetVipBanner from "../../components/RenestraVip/GetVipBanner";
-import {setGenerateImageId} from "../../redux/slice/ImageSlice";
-import {ModalTypes} from "../../modals/ModalRoot";
+import HistoryGenerateImages from "../../components/GenerateImage/HistoryGenerateImages";
 
 const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
     const [user, setUser] = useState<UserWithGeneratedInfoType>();
     const [hasFriendsPermission, setHasFriendsPermission] = React.useState(false);
     const {vk_has_profile_button, userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
-    const routeNavigator = useRouteNavigator();
+
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
 
     const init = () => {
@@ -111,11 +109,6 @@ const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
             .catch( (error) => {
                 console.log(error);
             });
-    }
-
-    const showGeneratedImage = (generateImageId: number) => {
-        dispatch(setGenerateImageId(generateImageId))
-        routeNavigator.showModal(ModalTypes.MODAL_SHOW_GENERATED_IMAGE)
     }
 
     const subscribeGroup = () => {
@@ -204,19 +197,7 @@ const PanelContent:React.FC<{vkUserInfo: UserInfo}>  = ({vkUserInfo}) => {
                     <Group header={<Header
                         aside={<RouterLink to={"/profile/history-generated/" + user.id}>Показать все</RouterLink>}>История
                         генераций</Header>}>
-                        <Div style={{display: 'flex', gap: 5, flexGrow: 1, flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-                            {
-                                user.history_generate.map((item, key) => (
-                                    <div key={key} onClick={() => showGeneratedImage(item.id)}>
-                                        <Image
-                                            size={96}
-                                            src={item.url}
-                                            borderRadius="m"
-                                        />
-                                    </div>
-                                ))
-                            }
-                        </Div>
+                        <HistoryGenerateImages history_generate={user.history_generate} />
                     </Group>
             }
             <Group>

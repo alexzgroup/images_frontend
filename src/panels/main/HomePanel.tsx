@@ -1,6 +1,18 @@
 import React, {ReactElement} from 'react';
 
-import {Banner, Button, Div, Group, Image, Panel, Placeholder, Separator, SimpleCell, Snackbar} from '@vkontakte/vkui';
+import {
+    Banner,
+    Button,
+    Div,
+    Group,
+    Header, HorizontalCell, HorizontalScroll,
+    Image,
+    Panel,
+    Placeholder,
+    Separator,
+    SimpleCell,
+    Snackbar
+} from '@vkontakte/vkui';
 import girl_image from '../../assets/images/icons/girl_icon.png';
 import {
     Icon28CancelCircleFillRed,
@@ -9,7 +21,7 @@ import {
     Icon28Users3
 } from "@vkontakte/icons";
 import DivCard from "../../components/DivCard";
-import {imageType} from "../../types/ApiTypes";
+import {favoriteImageType, imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {useSelector} from "react-redux";
@@ -23,10 +35,11 @@ import VipBlock from "../../components/RenestraVip/VipBlock";
 
 interface Props {
     id: string;
-    popularImageTypes: imageType[]|[],
+    popularImageTypes: imageType[],
+    favoriteImageTypes: favoriteImageType[],
 }
 
-const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
+const HomePanel: React.FC<Props> = ({id, popularImageTypes, favoriteImageTypes}) => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
@@ -85,6 +98,31 @@ const HomePanel: React.FC<Props> = ({id, popularImageTypes}) => {
                     </Placeholder>
                 </DivCard>
             </Group>
+            {
+                !!favoriteImageTypes.length &&
+                <Group header={<Header mode='secondary'>Избранные образы</Header>}>
+                    <HorizontalScroll>
+                        <div style={{ display: 'flex' }}>
+                            {
+                                favoriteImageTypes.map((item, key) => (
+                                    <HorizontalCell
+                                        onClick={() => routeNavigator.push(`/generate/select-${item.type}-image/${item.id}`)}
+                                        key={item.id} size="l" header={item.name} subtitle={item.description}>
+                                        <img style={{
+                                            width: 220,
+                                            height: 124,
+                                            borderRadius: 10,
+                                            boxSizing: 'border-box',
+                                            border: 'var(--vkui--size_border--regular) solid var(--vkui--color_image_border_alpha)',
+                                            objectFit: 'cover',
+                                        }} src={item.url}  alt='Ренестра' />
+                                    </HorizontalCell>
+                                ))
+                            }
+                        </div>
+                    </HorizontalScroll>
+                </Group>
+            }
             <Group mode='plain'>
                 <DivCard>
                     <Div>

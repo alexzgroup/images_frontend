@@ -20,7 +20,7 @@ import banner_man_image from "../../assets/images/select_image_profile_man.jpg";
 import banner_girl_image from "../../assets/images/select_image_profile_girl.jpg";
 import {RouterLink, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {AdvertisementEnum, exclusiveImageTypesType, imageType} from "../../types/ApiTypes";
+import {AdvertisementEnum, exclusiveImageTypesType, favoriteImageType, imageType} from "../../types/ApiTypes";
 import {IconImageTypeGenerator} from "../../components/IconImageTypeGenerator";
 import {LabelImageTypeGenerator} from "../../components/LabelImageTypeGenerator";
 import {addAdvertisement, apiGetImageTypes} from "../../api/AxiosApi";
@@ -37,7 +37,7 @@ interface Props {
 
 type  ImageTypeFromRequest = {
     exclusive_image_types: exclusiveImageTypesType[],
-    favorite_image_types: (exclusiveImageTypesType & {description: string})[] ,
+    favorite_image_types: favoriteImageType[] ,
     items: imageType[],
 }
 

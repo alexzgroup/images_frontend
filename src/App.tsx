@@ -33,7 +33,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
-import {imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
+import {favoriteImageType, imageType, socketImageType, socketSubscribeType} from "./types/ApiTypes";
 import {setUserDbData, setUserSubscribeStatus, setVkHasProfileButton} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
@@ -55,7 +55,8 @@ const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
 	const routerPopout = usePopout();
 	const routeNavigator = useRouteNavigator();
-	const [popularImageTypes, setPopularImageTypes] = useState<imageType[] | []>([]);
+	const [popularImageTypes, setPopularImageTypes] = useState<imageType[]>([]);
+	const [favoriteImageTypes, setFavoriteImageTypes] = useState<favoriteImageType[]>([]);
 
 	const { view: activeView } = useActiveVkuiLocation();
 	const activePanel = useGetPanelForView();
@@ -126,7 +127,7 @@ const App = () => {
 			}
 
 			setUser(userInfo);
-			const {popular_image_types, user} = await apiInitUser();
+			const {popular_image_types, user, favorite_image_types} = await apiInitUser();
 
 			const launchParams: GetLaunchParamsResponse & {
 				vk_has_profile_button?: number,
@@ -143,6 +144,8 @@ const App = () => {
 			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
 
 			setPopularImageTypes(popular_image_types);
+			setFavoriteImageTypes(favorite_image_types)
+
 			setTimeout(() => routeNavigator.hidePopout(), 1000);
 			initSocket(userInfo.id);
 		}
@@ -176,7 +179,11 @@ const App = () => {
 						tabbar={activePanel !== PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE && <TabBarWrapper />}
 					>
 						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
-							<HomePanel popularImageTypes={popularImageTypes} id={PANEL_CONSTANTS.PANEL_MAIN_HOME} />
+							<HomePanel
+								popularImageTypes={popularImageTypes}
+								favoriteImageTypes={favoriteImageTypes}
+								id={PANEL_CONSTANTS.PANEL_MAIN_HOME}
+							/>
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />

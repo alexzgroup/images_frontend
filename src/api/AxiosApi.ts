@@ -1,7 +1,7 @@
 import axios from 'axios';
 import {
     AddGroupChatBootType,
-    AdvertisementType, exclusiveImageTypesType,
+    AdvertisementType, exclusiveImageTypesType, favoriteImageType,
     GeneratedImagesType,
     generateImageType, GenerateProfileInfoType,
     GroupToChatBootType,
@@ -38,7 +38,7 @@ export const apiInitUser = () => {
  * Получаем типы генераций
  */
 export const apiGetImageTypes = () => {
-    return axiosApi.get(`image_type`).then((r: {data:{items:imageType[], exclusive_image_types: exclusiveImageTypesType[], favorite_image_types: (exclusiveImageTypesType & {description: string})[]}}) => r.data);
+    return axiosApi.get(`image_type`).then((r: {data:{items:imageType[], exclusive_image_types: exclusiveImageTypesType[], favorite_image_types: favoriteImageType[]}}) => r.data);
 };
 
 /**

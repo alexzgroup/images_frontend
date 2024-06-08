@@ -72,9 +72,14 @@ export type imageTypeStatisticType = {
     zodiac?: [],
 }
 
+export type favoriteImageType = exclusiveImageTypesType & {
+    description: string,
+}
+
 export type initUserApiType = {
     user: userApiType,
     popular_image_types: imageType[],
+    favorite_image_types: favoriteImageType[],
 }
 
 export type groupType = {
