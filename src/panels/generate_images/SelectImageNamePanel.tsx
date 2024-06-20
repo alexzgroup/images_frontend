@@ -20,11 +20,11 @@ import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {useDispatch, useSelector} from "react-redux";
 import bridge from "@vkontakte/vk-bridge";
-import {setAccessToken} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
-import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {imageTypeStatisticType} from "../../types/ApiTypes";
+import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
@@ -39,6 +39,8 @@ const PanelData = () => {
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
     const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
             available_count_generate: 0,
@@ -94,6 +96,15 @@ const PanelData = () => {
 
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
+        if (!userDbData?.is_vip) {
+            bridge.send("VKWebAppShowNativeAds", {
+                ad_format: EAdsFormats.INTERSTITIAL,
+            }).then((data) => {
+                if (data.result) {
+                    addAdvertisement({type: AdvertisementEnum.window}).then();
+                }
+            }).catch(() => {});
+        }
     }, []);
 
     return (
