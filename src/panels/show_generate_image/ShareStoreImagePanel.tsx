@@ -5,8 +5,8 @@ import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {addAdvertisement, updateShareGenerateImage} from "../../api/AxiosApi";
-import {AdvertisementEnum, EAdsFormats, ShareTypeEnum} from "../../types/ApiTypes";
+import {updateShareGenerateImage} from "../../api/AxiosApi";
+import {ShareTypeEnum} from "../../types/ApiTypes";
 import {useSelector} from "react-redux";
 import {Icon56StoryCircleFillYellow} from "@vkontakte/icons";
 import {RootStateType} from "../../redux/store/ConfigureStore";
@@ -31,7 +31,11 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
             bridge.send('VKWebAppShowStoryBox', storyData).then((r) => {
                 if (r.result) {
                     updateShareGenerateImage(imageGeneratedId, ShareTypeEnum.SHARE_HISTORY)
-                    routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
+                    if (!userDbData?.is_vip) {
+                        routeNavigator.push(`/show-generate-image/get-vip`, {state: {imageGeneratedId: params?.imageGeneratedId}})
+                    } else {
+                        routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
+                    }
                 }
             });
         }
@@ -39,16 +43,10 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
 
     const skipShareHistory = () => {
         if (!userDbData?.is_vip) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch(() => {});
+            routeNavigator.push(`/show-generate-image/get-vip`, {state: {imageGeneratedId: params?.imageGeneratedId}})
+        } else {
+            routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
         }
-
-        routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}`)
     }
 
     return (

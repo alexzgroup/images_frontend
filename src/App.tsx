@@ -50,6 +50,7 @@ import ProfileInfoPanel from "./panels/profile/ProfileInfoPanel";
 import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGeneratePanel";
 import FriendPanel from "./panels/friends/FriendPanel";
 import {getURlParam} from "./helpers/AppHelper";
+import ShareGetVipImagePanel from "./panels/show_generate_image/ShareGetVipImagePanel";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
@@ -211,6 +212,7 @@ const App = () => {
 						<View id={VIEW_CONSTANTS.VIEW_SHOW_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<ShareWallImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_SHARE_WALL} />
 							<ShareStoreImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_STORY_WALL} />
+							<ShareGetVipImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_GET_VIP} />
 							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_SERVICE} activePanel={activePanel}>

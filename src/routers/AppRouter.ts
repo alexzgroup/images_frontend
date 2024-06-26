@@ -68,6 +68,11 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
     },
     {
+        path: '/show-generate-image/get-vip',
+        panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_GET_VIP,
+        view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,
+    },
+    {
         path: '/show-generate-image/:imageGeneratedId',
         panel: PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT,
         view: VIEW_CONSTANTS.VIEW_SHOW_IMAGE,

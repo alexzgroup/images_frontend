@@ -23,6 +23,7 @@ export const PANEL_CONSTANTS = {
     PANEL_MONETIZATION_GROUP_LIST: 'panel_monetization_group_list',
     PANEL_SHOW_IMAGE_SHARE_WALL: 'panel_show_image_share_wall',
     PANEL_SHOW_IMAGE_STORY_WALL: 'panel_show_image_story_wall',
+    PANEL_SHOW_IMAGE_GET_VIP: 'panel_show_image_get_vip',
     PANEL_SHOW_IMAGE_VIEW_RESULT: 'panel_show_image_view_result',
     PANEL_SERVICE_OFFLINE: 'PANEL_SERVICE_OFFLINE',
     PANEL_FRIENDS: 'panel_friends',
