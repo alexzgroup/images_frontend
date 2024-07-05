@@ -67,7 +67,7 @@ const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
             gap: 5
         }}>
             <img width={320} style={{margin: 'auto', display: 'block'}} src={golden_light} alt="golden_light"/>
-            <RenestraTitleWithVip/>
+            <RenestraTitleWithVip />
             <Title level="2">Оформление подписки VIP!</Title>
             <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
                 <div style={{color: 'black'}}>Оформить подписку</div>
