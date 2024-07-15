@@ -76,10 +76,15 @@ export type favoriteImageType = exclusiveImageTypesType & {
     description: string,
 }
 
+export type GenerateImageNoShareType = GeneratedImageType & {
+    type?: string
+}
+
 export type initUserApiType = {
     user: userApiType,
     popular_image_types: imageType[],
     favorite_image_types: favoriteImageType[],
+    generated_images_not_share_wall: GenerateImageNoShareType[],
 }
 
 export type groupType = {

@@ -1,6 +1,6 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
 import {userImage} from "../../types/UserTypes";
-import {uploadPhotoType} from "../../types/ApiTypes";
+import {favoriteImageType, GenerateImageNoShareType, imageType, uploadPhotoType} from "../../types/ApiTypes";
 
 type uploadPhotoSliceType = uploadPhotoType & {
     photoUploadId: string,
@@ -10,6 +10,9 @@ export interface ReduxSliceImageInterface {
     generateImage: userImage|null,
     generateImageId: number, // id сгенерированного изображения
     uploadPhoto: uploadPhotoSliceType, // ссылка, base64 для истории и photo_id из ВК для поделиться на стене
+    popularImageTypes: imageType[],
+    favoriteImageTypes: favoriteImageType[],
+    generateImagesNotShareWall: GenerateImageNoShareType[],
 }
 
 // Define the initial state using that type
@@ -26,7 +29,9 @@ const initialState: ReduxSliceImageInterface = {
             name: '',
         }
     },
-
+    popularImageTypes: [],
+    favoriteImageTypes: [],
+    generateImagesNotShareWall: [],
 }
 
 export const imageSlice = createSlice({
@@ -45,6 +50,18 @@ export const imageSlice = createSlice({
         setUploadPhoto: (state, action: PayloadAction<uploadPhotoSliceType>) => {
             state.uploadPhoto = action.payload;
         },
+        setPopularImageTypes: (state, action: PayloadAction<imageType[]>) => {
+            state.popularImageTypes = action.payload;
+        },
+        setFavoriteImageTypes: (state, action: PayloadAction<favoriteImageType[]>) => {
+            state.favoriteImageTypes = action.payload;
+        },
+        setGenerateImagesNotShareWall: (state, action: PayloadAction<GenerateImageNoShareType[]>) => {
+            state.generateImagesNotShareWall = action.payload;
+        },
+        deleteGenerateImagesNotShareWall: (state, action: PayloadAction<number>) => {
+            state.generateImagesNotShareWall = state.generateImagesNotShareWall.filter((item) => item.id !== action.payload);
+        },
     }
 })
 
@@ -53,6 +70,10 @@ export const {
     setGenerateImage,
     setGenerateImageId,
     setUploadPhoto,
+    setGenerateImagesNotShareWall,
+    setPopularImageTypes,
+    setFavoriteImageTypes,
+    deleteGenerateImagesNotShareWall,
 } = imageSlice.actions
 
 export default imageSlice.reducer
