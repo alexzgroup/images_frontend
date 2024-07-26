@@ -150,7 +150,7 @@ const App = () => {
 			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
 
 			setTimeout(() => routeNavigator.hidePopout(), 1000);
-			initSocket(userInfo.id);
+			initSocket(user.id);
 		}
 		fetchData();
 
