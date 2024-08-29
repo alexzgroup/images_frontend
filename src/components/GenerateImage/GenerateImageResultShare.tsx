@@ -1,5 +1,5 @@
 import React, {Suspense, useContext, useEffect, useState} from "react";
-import {Alert, Button, ButtonGroup, Caption, PanelSpinner, Spacing, Subhead} from "@vkontakte/vkui";
+import {Alert, Banner, Button, ButtonGroup, PanelSpinner, Spacing, Subhead} from "@vkontakte/vkui";
 import {ShareTypeEnum} from "../../types/ApiTypes";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {apiGetGenerateImage, updateShareGenerateImage} from "../../api/AxiosApi";
@@ -15,6 +15,7 @@ import {ModalTypes} from "../../modals/ModalRoot";
 import {getPhotoUploadId, getStoryBoxData, getWallData} from "../../helpers/AppHelper";
 import {WallMessagesEnum} from "../../enum/MessagesEnum";
 import {Icon28AdvertisingOutline, Icon28StoryOutline} from "@vkontakte/icons";
+import {ColorsList} from "../../types/ColorTypes";
 
 const Content:React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -119,19 +120,39 @@ const Content:React.FC = () => {
                 style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.created_at}</span></Subhead>
             <Subhead weight="1" style={{width: '100%', textAlign: 'center'}}>Поделиться с друзьями</Subhead>
             <Spacing/>
+            {
+                uploadPhoto?.available_share_free_image &&
+                    <Banner
+                        style={{
+                            padding: 0,
+                        }}
+                        mode="image"
+                        size="m"
+                        background={
+                            <div
+                                style={{
+                                    backgroundColor: ColorsList.primary,
+                                }}
+                            />
+                        }
+                        header="Посмотреть и поделиться на стене"
+                        subheader="Вы получите ещё +1 генерацию бесплатно!"
+                        actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
+                    />
+            }
             <ButtonGroup mode="horizontal" stretched>
-                <Button
-                    before={<Icon28AdvertisingOutline/>}
-                    size="l"
-                    mode="primary"
-                    stretched
-                    onClick={shareWall}
-                >
-                    Посмотреть и поделиться на стене
-                    {
-                        uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
-                    }
-                </Button>
+                {
+                    !uploadPhoto?.available_share_free_image &&
+                        <Button
+                            before={<Icon28AdvertisingOutline/>}
+                            size="l"
+                            mode="primary"
+                            stretched
+                            onClick={shareWall}
+                        >
+                            На стене
+                        </Button>
+                }
                 <Button
                     before={<Icon28StoryOutline/>}
                     size="l"

@@ -2,9 +2,9 @@ import React, {useContext, useEffect} from 'react';
 
 import {
     Alert,
+    Banner,
     Button,
     ButtonGroup,
-    Caption,
     Group,
     Panel,
     PanelHeader,
@@ -25,7 +25,7 @@ import {ColorsList} from "../../types/ColorTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
 import {WallMessagesEnum} from "../../enum/MessagesEnum";
-import {Icon24StoryReplyOutline} from "@vkontakte/icons";
+import {Icon28AdvertisingOutline} from "@vkontakte/icons";
 
 interface Props {
     id: string;
@@ -137,18 +137,44 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                             </div>}
                             header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
                             action={
-                                <ButtonGroup mode='vertical'>
-                                    <Button
-                                        before={<Icon24StoryReplyOutline />}
-                                        onClick={shareWall} stretched size={isMobileSize ? 'm' : 'l'}>
-                                        Посмотреть и поделиться на стене
-                                        {
-                                            uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
+                            <>
+                                {
+                                    uploadPhoto?.available_share_free_image &&
+                                    <Banner
+                                        style={{
+                                            padding: 0,
+                                        }}
+                                        mode="image"
+                                        size="m"
+                                        background={
+                                            <div
+                                                style={{
+                                                    backgroundColor: ColorsList.primary,
+                                                }}
+                                            />
                                         }
-                                    </Button>
+                                        header="Посмотреть и поделиться на стене"
+                                        subheader="Вы получите ещё +1 генерацию бесплатно!"
+                                        actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
+                                    />
+                                }
+                                <ButtonGroup mode='horizontal'>
+                                    {
+                                        !uploadPhoto?.available_share_free_image &&
+                                        <Button
+                                            before={<Icon28AdvertisingOutline/>}
+                                            size="l"
+                                            mode="primary"
+                                            stretched
+                                            onClick={shareWall}
+                                        >
+                                            На стене
+                                        </Button>
+                                    }
                                     <Button mode="secondary" onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)} stretched
                                             size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
                                 </ButtonGroup>
+                            </>
                             }
                         />
                     </Group>

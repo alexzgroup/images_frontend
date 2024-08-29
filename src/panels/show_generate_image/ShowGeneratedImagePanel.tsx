@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 
-import {Alert, Button, ButtonGroup, Caption, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
+import {Alert, Banner, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getPhotoUploadId, getStoryBoxData, getWallData} from "../../helpers/AppHelper";
@@ -14,7 +14,8 @@ import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {WallMessagesEnum} from "../../enum/MessagesEnum";
-import {Icon24StoryReplyOutline} from "@vkontakte/icons";
+import {Icon28AdvertisingOutline, Icon28StoryOutline} from "@vkontakte/icons";
+import {ColorsList} from "../../types/ColorTypes";
 
 interface Props {
     id: string;
@@ -108,19 +109,45 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                 (uploadPhoto.url)
                     ?
                 <Group>
-                    <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 25}}>
+                    <div style={{display: 'flex', flexFlow: 'column', alignItems: 'center', rowGap: 5}}>
                         <img
                             style={{maxWidth: '100%', margin: "auto", height: '50vh', borderRadius: 'var(--vkui--size_border_radius--regular)'}}
                             src={uploadPhoto.url}
                             alt=''/>
-                        <ButtonGroup mode='vertical'>
-                            <Button before={<Icon24StoryReplyOutline />} onClick={shareWall} stretched size='l'>
-                                Посмотреть и поделиться на стене
-                                {
-                                    uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
-                                }
-                            </Button>
-                            <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
+                        {
+                            uploadPhoto?.available_share_free_image &&
+                                <Banner
+                                    style={{
+                                        padding: 0,
+                                    }}
+                                    mode="image"
+                                    size="m"
+                                    background={
+                                        <div
+                                            style={{
+                                                backgroundColor: ColorsList.primary,
+                                            }}
+                                        />
+                                    }
+                                    header="Посмотреть и поделиться на стене"
+                                    subheader="Вы получите ещё +1 генерацию бесплатно!"
+                                    actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
+                                />
+                        }
+                        <ButtonGroup mode='horizontal'>
+                            {
+                                !uploadPhoto?.available_share_free_image &&
+                                <Button
+                                    before={<Icon28AdvertisingOutline/>}
+                                    size="l"
+                                    mode="primary"
+                                    stretched
+                                    onClick={shareWall}
+                                >
+                                    На стене
+                                </Button>
+                            }
+                            <Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
                         </ButtonGroup>
                     </div>
                 </Group>
