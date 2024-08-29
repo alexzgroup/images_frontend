@@ -1,6 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 
-import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
+import {Alert, Button, ButtonGroup, Caption, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getPhotoUploadId, getStoryBoxData, getWallData} from "../../helpers/AppHelper";
@@ -14,6 +14,7 @@ import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {WallMessagesEnum} from "../../enum/MessagesEnum";
+import {Icon24StoryReplyOutline} from "@vkontakte/icons";
 
 interface Props {
     id: string;
@@ -113,7 +114,12 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                             src={uploadPhoto.url}
                             alt=''/>
                         <ButtonGroup mode='vertical'>
-                            <Button onClick={shareWall} stretched size='l'>Поделиться с друзьями на стене</Button>
+                            <Button before={<Icon24StoryReplyOutline />} onClick={shareWall} stretched size='l'>
+                                Посмотреть и поделиться на стене
+                                {
+                                    uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
+                                }
+                            </Button>
                             <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
                         </ButtonGroup>
                     </div>

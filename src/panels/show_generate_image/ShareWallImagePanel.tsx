@@ -1,6 +1,16 @@
 import React, {useContext, useEffect} from 'react';
 
-import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner, Placeholder} from '@vkontakte/vkui';
+import {
+    Alert,
+    Button,
+    ButtonGroup,
+    Caption,
+    Group,
+    Panel,
+    PanelHeader,
+    PanelSpinner,
+    Placeholder
+} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getPhotoUploadId, getWallData} from "../../helpers/AppHelper";
@@ -15,6 +25,7 @@ import {ColorsList} from "../../types/ColorTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
 import {WallMessagesEnum} from "../../enum/MessagesEnum";
+import {Icon24StoryReplyOutline} from "@vkontakte/icons";
 
 interface Props {
     id: string;
@@ -127,8 +138,14 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                             header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
                             action={
                                 <ButtonGroup mode='vertical'>
-                                    <Button onClick={shareWall} stretched size={isMobileSize ? 'm' : 'l'}>Посмотреть и
-                                        поделиться на стене</Button>
+                                    <Button
+                                        before={<Icon24StoryReplyOutline />}
+                                        onClick={shareWall} stretched size={isMobileSize ? 'm' : 'l'}>
+                                        Посмотреть и поделиться на стене
+                                        {
+                                            uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
+                                        }
+                                    </Button>
                                     <Button mode="secondary" onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)} stretched
                                             size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
                                 </ButtonGroup>

@@ -113,7 +113,8 @@ export type uploadPhotoType = {
     image_type: {
         name: string,
         sex?: number,
-    }
+    },
+    available_share_free_image?: boolean,
 }
 
 export type generateImageType = operationWithMessageType & {

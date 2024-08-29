@@ -1,5 +1,5 @@
 import React, {Suspense, useContext, useEffect, useState} from "react";
-import {Alert, Button, ButtonGroup, PanelSpinner, Spacing, Subhead} from "@vkontakte/vkui";
+import {Alert, Button, ButtonGroup, Caption, PanelSpinner, Spacing, Subhead} from "@vkontakte/vkui";
 import {ShareTypeEnum} from "../../types/ApiTypes";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {apiGetGenerateImage, updateShareGenerateImage} from "../../api/AxiosApi";
@@ -121,6 +121,18 @@ const Content:React.FC = () => {
             <Spacing/>
             <ButtonGroup mode="horizontal" stretched>
                 <Button
+                    before={<Icon28AdvertisingOutline/>}
+                    size="l"
+                    mode="primary"
+                    stretched
+                    onClick={shareWall}
+                >
+                    Посмотреть и поделиться на стене
+                    {
+                        uploadPhoto?.available_share_free_image && <Caption level="3">Вы получите ещё +1 генерацию бесплатно!</Caption>
+                    }
+                </Button>
+                <Button
                     before={<Icon28StoryOutline/>}
                     size="l"
                     mode="primary"
@@ -128,15 +140,6 @@ const Content:React.FC = () => {
                     onClick={shareStore}
                 >
                     В истории
-                </Button>
-                <Button
-                    before={<Icon28AdvertisingOutline/>}
-                    size="l"
-                    mode="primary"
-                    stretched
-                    onClick={shareWall}
-                >
-                    На стене
                 </Button>
             </ButtonGroup>
         </React.Fragment>
