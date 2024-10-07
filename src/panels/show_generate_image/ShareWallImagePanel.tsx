@@ -1,16 +1,6 @@
 import React, {useContext, useEffect} from 'react';
 
-import {
-    Alert,
-    Banner,
-    Button,
-    ButtonGroup,
-    Group,
-    Panel,
-    PanelHeader,
-    PanelSpinner,
-    Placeholder
-} from '@vkontakte/vkui';
+import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner, Placeholder} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getPhotoUploadId, getWallData} from "../../helpers/AppHelper";
@@ -138,40 +128,19 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                             header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
                             action={
                             <>
-                                {
-                                    uploadPhoto?.available_share_free_image &&
-                                    <Banner
-                                        style={{
-                                            padding: 0,
-                                        }}
-                                        mode="image"
-                                        size="m"
-                                        background={
-                                            <div
-                                                style={{
-                                                    backgroundColor: ColorsList.primary,
-                                                }}
-                                            />
-                                        }
-                                        header="Посмотреть и поделиться на стене"
-                                        subheader="Вы получите ещё +1 генерацию бесплатно!"
-                                        actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
-                                    />
-                                }
-                                <ButtonGroup mode='horizontal'>
-                                    {
-                                        !uploadPhoto?.available_share_free_image &&
-                                        <Button
-                                            before={<Icon28AdvertisingOutline/>}
-                                            size="l"
-                                            mode="primary"
+                                <ButtonGroup mode='vertical'>
+                                    <Button
+                                        before={<Icon28AdvertisingOutline/>}
+                                        size="l"
+                                        mode="primary"
+                                        stretched
+                                        onClick={shareWall}
+                                    >
+                                        Посмотреть и поделится на стене
+                                    </Button>
+                                    <Button mode="secondary"
+                                            onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)}
                                             stretched
-                                            onClick={shareWall}
-                                        >
-                                            На стене
-                                        </Button>
-                                    }
-                                    <Button mode="secondary" onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)} stretched
                                             size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
                                 </ButtonGroup>
                             </>

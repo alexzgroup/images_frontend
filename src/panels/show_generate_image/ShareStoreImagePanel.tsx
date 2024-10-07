@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 
-import {Button, ButtonGroup, Group, Panel, PanelHeader, Placeholder} from '@vkontakte/vkui';
+import {Banner, Button, ButtonGroup, Group, Panel, PanelHeader, Placeholder} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData} from "../../helpers/AppHelper";
@@ -8,10 +8,11 @@ import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {updateShareGenerateImage} from "../../api/AxiosApi";
 import {ShareTypeEnum} from "../../types/ApiTypes";
 import {useSelector} from "react-redux";
-import {Icon56StoryCircleFillYellow} from "@vkontakte/icons";
+import {Icon28StoryOutline, Icon56StoryCircleFillYellow} from "@vkontakte/icons";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {ColorsList} from "../../types/ColorTypes";
 
 interface Props {
     id: string;
@@ -58,11 +59,32 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                     icon={<div className="pulseLine"><Icon56StoryCircleFillYellow height={98} width={98} /></div>}
                     header={`${vkUserInfo?.first_name}, также не забудьте поделиться в истории ВКонтакте!`}
                     action={
+                    <>
+                        {
+                            uploadPhoto?.available_share_free_image &&
+                            <Banner
+                                style={{
+                                    padding: 0,
+                                }}
+                                mode="image"
+                                size="m"
+                                background={
+                                    <div
+                                        style={{
+                                            backgroundColor: ColorsList.primary,
+                                        }}
+                                    />
+                                }
+                                header="Посмотреть и поделиться в истории"
+                                subheader="Вы получите ещё +1 генерацию бесплатно!"
+                                actions={<Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched  appearance="overlay" size="l">Поделиться в истории ВК</Button>}
+                            />
+                        }
                         <ButtonGroup mode='vertical'>
-                            <Button onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size={isMobileSize ? 'm' : 'l'}>Поделиться в истории ВК</Button>
                             <Button mode="secondary" onClick={skipShareHistory} stretched
                                     size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
                         </ButtonGroup>
+                    </>
                     }
                 />
             </Group>

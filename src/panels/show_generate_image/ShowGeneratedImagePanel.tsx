@@ -129,25 +129,17 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                                             }}
                                         />
                                     }
-                                    header="Посмотреть и поделиться на стене"
+                                    header="Посмотреть и поделиться в истории"
                                     subheader="Вы получите ещё +1 генерацию бесплатно!"
-                                    actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
+                                    actions={<Button appearance="overlay" before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>}
                                 />
                         }
                         <ButtonGroup mode='horizontal'>
                             {
                                 !uploadPhoto?.available_share_free_image &&
-                                <Button
-                                    before={<Icon28AdvertisingOutline/>}
-                                    size="l"
-                                    mode="primary"
-                                    stretched
-                                    onClick={shareWall}
-                                >
-                                    На стене
-                                </Button>
+                                    <Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
                             }
-                            <Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
+                            <Button mode="secondary" onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} size="l">Поделиться на стене</Button>
                         </ButtonGroup>
                     </div>
                 </Group>

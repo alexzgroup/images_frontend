@@ -45,6 +45,48 @@ export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
                 url: 'https://vk.com/app' + process.env.REACT_APP_APP_ID,
                 type: 'url',
             },
+        stickers: [
+            {
+                sticker_type: "renderable",
+                sticker: {
+                    transform: {
+                        relation_width: 1,
+                        translation_x: 0,
+                        translation_y: 0,
+                    },
+                    can_delete: false,
+                    content_type: "image",
+                    url: 'https://psv4.userapi.com/c909618/u69096836/docs/d22/b24e106f2d2c/prozrachny_fon.png?extra=a-K9FMVEibHe67IMqDPdRH6naSYJcnI2DdReZ4UIVdMHGrvjyAgWXSFqRMIXKtU6JzGPFkREpH59rae22_W014zDE1yDlWEEyJwzNF0Axw6fHZhiQwWV7XDfszdhHad7AwuJ4XZDvHZAWmM7sc1QLw',
+                    clickable_zones: [
+                        {
+                            action_type: "link",
+                            action: {
+                                link: "https://vk.com/app" + process.env.REACT_APP_APP_ID,
+                                tooltip_text_key: "tooltip_open_default"
+                            },
+                            clickable_area: [
+                                {
+                                    x: 0,
+                                    y: 0
+                                },
+                                {
+                                    x: 736,
+                                    y: 0
+                                },
+                                {
+                                    x: 736,
+                                    y: 1313
+                                },
+                                {
+                                    x: 0,
+                                    y: 1313
+                                }
+                            ]
+                        },
+                    ]
+                }
+            },
+        ]
     }
 }
 

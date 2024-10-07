@@ -135,32 +135,42 @@ const Content:React.FC = () => {
                                 }}
                             />
                         }
-                        header="Посмотреть и поделиться на стене"
+                        header="Посмотреть и поделиться в истории"
                         subheader="Вы получите ещё +1 генерацию бесплатно!"
-                        actions={<Button onClick={shareWall} stretched before={<Icon28AdvertisingOutline/>} appearance="overlay" size="l">Поделиться на стене</Button>}
+                        actions={
+                            <Button
+                                before={<Icon28StoryOutline/>}
+                                size="l"
+                                appearance="overlay"
+                                stretched
+                                onClick={shareStore}
+                            >
+                                В истории
+                            </Button>
+                        }
                     />
             }
             <ButtonGroup mode="horizontal" stretched>
                 {
                     !uploadPhoto?.available_share_free_image &&
-                        <Button
-                            before={<Icon28AdvertisingOutline/>}
-                            size="l"
-                            mode="primary"
-                            stretched
-                            onClick={shareWall}
-                        >
-                            На стене
-                        </Button>
+                    <Button
+                        before={<Icon28StoryOutline/>}
+                        size="l"
+                        mode="primary"
+                        stretched
+                        onClick={shareStore}
+                    >
+                        В истории
+                    </Button>
                 }
                 <Button
-                    before={<Icon28StoryOutline/>}
+                    before={<Icon28AdvertisingOutline/>}
                     size="l"
                     mode="primary"
                     stretched
-                    onClick={shareStore}
+                    onClick={shareWall}
                 >
-                    В истории
+                    На стене
                 </Button>
             </ButtonGroup>
         </React.Fragment>
