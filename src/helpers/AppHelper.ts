@@ -2,6 +2,7 @@ import {Platform} from "@vkontakte/vkui";
 import bridge, {ShowStoryBoxOptions, UserInfo, WallPostRequestOptions} from "@vkontakte/vk-bridge";
 import {PlatformType} from "@vkontakte/vkui/dist/lib/platform";
 import {uploadImage} from "../api/AxiosApi";
+import transparentBgSticker from '../assets/images/transparent_bg_sticker.png';
 
 export const getDonutUrl = (platform: PlatformType):string => {
     if (platform === Platform.VKCOM) {
@@ -56,7 +57,7 @@ export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
                     },
                     can_delete: false,
                     content_type: "image",
-                    url: 'https://psv4.userapi.com/c909618/u69096836/docs/d22/b24e106f2d2c/prozrachny_fon.png?extra=a-K9FMVEibHe67IMqDPdRH6naSYJcnI2DdReZ4UIVdMHGrvjyAgWXSFqRMIXKtU6JzGPFkREpH59rae22_W014zDE1yDlWEEyJwzNF0Axw6fHZhiQwWV7XDfszdhHad7AwuJ4XZDvHZAWmM7sc1QLw',
+                    url: transparentBgSticker,
                     clickable_zones: [
                         {
                             action_type: "link",
