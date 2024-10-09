@@ -1,6 +1,6 @@
 import React, {useContext} from 'react';
 
-import {Banner, Button, ButtonGroup, Group, Panel, PanelHeader, Placeholder} from '@vkontakte/vkui';
+import {Banner, Button, Group, Panel, PanelHeader, PanelHeaderClose, Placeholder} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {getStoryBoxData} from "../../helpers/AppHelper";
@@ -19,7 +19,7 @@ interface Props {
 }
 
 const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
-    const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
@@ -52,7 +52,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Результат</PanelHeader>
+            <PanelHeader before={<PanelHeaderClose onClick={skipShareHistory} />}>Результат</PanelHeader>
             <Group>
                 <Placeholder
                     stretched
@@ -80,10 +80,6 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                                 actions={<Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched  appearance="overlay" size="l">Поделиться в истории ВК</Button>}
                             />
                         }
-                        <ButtonGroup mode='vertical'>
-                            <Button mode="secondary" onClick={skipShareHistory} stretched
-                                    size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
-                        </ButtonGroup>
                     </>
                     }
                 />

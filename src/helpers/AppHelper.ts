@@ -57,7 +57,7 @@ export const getStoryBoxData = (blob: any): ShowStoryBoxOptions => {
                     },
                     can_delete: false,
                     content_type: "image",
-                    url: transparentBgSticker,
+                    blob: transparentBgSticker,
                     clickable_zones: [
                         {
                             action_type: "link",
