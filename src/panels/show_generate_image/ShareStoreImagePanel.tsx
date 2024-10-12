@@ -8,7 +8,7 @@ import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {updateShareGenerateImage} from "../../api/AxiosApi";
 import {ShareTypeEnum} from "../../types/ApiTypes";
 import {useSelector} from "react-redux";
-import {Icon28StoryOutline, Icon56StoryCircleFillYellow} from "@vkontakte/icons";
+import {Icon28CancelOutline, Icon28StoryOutline, Icon56StoryCircleFillYellow} from "@vkontakte/icons";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
@@ -52,7 +52,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader before={<PanelHeaderClose onClick={skipShareHistory} />}>Результат</PanelHeader>
+            <PanelHeader before={<PanelHeaderClose onClick={skipShareHistory}><Icon28CancelOutline /></PanelHeaderClose>}>Результат</PanelHeader>
             <Group>
                 <Placeholder
                     stretched
