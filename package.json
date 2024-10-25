@@ -1,7 +1,7 @@
 {
     "name": "generate_image-app",
     "version": "0.0.1",
-    "homepage": "https://github.com/alexzgroup/images_frontend",
+    "homepage": "https://alexzgroup.github.io/images_frontend/",
     "scripts": {
         "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
         "build": "react-scripts build",

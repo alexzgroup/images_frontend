@@ -7,10 +7,9 @@ import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageS
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import bridge from "@vkontakte/vk-bridge";
-import {getStoryBoxData} from "../../helpers/AppHelper";
 import {Icon28StoryOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
+import {useTelegram} from "../../context/TelegramProvider";
 
 const Content:React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -18,15 +17,18 @@ const Content:React.FC = () => {
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {uploadPhoto, generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const dispatch = useDispatch();
+    const { webApp } = useTelegram();
 
-    const shareStore = () => {
-        if (uploadPhoto) {
-            const storyData = getStoryBoxData(uploadPhoto.base64);
-            bridge.send('VKWebAppShowStoryBox', storyData).then((r) => {
-                if (r.result) {
-                    updateShareGenerateImage(generateImageId, ShareTypeEnum.SHARE_HISTORY)
+    const shareStore = async () => {
+        if (uploadPhoto && webApp) {
+            webApp.shareToStory(uploadPhoto.url, {
+                text: 'Мой образ сгенерировало приложение Renestra AI',
+                widget_link: {
+                    url: process.env.REACT_APP_TG_URL,
+                    name: 'Образ: ' + uploadPhoto.image_type.name,
                 }
-            });
+            })
+            updateShareGenerateImage(generateImageId, ShareTypeEnum.SHARE_HISTORY)
         }
     }
 

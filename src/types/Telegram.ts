@@ -8,6 +8,16 @@ export interface ITelegramUser {
     photo_url?: string;
 }
 
+export type TStoryWidgetLink = {
+    url: string,
+    name?: string,
+}
+
+export interface IStoryShareParams {
+    text: string;
+    widget_link: TStoryWidgetLink,
+}
+
 export interface IWebApp {
     initData: string;
     initDataUnsafe: {
@@ -46,4 +56,5 @@ export interface IWebApp {
         isActive: boolean;
     };
     HapticFeedback: any;
+    shareToStory: (media_url: string, params: IStoryShareParams) => void;
 }

@@ -72,7 +72,7 @@ const App = () => {
 	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
 	const dispatch = useDispatch();
-	const { userTg } = useTelegram();
+	const { userTg, webApp } = useTelegram();
 
 	const initSocket = (vkUserId: number) => {
 		const options = {
