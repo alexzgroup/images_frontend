@@ -1,0 +1,24 @@
+{
+  "files": {
+    "main.css": "/alexzgroup/images_frontend/static/css/main.4db347a8.css",
+    "main.js": "/alexzgroup/images_frontend/static/js/main.71b40acd.js",
+    "static/js/495.54f04246.chunk.js": "/alexzgroup/images_frontend/static/js/495.54f04246.chunk.js",
+    "static/js/256.1275282f.chunk.js": "/alexzgroup/images_frontend/static/js/256.1275282f.chunk.js",
+    "static/media/golden_light.png": "/alexzgroup/images_frontend/static/media/golden_light.4f4f75b2b2dca641ecc5.png",
+    "static/media/vip_logo.png": "/alexzgroup/images_frontend/static/media/vip_logo.4866c8df3429d6b7f509.png",
+    "static/media/monetization.png": "/alexzgroup/images_frontend/static/media/monetization.05c81fb7f937551698ba.png",
+    "static/media/select_image_profile_man.jpg": "/alexzgroup/images_frontend/static/media/select_image_profile_man.4fe33ec58a7989070a57.jpg",
+    "static/media/select_image_profile_girl.jpg": "/alexzgroup/images_frontend/static/media/select_image_profile_girl.b0cb18d58d2834005f72.jpg",
+    "static/media/FloridaVibesByTurbologo.otf": "/alexzgroup/images_frontend/static/media/FloridaVibesByTurbologo.207c2e09086f0833982f.otf",
+    "static/media/example_man_generated.png": "/alexzgroup/images_frontend/static/media/example_man_generated.da6dde1d198f4202c385.png",
+    "index.html": "/alexzgroup/images_frontend/index.html",
+    "main.4db347a8.css.map": "/alexzgroup/images_frontend/static/css/main.4db347a8.css.map",
+    "main.71b40acd.js.map": "/alexzgroup/images_frontend/static/js/main.71b40acd.js.map",
+    "495.54f04246.chunk.js.map": "/alexzgroup/images_frontend/static/js/495.54f04246.chunk.js.map",
+    "256.1275282f.chunk.js.map": "/alexzgroup/images_frontend/static/js/256.1275282f.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.4db347a8.css",
+    "static/js/main.71b40acd.js"
+  ]
+}
