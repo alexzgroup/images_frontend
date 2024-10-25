@@ -135,7 +135,7 @@ export const TotalInfo = () => {
                 <CardGrid size='l'>
                     <Card mode='shadow'>
                         <SimpleCell
-                            before={<Avatar size={48} src={vkUserInfo?.photo_100} />}
+                            before={<Avatar size={48} initials={Array.from(vkUserInfo?.first_name || '')[0] + '' + Array.from(vkUserInfo?.last_name || '')[0]} gradientColor="blue" />}
                         >
                             {vkUserInfo?.first_name + ' ' + vkUserInfo?.last_name}
                         </SimpleCell>

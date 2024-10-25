@@ -11,6 +11,7 @@ export const VIEW_CONSTANTS = {
 
 export const PANEL_CONSTANTS = {
     PANEL_MAIN_HOME: 'panel_main_home',
+    PANEL_MAIN_SELECT_SEX: 'panel_main_select_sex',
     PANEL_GENERATE_IMAGE_SELECT_PROFILE: 'panel_generate_image_select_profile',
     PANEL_GENERATE_IMAGE_SELECT_IMAGE: 'panel_generate_image_select_image',
     PANEL_GENERATE_IMAGE_NAME_SELECT_IMAGE: 'panel_generate_image_name_select_image',

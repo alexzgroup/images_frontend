@@ -6,7 +6,7 @@ import {ColorsList} from "../../types/ColorTypes";
 
 const UserGenerateInfo: React.FC<{user: UserWithGeneratedInfoType}> = ({user}) => (
     <RichCell
-        before={<Avatar size={72} src={user?.photo_200} />}
+        before={<Avatar size={72} initials={Array.from(user?.first_name)[0] + '' + Array.from(user?.last_name)[0]} gradientColor="blue" />}
         text={
             <React.Fragment>
                 <MiniInfoCell style={{paddingLeft: 0}} before={<Icon20Like fill={ColorsList.primary} />}>

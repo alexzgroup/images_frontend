@@ -15,7 +15,6 @@ import {
 import {Icon56DonateOutline, Icon56InfoOutline, Icon56PaletteOutline, Icon56Users3Outline} from '@vkontakte/icons';
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {getDonutUrl} from "../helpers/AppHelper";
-import {SelectUserImage} from "../components/SelectUserImage";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
@@ -131,15 +130,6 @@ const ModalRootComponent:FC = () => {
                     </ButtonGroup>
                 }
             />
-            <ModalPage
-                id={ModalTypes.MODAL_SELECT_GENERATE_IMAGE}
-                onClose={() => routeNavigator.hideModal()}
-                settlingHeight={100}
-                hideCloseButton={true}
-                header={<ModalPageHeader>Выберите фотографию</ModalPageHeader>}
-            >
-               <SelectUserImage />
-            </ModalPage>
             <ModalCard
                 id={ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER}
                 onClose={() => !windowBlocked && routeNavigator.hideModal()}

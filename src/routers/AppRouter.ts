@@ -13,6 +13,11 @@ const AppRouter = createHashRouter([
         view: VIEW_CONSTANTS.VIEW_MAIN,
     },
     {
+        path: '/select-sex',
+        panel: PANEL_CONSTANTS.PANEL_MAIN_SELECT_SEX,
+        view: VIEW_CONSTANTS.VIEW_MAIN,
+    },
+    {
         path: '/generate',
         panel: PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE,
         view: VIEW_CONSTANTS.VIEW_GENERATE_IMAGE,

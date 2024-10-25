@@ -1,11 +1,12 @@
 {
     "name": "generate_image-app",
     "version": "0.0.1",
+    "homepage": "https://github.com/alexzgroup/images_frontend",
     "scripts": {
         "start": "cross-env PORT=10888 HTTPS=true react-scripts start",
         "build": "react-scripts build",
         "predeploy": "npm run build",
-        "deploy": "vk-miniapps-deploy",
+        "deploy": "gh-pages -d build",
         "tunnel": "vk-tunnel --insecure=1 --http-protocol=https --ws-protocol=wss --host=0.0.0.0 --port=10888"
     },
     "engines": {
@@ -17,6 +18,7 @@
         "@reduxjs/toolkit": "^1.9.7",
         "@types/react": "^17.0.2",
         "@types/react-dom": "^17.0.2",
+        "@types/telegram-web-app": "^7.10.1",
         "@vkontakte/icons": "^2.88.0",
         "@vkontakte/vk-bridge": "^2.15.1",
         "@vkontakte/vk-mini-apps-router": "^1.4.2",
@@ -40,6 +42,7 @@
     },
     "devDependencies": {
         "cross-env": "^7.0.3",
+        "gh-pages": "^6.2.0",
         "react-hot-loader": "^4.13.0",
         "react-scripts": "^5.0.1"
     },

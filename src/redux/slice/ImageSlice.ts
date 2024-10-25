@@ -1,5 +1,4 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {userImage} from "../../types/UserTypes";
 import {favoriteImageType, GenerateImageNoShareType, imageType, uploadPhotoType} from "../../types/ApiTypes";
 
 type uploadPhotoSliceType = uploadPhotoType & {
@@ -7,7 +6,7 @@ type uploadPhotoSliceType = uploadPhotoType & {
 }
 
 export interface ReduxSliceImageInterface {
-    generateImage: userImage|null,
+    selectImageFile: File|null, // выбранный файл изображения
     generateImageId: number, // id сгенерированного изображения
     uploadPhoto: uploadPhotoSliceType, // ссылка, base64 для истории и photo_id из ВК для поделиться на стене
     popularImageTypes: imageType[],
@@ -17,7 +16,7 @@ export interface ReduxSliceImageInterface {
 
 // Define the initial state using that type
 const initialState: ReduxSliceImageInterface = {
-    generateImage: null,
+    selectImageFile: null,
     generateImageId: 0,
     uploadPhoto: {
         url: '',
@@ -38,11 +37,11 @@ export const imageSlice = createSlice({
     name: 'imageSlice',
     initialState,
     reducers: {
-        setGenerateImage: (state, action: PayloadAction<userImage>) => {
-            state.generateImage = action.payload;
+        setSelectImageFile: (state, action: PayloadAction<File>) => {
+            state.selectImageFile = action.payload;
         },
-        clearGenerateImage: state => {
-            state.generateImage = null;
+        clearSelectImageFile: state => {
+            state.selectImageFile = null;
         },
         setGenerateImageId: (state, action: PayloadAction<number>) => {
             state.generateImageId = action.payload
@@ -66,8 +65,8 @@ export const imageSlice = createSlice({
 })
 
 export const {
-    clearGenerateImage,
-    setGenerateImage,
+    clearSelectImageFile,
+    setSelectImageFile,
     setGenerateImageId,
     setUploadPhoto,
     setGenerateImagesNotShareWall,

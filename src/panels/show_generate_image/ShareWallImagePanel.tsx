@@ -1,21 +1,13 @@
 import React, {useContext, useEffect} from 'react';
 
-import {Alert, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner, Placeholder} from '@vkontakte/vkui';
-import bridge from "@vkontakte/vk-bridge";
+import {Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner, Placeholder} from '@vkontakte/vkui';
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
-import {getPhotoUploadId, getWallData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {apiGetGenerateImage, updateShareGenerateImage} from "../../api/AxiosApi";
-import {ShareTypeEnum} from "../../types/ApiTypes";
-import {setAccessToken} from "../../redux/slice/UserSlice";
+import {apiGetGenerateImage} from "../../api/AxiosApi";
 import {useDispatch, useSelector} from "react-redux";
-import {ModalTypes} from "../../modals/ModalRoot";
-import {setWindowBlocked} from "../../redux/slice/AppStatusesSlice";
 import {ColorsList} from "../../types/ColorTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
-import {WallMessagesEnum} from "../../enum/MessagesEnum";
-import {Icon28AdvertisingOutline} from "@vkontakte/icons";
 
 interface Props {
     id: string;
@@ -28,61 +20,6 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
     const params = useParams<'imageGeneratedId'>();
     const dispatch = useDispatch();
 
-    const rejectAccessToken = () => {
-        routeNavigator.showPopout(
-            <Alert
-                actions={[
-                    {
-                        title: 'Понятно',
-                        autoClose: true,
-                        mode: 'destructive',
-                    },
-                ]}
-                onClose={() => {
-                    routeNavigator.hidePopout();
-                }}
-                header="Внимание!"
-                text="Для публикации результата разрешите доступ."
-            />
-        );
-    }
-
-    const shareWall = async () => {
-        bridge.send('VKWebAppGetAuthToken', {
-            app_id: Number(process.env.REACT_APP_APP_ID),
-            scope: 'photos,wall'
-        })
-            .then(async (data) => {
-                if (data.access_token) {
-                    dispatch(setAccessToken(data.access_token))
-                    let photoId = uploadPhoto.photoUploadId;
-
-                    if (!photoId) {
-                        dispatch(setWindowBlocked(true))
-                        routeNavigator.showModal(ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER);
-                        photoId = await getPhotoUploadId(data.access_token, Number(params?.imageGeneratedId));
-                        dispatch(setUploadPhoto({...uploadPhoto, photoUploadId: photoId}))
-                        dispatch(setWindowBlocked(false))
-                        routeNavigator.hideModal();
-                    }
-
-                    if (uploadPhoto && vkUserInfo) {
-                        const wallData = getWallData({photoUploadId: photoId, vkUserInfo, wallMessage: WallMessagesEnum[uploadPhoto.type]});
-                        bridge.send('VKWebAppShowWallPostBox', wallData).then((r) => {
-                            if (r.post_id) {
-                                updateShareGenerateImage(Number(params?.imageGeneratedId), ShareTypeEnum.SHARE_WALL)
-                            }
-                        }).catch();
-                    }
-                } else {
-                    rejectAccessToken()
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-                rejectAccessToken()
-            });
-    }
 
     useEffect(() => {
         (async () => {
@@ -129,15 +66,6 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                             action={
                             <>
                                 <ButtonGroup mode='vertical'>
-                                    <Button
-                                        before={<Icon28AdvertisingOutline/>}
-                                        size="l"
-                                        mode="primary"
-                                        stretched
-                                        onClick={shareWall}
-                                    >
-                                        Посмотреть и поделится на стене
-                                    </Button>
                                     <Button mode="secondary"
                                             onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)}
                                             stretched

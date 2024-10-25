@@ -1,4 +1,4 @@
-import {UserInfo} from "@vkontakte/vk-bridge";
+import {ITelegramUser} from "./Telegram";
 
 export type userApiType = {
     balance: number,
@@ -142,7 +142,7 @@ export type socketSubscribeType = {
 }
 
 export type sendGenerateImageType = {
-    image_url: string,
+    image_file: File,
     image_type_id: number,
     options: FormDataOptionType[]|[],
 }
@@ -210,4 +210,4 @@ export type GenerateProfileInfoType = {
     history_generate: GeneratedImageType[],
 }
 
-export type UserWithGeneratedInfoType = UserInfo & GenerateProfileInfoType
+export type UserWithGeneratedInfoType = ITelegramUser & GenerateProfileInfoType

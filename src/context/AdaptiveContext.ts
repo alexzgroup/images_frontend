@@ -1,9 +1,9 @@
 import React from "react";
-import {UserInfo} from "@vkontakte/vk-bridge";
+import type {ITelegramUser} from "../types/Telegram";
 
 
 export type AdaptiveContextType = {
     isMobileSize?: boolean,
-    vkUserInfo?: UserInfo,
+    vkUserInfo?: ITelegramUser,
 }
 export const AdaptiveContext = React.createContext<AdaptiveContextType>({});

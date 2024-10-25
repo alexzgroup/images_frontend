@@ -28,14 +28,14 @@ import {
 import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {ModalTypes} from "../../modals/ModalRoot";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 import example_man_generated from '../../assets/images/example_man_generated.png'
+import example_woman_generated from '../../assets/images/example_woman_generated.jpg'
 import {useDispatch, useSelector} from "react-redux";
 import bridge from "@vkontakte/vk-bridge";
-import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
+import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
@@ -53,11 +53,10 @@ interface Props {
 }
 
 const PanelData = () => {
-
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
-    const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
@@ -98,29 +97,13 @@ const PanelData = () => {
                     text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
                 />
             );
-        } else if (generateImage && params?.imageTypeId) {
+        } else if (selectImageFile && params?.imageTypeId) {
             if (imageType.img_type_to_variant_groups.length && !formData.length) {
                 setFormDataError(true);
                 return;
             }
             routeNavigator.push('/generate/preloader', {state: {formData, imageTypeId: params?.imageTypeId}})
         }
-    }
-
-    const getUserToken = () => {
-        bridge.send('VKWebAppGetAuthToken', {
-            app_id: Number(process.env.REACT_APP_APP_ID),
-            scope: 'photos,wall'
-        })
-            .then((data) => {
-                if (data.access_token) {
-                    dispatch(setAccessToken(data.access_token))
-                    routeNavigator.showModal(ModalTypes.MODAL_SELECT_GENERATE_IMAGE)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }
 
     const handleChangeOption = (e: ChangeEvent<HTMLInputElement>) => {
@@ -213,174 +196,174 @@ const PanelData = () => {
 
     return (
         <React.Fragment>
-            <Group>
-                <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
-                    <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
-                    {
-                        (imageType.generate_statistic.available_count_generate < 1)
-                            ?
-                            <React.Fragment>
-                                {
-                                    !userDbData?.subscribe ?
-                                        <React.Fragment>
-                                            <Button
-                                                onClick={subscribeGroup}
-                                                appearance={'accent'}
-                                                mode={'primary' } size="l">
-                                                Получить +1 генерацию
-                                            </Button>
-                                            <Banner
-                                                size="m"
-                                                noPadding
-                                                mode="image"
-                                                header="У Вас закончились генерации."
-                                                subheader={'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
-                                                background={<div style={{background: ColorsList.error}} />}
-                                                style={{width: '100%', margin: '10px 0 5px 0'}}
-                                            />
-                                        </React.Fragment>
-                                        :
-                                        (
-                                            userDbData?.is_vip ?
-                                                <React.Fragment>
-                                                    <Button
-                                                        disabled
-                                                        appearance='negative'
-                                                        mode='secondary'
-                                                        size="l">
-                                                        Будет доступно завтра
-                                                    </Button>
-                                                    <Banner
-                                                        size="m"
-                                                        noPadding
-                                                        mode="image"
-                                                        header="У Вас закончились генерации."
-                                                        subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
-                                                        background={<div style={{background: ColorsList.error}} />}
-                                                        style={{width: '100%', margin: '10px 0 5px 0'}}
-                                                    />
-                                                </React.Fragment>
-                                                :
-                                                <React.Fragment>
-                                                    <ButtonGold style={{width: isMobileSize ? '100%' : 'auto'}}>Оформить подписку VIP</ButtonGold>
-                                                    <Spacing />
-                                                    <div className="gold_light">
-                                                        <div className="vip-block">
-                                                            <Title level="3" style={{textAlign: 'left', color: 'white'}}>У вас закончились генерации!</Title>
-                                                            <Subhead style={{textAlign: 'left'}}>
-                                                                Для того, чтобы увеличить лимит генераций до 20 в день, вы можете оформить VIP подписку.
-                                                            </Subhead>
-                                                            <Spacing />
-                                                            <RenestraTitleWithLogo />
-                                                        </div>
-                                                    </div>
-                                                </React.Fragment>
-                                        )
-                                }
-                            </React.Fragment>
-                            :
-                            <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>
-                                Продолжить
-                            </Button>
-                    }
-                </Div>
-            </Group>
-            {
-                !!imageType.img_type_to_variant_groups.length &&
-                <Group header={<Header>Выберите опции генерации</Header>}>
-                    {
-                        formDataError &&
-                            <FormStatus header="Ошибка отправки формы" mode="error">
-                                Необходимо выбрать варианты генерации
-                            </FormStatus>
-                    }
-                        <FormLayout>
-                            <FormLayoutGroup mode="horizontal">
-                                {
-                                    imageType.img_type_to_variant_groups.map((group, groupKey) => (
-                                        <FormItem top={group.group.name} key={groupKey}>
-                                            {
-                                                imageType.img_type_to_variant_groups.length > 1
-                                                ?
+                <Group>
+                    <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
+                        <SelectImageSection />
+                        {
+                            (imageType.generate_statistic.available_count_generate < 1)
+                                ?
+                                <React.Fragment>
+                                    {
+                                        !userDbData?.subscribe ?
+                                            <React.Fragment>
+                                                <Button
+                                                    onClick={subscribeGroup}
+                                                    appearance={'accent'}
+                                                    mode={'primary' } size="l">
+                                                    Получить +1 генерацию
+                                                </Button>
+                                                <Banner
+                                                    size="m"
+                                                    noPadding
+                                                    mode="image"
+                                                    header="У Вас закончились генерации."
+                                                    subheader={'Подпишитесь на сообщество, чтобы получить ещё 1 ежедневную генерацию.'}
+                                                    background={<div style={{background: ColorsList.error}} />}
+                                                    style={{width: '100%', margin: '10px 0 5px 0'}}
+                                                />
+                                            </React.Fragment>
+                                            :
+                                            (
+                                                userDbData?.is_vip ?
                                                     <React.Fragment>
-                                                        {
-                                                            group.options.map((option, keyOption) => (
-                                                                <Checkbox
-                                                                    style={{
-                                                                        cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
-                                                                    }}
-                                                                    disabled={disabledOptions.includes(option.id)}
-                                                                    key={keyOption}
-                                                                    data-group_id={group.group.id}
-                                                                    onChange={handleChangeOption}
-                                                                    value={option.id}
-                                                                >
-                                                                    {option.name}
-                                                                </Checkbox>
-                                                            ))
-                                                        }
+                                                        <Button
+                                                            disabled
+                                                            appearance='negative'
+                                                            mode='secondary'
+                                                            size="l">
+                                                            Будет доступно завтра
+                                                        </Button>
+                                                        <Banner
+                                                            size="m"
+                                                            noPadding
+                                                            mode="image"
+                                                            header="У Вас закончились генерации."
+                                                            subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
+                                                            background={<div style={{background: ColorsList.error}} />}
+                                                            style={{width: '100%', margin: '10px 0 5px 0'}}
+                                                        />
                                                     </React.Fragment>
                                                     :
                                                     <React.Fragment>
-                                                        <RadioGroup>
+                                                        <ButtonGold style={{width: isMobileSize ? '100%' : 'auto'}}>Оформить подписку VIP</ButtonGold>
+                                                        <Spacing />
+                                                        <div className="gold_light">
+                                                            <div className="vip-block">
+                                                                <Title level="3" style={{textAlign: 'left', color: 'white'}}>У вас закончились генерации!</Title>
+                                                                <Subhead style={{textAlign: 'left'}}>
+                                                                    Для того, чтобы увеличить лимит генераций до 20 в день, вы можете оформить VIP подписку.
+                                                                </Subhead>
+                                                                <Spacing />
+                                                                <RenestraTitleWithLogo />
+                                                            </div>
+                                                        </div>
+                                                    </React.Fragment>
+                                            )
+                                    }
+                                </React.Fragment>
+                                :
+                                <Button disabled={selectImageFile === null} stretched size='l' onClick={openPreloaderGenerate}>
+                                    Продолжить
+                                </Button>
+                        }
+                    </Div>
+                </Group>
+                {
+                    !!imageType.img_type_to_variant_groups.length &&
+                    <Group header={<Header>Выберите опции генерации</Header>}>
+                        {
+                            formDataError &&
+                                <FormStatus header="Ошибка отправки формы" mode="error">
+                                    Необходимо выбрать варианты генерации
+                                </FormStatus>
+                        }
+                            <FormLayout>
+                                <FormLayoutGroup mode="horizontal">
+                                    {
+                                        imageType.img_type_to_variant_groups.map((group, groupKey) => (
+                                            <FormItem top={group.group.name} key={groupKey}>
+                                                {
+                                                    imageType.img_type_to_variant_groups.length > 1
+                                                    ?
+                                                        <React.Fragment>
                                                             {
                                                                 group.options.map((option, keyOption) => (
-                                                                    <Radio
-                                                                        name={'option_' + group.group.id}
+                                                                    <Checkbox
+                                                                        style={{
+                                                                            cursor: disabledOptions.includes(option.id) ? 'no-drop' : ''
+                                                                        }}
+                                                                        disabled={disabledOptions.includes(option.id)}
                                                                         key={keyOption}
                                                                         data-group_id={group.group.id}
                                                                         onChange={handleChangeOption}
                                                                         value={option.id}
                                                                     >
                                                                         {option.name}
-                                                                    </Radio>
+                                                                    </Checkbox>
                                                                 ))
                                                             }
-                                                        </RadioGroup>
-                                                    </React.Fragment>
-                                            }
-                                        </FormItem>
-                                    ))
-                                }
-                            </FormLayoutGroup>
-                        </FormLayout>
+                                                        </React.Fragment>
+                                                        :
+                                                        <React.Fragment>
+                                                            <RadioGroup>
+                                                                {
+                                                                    group.options.map((option, keyOption) => (
+                                                                        <Radio
+                                                                            name={'option_' + group.group.id}
+                                                                            key={keyOption}
+                                                                            data-group_id={group.group.id}
+                                                                            onChange={handleChangeOption}
+                                                                            value={option.id}
+                                                                        >
+                                                                            {option.name}
+                                                                        </Radio>
+                                                                    ))
+                                                                }
+                                                            </RadioGroup>
+                                                        </React.Fragment>
+                                                }
+                                            </FormItem>
+                                        ))
+                                    }
+                                </FormLayoutGroup>
+                            </FormLayout>
+                    </Group>
+                }
+                <Group header={<Header>Пример генерации образа:</Header>}>
+                    <Div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
+                        <div>
+                            <Image
+                                src={userDbData?.sex === 2 ? example_man_generated : example_woman_generated}
+                                size={96} />
+                        </div>
+                        <div>
+                            <Icon48ArrowRightOutline fill='var(--vkui--color_accent_blue)' />
+                        </div>
+                        <div>
+                            <Image
+                                src={imageType.item.url || example_man_generated}
+                                size={96} />
+                        </div>
+                    </Div>
                 </Group>
-            }
-            <Group header={<Header>Пример генерации образа:</Header>}>
-                <Div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
-                    <div>
-                        <Image
-                            src={generateImage ? generateImage.sizes[generateImage.sizes.length - 1].url : vkUserInfo?.photo_200}
-                            size={96} />
-                    </div>
-                    <div>
-                        <Icon48ArrowRightOutline fill='var(--vkui--color_accent_blue)' />
-                    </div>
-                    <div>
-                        <Image
-                            src={imageType.item.url || example_man_generated}
-                            size={96} />
-                    </div>
-                </Div>
-            </Group>
-            <Group>
-                <Banner
-                    size="m"
-                    header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам ${imageType.generate_statistic.available_count_generate === 1 ? 'доступна' : 'доступно'} ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
-                        : 'Доступно 0 генераций'}
-                    subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
-                        {
-                            !userDbData?.subscribe && <React.Fragment>
-                                <br/>Чтобы получить 1 дополнительную генерацию в день, подпишитесь на нашу группу.
-                            </React.Fragment>
+                <Group>
+                    <Banner
+                        size="m"
+                        header={imageType.generate_statistic.available_count_generate
+                            ? `Сегодня вам ${imageType.generate_statistic.available_count_generate === 1 ? 'доступна' : 'доступно'} ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
+                            : 'Доступно 0 генераций'}
+                        subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
+                            {
+                                !userDbData?.subscribe && <React.Fragment>
+                                    <br/>Чтобы получить 1 дополнительную генерацию в день, подпишитесь на нашу группу.
+                                </React.Fragment>
+                            }
+                        </Text>}
+                        actions={
+                            !userDbData?.subscribe && <Button onClick={subscribeGroup} before={<Icon20CheckNewsfeedOutline />} size='s'>Подписаться на сообщество VK</Button>
                         }
-                    </Text>}
-                    actions={
-                        !userDbData?.subscribe && <Button onClick={subscribeGroup} before={<Icon20CheckNewsfeedOutline />} size='s'>Подписаться на сообщество VK</Button>
-                    }
-                />
-            </Group>
+                    />
+                </Group>
             <RecommendedLabels />
             {snackbar}
         </React.Fragment>
@@ -391,7 +374,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(clearGenerateImage())
+        dispatch(clearSelectImageFile())
     }, []);
 
     return (

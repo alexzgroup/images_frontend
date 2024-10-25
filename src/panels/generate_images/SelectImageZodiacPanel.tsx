@@ -20,7 +20,7 @@ import {useDispatch, useSelector} from "react-redux";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
+import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
@@ -36,7 +36,7 @@ const PanelData = () => {
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch()
-    const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
@@ -74,7 +74,7 @@ const PanelData = () => {
                     text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
                 />
             );
-        } else if (generateImage && params?.imageTypeId) {
+        } else if (selectImageFile && params?.imageTypeId) {
             if (!zodiac) {
                 setZodiacSelectError('Выберите значение');
             } else {
@@ -122,7 +122,7 @@ const PanelData = () => {
         <React.Fragment>
             <Group>
                 <Div style={{textAlign: 'center', display: "flex", flexFlow: 'column', alignItems: 'center', margin: 'auto'}}>
-                    <SelectImageSection generateImage={generateImage} getUserToken={getUserToken} />
+                    <SelectImageSection />
                     {
                         imageType.zodiac &&
                             <FormItem
@@ -164,7 +164,7 @@ const PanelData = () => {
                                 />
                             </React.Fragment>
                             :
-                            <Button disabled={!generateImage} stretched size='l' onClick={openPreloaderGenerate}>
+                            <Button disabled={!selectImageFile} stretched size='l' onClick={openPreloaderGenerate}>
                                 Продолжить
                             </Button>
                     }
@@ -188,7 +188,7 @@ const SelectImageZodiacPanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
 
     useEffect(() => {
-        dispatch(clearGenerateImage())
+        dispatch(clearSelectImageFile())
     }, []);
 
     return (

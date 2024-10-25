@@ -44,8 +44,6 @@ type  ImageTypeFromRequest = {
 export const LoadingImageTypes:FC = () => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
-
     const [imageTypes, setImageTypes] = useState<ImageTypeFromRequest|null>(null);
 
     const openImageType = (imageTypeItem: imageType) => {
@@ -99,7 +97,7 @@ export const LoadingImageTypes:FC = () => {
                             background={
                                 <div
                                     style={{
-                                        background: 'url("' + (vkUserInfo?.sex === 2 ? banner_man_image : banner_girl_image) + '") center center/cover no-repeat',
+                                        background: 'url("' + (userDbData?.sex === 2 ? banner_man_image : banner_girl_image) + '") center center/cover no-repeat',
                                     }}
                                 />
                             }

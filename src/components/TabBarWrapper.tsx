@@ -39,13 +39,6 @@ return (
             <Icon28UserCircleOutline/>
         </TabbarItem>
         <TabbarItem
-            onClick={() => routeNavigator.push('/friends')}
-            selected={activeView === VIEW_CONSTANTS.VIEW_FRIENDS}
-            text="Друзья"
-        >
-            <Icon28Users/>
-        </TabbarItem>
-        <TabbarItem
             onClick={() => routeNavigator.push('/about')}
             selected={activeView === VIEW_CONSTANTS.VIEW_ABOUT}
             text="О приложении"

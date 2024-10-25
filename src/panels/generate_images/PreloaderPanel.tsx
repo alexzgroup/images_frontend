@@ -24,7 +24,7 @@ import {
     sendGenerateImageType
 } from "../../types/ApiTypes";
 import {addAdvertisement, apiGenerateImage} from "../../api/AxiosApi";
-import {clearGenerateImage, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
+import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import bridge from "@vkontakte/vk-bridge";
@@ -41,7 +41,7 @@ type formDataType = {
 }
 
 const PreloaderPanel: React.FC<Props> = ({id}) => {
-    const {generateImage} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
+    const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
     const [step, setStep] = useState<number>(1)
@@ -64,19 +64,18 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     const formDataParams = useMetaParams<formDataType>();
 
     const initGenerate = async () => {
-        if (generateImage && formDataParams) {
-            const imageUrl = generateImage.sizes[generateImage.sizes.length - 1].url;
-
+        if (selectImageFile && formDataParams) {
             const data: sendGenerateImageType = {
-                image_url: imageUrl,
+                image_file: selectImageFile,
                 image_type_id: formDataParams.imageTypeId,
                 options: formDataParams.formData,
             }
+
             const response = await apiGenerateImage(data)
             setResponseGenerate({...response, loading: true})
             blockedWindow.current = false;
 
-            dispatch(clearGenerateImage())
+            dispatch(clearSelectImageFile())
 
             if (response.result) {
                 routeNavigator.push(`/show-generate-image/${response.id}/share-wall`);
@@ -103,7 +102,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     }
 
     useEffect(() => {
-        if (formDataParams?.imageTypeId && generateImage) {
+        if (formDataParams?.imageTypeId && selectImageFile) {
             if (!userDbData?.is_vip) {
                 bridge.send("VKWebAppShowNativeAds", {
                     ad_format: EAdsFormats.INTERSTITIAL,
@@ -135,7 +134,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     return (
         <Panel id={id}>
             {
-                (formDataParams?.imageTypeId && generateImage)
+                (formDataParams?.imageTypeId && selectImageFile)
                     ?
                     <React.Fragment>
                         <PanelHeader>Генерация началась</PanelHeader>

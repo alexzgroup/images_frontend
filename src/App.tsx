@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from 'react';
 import bridge, {GetLaunchParamsResponse, UserInfo} from '@vkontakte/vk-bridge';
 import {
-	AdaptivityProps,
+	AdaptivityProps, Alert,
 	Epic,
 	Platform,
 	ScreenSpinner,
@@ -31,7 +31,7 @@ import WelcomePanel from "./panels/monetization/WelcomePanel";
 import ProfilePanel from "./panels/monetization/ProfilePanel";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
-import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
+import {hideAppLoading, ReduxSliceStatusesInterface, setWindowBlocked} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
 import {socketImageType, socketSubscribeType} from "./types/ApiTypes";
 import {setUserDbData, setUserSubscribeStatus, setVkHasProfileButton} from "./redux/slice/UserSlice";
@@ -56,9 +56,12 @@ import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGenerate
 import FriendPanel from "./panels/friends/FriendPanel";
 import {getURlParam} from "./helpers/AppHelper";
 import ShareGetVipImagePanel from "./panels/show_generate_image/ShareGetVipImagePanel";
+import { useTelegram } from "./context/TelegramProvider";
+import type {ITelegramUser} from "./types/Telegram";
+import SelectSexPanel from "./panels/main/SelectSexPanel";
 
 const App = () => {
-	const [vkUserInfo, setUser] = useState<UserInfo | undefined>();
+	const [vkUserInfo, setUser] = useState<ITelegramUser | undefined>();
 	const routerPopout = usePopout();
 	const routeNavigator = useRouteNavigator();
 	const { view: activeView } = useActiveVkuiLocation();
@@ -69,6 +72,7 @@ const App = () => {
 	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
 	const dispatch = useDispatch();
+	const { userTg } = useTelegram();
 
 	const initSocket = (vkUserId: number) => {
 		const options = {
@@ -122,46 +126,46 @@ const App = () => {
 	}
 
 	useEffect(() => {
-		async function fetchData() {
-			const userInfo = await bridge.send('VKWebAppGetUserInfo');
+			async function fetchData() {
+				if(userTg) {
+					const userInfo = userTg;
 
-			if (DEV_USER_VK_IDS.includes(userInfo.id) && !isVkComPlatform) {
-				import("./eruda").then(({ default: eruda }) => {});
+					if (DEV_USER_VK_IDS.includes(userInfo.id) && !isVkComPlatform && process.env.NODE_ENV === 'production') {
+						import("./eruda").then(({ default: eruda }) => {});
+					}
+
+					setUser(userInfo);
+					const {popular_image_types, user, favorite_image_types, generated_images_not_share_wall} = await apiInitUser();
+
+					if (getURlParam('vk_profile_id')) {
+						routeNavigator.replace('/friend/' + getURlParam('vk_profile_id'))
+					}
+
+					dispatch(setUserDbData(user));
+					dispatch(hideAppLoading());
+					dispatch(setPopularImageTypes(popular_image_types));
+					dispatch(setFavoriteImageTypes(favorite_image_types));
+					dispatch(setGenerateImagesNotShareWall(generated_images_not_share_wall));
+
+					routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
+					setTimeout(() => routeNavigator.hidePopout(), 1000);
+					initSocket(user.id);
+
+					if (!user.sex) {
+						routeNavigator.push('/select-sex');
+					}
+				}
 			}
 
-			setUser(userInfo);
-			const {popular_image_types, user, favorite_image_types, generated_images_not_share_wall} = await apiInitUser();
+			window.addEventListener("offline", function () {
+				routeNavigator.push('/offline');
+			});
 
-			const launchParams: GetLaunchParamsResponse & {
-				vk_has_profile_button?: number,
-			} = await bridge.send('VKWebAppGetLaunchParams');
-
-			if (getURlParam('vk_ref') === 'third_party_profile_buttons' && getURlParam('vk_profile_id')) {
-				routeNavigator.replace('/friend/' + getURlParam('vk_profile_id'))
-			}
-
-			dispatch(setUserDbData(user));
-			dispatch(hideAppLoading());
-			dispatch(setVkHasProfileButton(Number(launchParams.vk_has_profile_button)))
-			dispatch(setPopularImageTypes(popular_image_types));
-			dispatch(setFavoriteImageTypes(favorite_image_types));
-			dispatch(setGenerateImagesNotShareWall(generated_images_not_share_wall));
-
-			routeNavigator.showPopout(<ScreenSpinner state='done'  size='large' />);
-
-			setTimeout(() => routeNavigator.hidePopout(), 1000);
-			initSocket(user.id);
-		}
-		fetchData();
-
-		window.addEventListener("offline", function () {
-			routeNavigator.push('/offline');
-		});
-
-		window.addEventListener("online", function () {
-			routeNavigator.back();
-		});
-	}, []);
+			window.addEventListener("online", function () {
+				routeNavigator.back();
+			});
+		fetchData()
+	}, [userTg]);
 
 	return (
 		<AdaptiveContext.Provider value={
@@ -179,10 +183,11 @@ const App = () => {
 				<SplitCol>
 					<Epic
 						activeStory={activeView}
-						tabbar={activePanel !== PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE && <TabBarWrapper />}
+						tabbar={![PANEL_CONSTANTS.PANEL_SERVICE_OFFLINE, PANEL_CONSTANTS.PANEL_MAIN_SELECT_SEX].includes(activePanel) && <TabBarWrapper />}
 					>
 						<View id={VIEW_CONSTANTS.VIEW_MAIN} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<HomePanel id={PANEL_CONSTANTS.PANEL_MAIN_HOME} />
+							<SelectSexPanel id={PANEL_CONSTANTS.PANEL_MAIN_SELECT_SEX} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_GENERATE_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<SelectProfilePanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_SELECT_PROFILE} />
