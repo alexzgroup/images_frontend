@@ -45,6 +45,7 @@ export const LoadingImageTypes:FC = () => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageTypes, setImageTypes] = useState<ImageTypeFromRequest|null>(null);
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
@@ -92,8 +93,8 @@ export const LoadingImageTypes:FC = () => {
                     <Group>
                         <Banner
                             mode="image"
-                            header="Случайный образ"
-                            subheader="Ежедневное обновление. Примерь на себя стильный наряд."
+                            header={lang.TITLES.SELECT_PROFILE_PANEL_BANNER_TITLE}
+                            subheader={lang.DESCRIPTIONS.SELECT_PROFILE_PANEL_BANNER_DESCRIPTION}
                             background={
                                 <div
                                     style={{
@@ -103,12 +104,12 @@ export const LoadingImageTypes:FC = () => {
                             }
                             actions={<Button before={<Icon24Arrow2SquarepathOutline/>}
                                              onClick={() => openRandomImage()}
-                                             appearance="overlay">Сгенерировать</Button>}
+                                             appearance="overlay">{lang.BUTTONS.SELECT_PROFILE_PANEL_GENERATE}</Button>}
                         />
                     </Group>
                     {
                         !!imageTypes.exclusive_image_types.length &&
-                        <Group header={<Header mode='secondary'>Дополнительные функции</Header>}>
+                        <Group header={<Header mode='secondary'>{lang.TITLES.SELECT_PROFILE_PANEL_ADDITIONAL}</Header>}>
                             <Div style={{
                                 display: 'grid',
                                 gridTemplate: '1fr/1fr 1fr 1fr',
@@ -136,7 +137,7 @@ export const LoadingImageTypes:FC = () => {
                     }
                     {
                         !!imageTypes.favorite_image_types.length &&
-                        <Group header={<Header mode='secondary'>Избранные образы</Header>}>
+                        <Group header={<Header mode='secondary'>{lang.TITLES.HOME_PANEL_FAVORITE}</Header>}>
                             <HorizontalScroll>
                                 <div style={{ display: 'flex' }}>
                                     {
@@ -160,7 +161,7 @@ export const LoadingImageTypes:FC = () => {
                         </Group>
                     }
                     <Group
-                        header={<Header mode='secondary'>Другие образы</Header>}
+                        header={<Header mode='secondary'>{lang.TITLES.SELECT_PROFILE_PANEL_OTHER_IMAGES}</Header>}
                     >
                         <Separator/>
                         {
@@ -180,9 +181,10 @@ export const LoadingImageTypes:FC = () => {
 }
 
 const SelectProfilePanel: React.FC<Props> = ({id}) => {
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
     return (
         <Panel id={id}>
-            <PanelHeader>Выберите себе образ</PanelHeader>
+            <PanelHeader>{lang.HEADERS.SELECT_PROFILE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />}>
                 <LoadingImageTypes />
             </Suspense>

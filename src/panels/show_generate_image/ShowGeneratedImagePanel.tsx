@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 
 import {Banner, Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
@@ -11,6 +11,7 @@ import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {Icon28StoryOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -20,7 +21,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const params = useParams<'imageGeneratedId'>();
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const shareStore = async (imageGeneratedId: number) => {
         if (uploadPhoto) {
@@ -42,7 +43,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>Результат генерации</PanelHeader>
+            <PanelHeader>{lang.HEADERS.SHOW_GENERATE_IMAGE_PANEL}</PanelHeader>
             {
                 (uploadPhoto.url)
                     ?
@@ -67,15 +68,17 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
                                             }}
                                         />
                                     }
-                                    header="Посмотреть и поделиться в истории"
-                                    subheader="Вы получите ещё +1 генерацию бесплатно!"
-                                    actions={<Button appearance="overlay" before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>}
+                                    header={lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY}
+                                    subheader={lang.DESCRIPTIONS.SHOW_GENERATE_PANEL_GET_GENERATION}
+                                    actions={<Button appearance="overlay" before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>
+                                        {lang.BUTTONS.SHOW_GENERATE_IMAGE_SHARE_STORY}
+                                    </Button>}
                                 />
                         }
                         <ButtonGroup mode='horizontal'>
                             {
                                 !uploadPhoto?.available_share_free_image &&
-                                    <Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>Поделиться с друзьями в истории</Button>
+                                    <Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched size='l'>{lang.BUTTONS.SHOW_GENERATE_IMAGE_SHARE_STORY}</Button>
                             }
                         </ButtonGroup>
                     </div>

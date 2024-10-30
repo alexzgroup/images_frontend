@@ -1,22 +1,24 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {Button, Panel, Placeholder} from '@vkontakte/vkui';
 import {Icon56DoNotDisturbOutline} from "@vkontakte/icons";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
 }
 
 const OfflinePanel: React.FC<Props> = ({id}) => {
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     return (<Panel id={id}>
                 <Placeholder
                     stretched
                     icon={<Icon56DoNotDisturbOutline/>}
-                    header="Произошла ошибка!"
-                    action={<Button size="l">Повторить</Button>}
+                    header={lang.HEADERS.OFFLINE_PANEL}
+                    action={<Button size="l">{lang.BUTTONS.OFFLINE_PANEL_REPEAT}</Button>}
                 >
-                    Проверьте Ваше соединение с интернетом.
+                    {lang.DESCRIPTIONS.OFFLINE_PANEL}
                 </Placeholder>
         </Panel>
     )

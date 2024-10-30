@@ -1,14 +1,15 @@
 import {Caption, File, Image, Link, Spacing, Subhead} from "@vkontakte/vkui";
 import {Icon24Camera} from "@vkontakte/icons";
 import {UrlConstants} from "../../constants/UrlConstants";
-import React, {FC, useState} from "react";
+import React, {FC, useContext, useState} from "react";
 import {useDispatch} from "react-redux";
 import {setSelectImageFile} from "../../redux/slice/ImageSlice";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 const SelectImageSection:FC = () => {
     const [selectImage, setSelectImage] = useState<string>('');
     const dispatch = useDispatch();
-
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
     const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
             return;
@@ -23,7 +24,7 @@ const SelectImageSection:FC = () => {
 
     return (
         <React.Fragment>
-            <Subhead style={{textAlign: 'center'}}>Выберите свою фотографию с аватарок VK</Subhead>
+            <Subhead style={{textAlign: 'center'}}>{lang.DESCRIPTIONS.SELECT_IMAGE}</Subhead>
             <Spacing />
             <Image withBorder={false}
                    size={128}
@@ -33,13 +34,13 @@ const SelectImageSection:FC = () => {
                   onChange={loadImage}
                   before={<Icon24Camera role="presentation" />}
                   size="s">
-                Открыть галерею
+                {lang.BUTTONS.OPEN_GALLERY}
             </File>
             <Spacing />
-            <Caption>Нажимая продолжить, вы соглашаетесь с {" "}
-                <Link target='_blank' href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>{" "}
-                и{" "}
-                <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
+            <Caption>{lang.DESCRIPTIONS.CLICK_BEFORE_POLITIC} {" "}
+                <Link target='_blank' href={UrlConstants.URL_POLITIC}>{lang.DESCRIPTIONS.ABOUT_PANEL_POLITIC}</Link>{" "}
+                {lang.DESCRIPTIONS.AND}{" "}
+                <Link target='_blank' href={UrlConstants.URL_RULE_APP}>{lang.DESCRIPTIONS.ABOUT_PANEL_RULES}</Link>.
             </Caption>
             <Spacing />
         </React.Fragment>

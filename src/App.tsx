@@ -1,7 +1,6 @@
 import React, {useEffect, useState} from 'react';
-import bridge, {GetLaunchParamsResponse, UserInfo} from '@vkontakte/vk-bridge';
 import {
-	AdaptivityProps, Alert,
+	AdaptivityProps,
 	Epic,
 	Platform,
 	ScreenSpinner,
@@ -31,10 +30,10 @@ import WelcomePanel from "./panels/monetization/WelcomePanel";
 import ProfilePanel from "./panels/monetization/ProfilePanel";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "./redux/store/ConfigureStore";
-import {hideAppLoading, ReduxSliceStatusesInterface, setWindowBlocked} from "./redux/slice/AppStatusesSlice";
+import {hideAppLoading, ReduxSliceStatusesInterface} from "./redux/slice/AppStatusesSlice";
 import {apiInitUser} from "./api/AxiosApi";
 import {socketImageType, socketSubscribeType} from "./types/ApiTypes";
-import {setUserDbData, setUserSubscribeStatus, setVkHasProfileButton} from "./redux/slice/UserSlice";
+import {setUserDbData, setUserSubscribeStatus} from "./redux/slice/UserSlice";
 import GroupListPanel from "./panels/monetization/GroupListPanel";
 import PreloaderPanel from "./panels/generate_images/PreloaderPanel";
 import {
@@ -43,25 +42,26 @@ import {
 	setGenerateImagesNotShareWall,
 	setPopularImageTypes
 } from "./redux/slice/ImageSlice";
-import ShareWallImagePanel from "./panels/show_generate_image/ShareWallImagePanel";
 import ShareStoreImagePanel from "./panels/show_generate_image/ShareStoreImagePanel";
 import ShowGeneratedImagePanel from "./panels/show_generate_image/ShowGeneratedImagePanel";
 import {publish} from "./Events/CustomEvents";
 import OfflinePanel from "./panels/service/OfflinePanel";
 import SelectImageNamePanel from "./panels/generate_images/SelectImageNamePanel";
 import SelectImageZodiacPanel from "./panels/generate_images/SelectImageZodiacPanel";
-import FriendsPanel from "./panels/friends/FriendsPanel";
 import ProfileInfoPanel from "./panels/profile/ProfileInfoPanel";
 import ProfileHistoryGeneratePanel from "./panels/profile/ProfileHistoryGeneratePanel";
-import FriendPanel from "./panels/friends/FriendPanel";
 import {getURlParam} from "./helpers/AppHelper";
 import ShareGetVipImagePanel from "./panels/show_generate_image/ShareGetVipImagePanel";
-import { useTelegram } from "./context/TelegramProvider";
+import {useTelegram} from "./context/TelegramProvider";
 import type {ITelegramUser} from "./types/Telegram";
 import SelectSexPanel from "./panels/main/SelectSexPanel";
+import {Lang} from "./lang/en";
+import {LangEnum} from "./enum/LangEnum";
+import {TLang} from "./types/LangType";
 
 const App = () => {
 	const [vkUserInfo, setUser] = useState<ITelegramUser | undefined>();
+	const [lang, setLang] = useState<TLang>(Lang);
 	const routerPopout = usePopout();
 	const routeNavigator = useRouteNavigator();
 	const { view: activeView } = useActiveVkuiLocation();
@@ -72,7 +72,7 @@ const App = () => {
 	const isMobileSize:boolean = (view.viewWidth || 99) < ViewWidth.SMALL_TABLET;
 	const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
 	const dispatch = useDispatch();
-	const { userTg, webApp } = useTelegram();
+	const { userTg} = useTelegram();
 
 	const initSocket = (vkUserId: number) => {
 		const options = {
@@ -141,6 +141,12 @@ const App = () => {
 						routeNavigator.replace('/friend/' + getURlParam('vk_profile_id'))
 					}
 
+					if (userTg.language_code !== LangEnum.en) {
+						const language_code =  LangEnum[userTg.language_code] || LangEnum.en;
+						const {Lang}:{Lang: TLang} = await import('./lang/' + language_code);
+						setLang(Lang);
+					}
+
 					dispatch(setUserDbData(user));
 					dispatch(hideAppLoading());
 					dispatch(setPopularImageTypes(popular_image_types));
@@ -172,6 +178,7 @@ const App = () => {
 			{
 				isMobileSize,
 				vkUserInfo,
+				lang,
 			}
 		}>
 		<SplitLayout
@@ -196,10 +203,6 @@ const App = () => {
 							<SelectImageZodiacPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_ZODIAC_SELECT_IMAGE} />
 							<PreloaderPanel id={PANEL_CONSTANTS.PANEL_GENERATE_IMAGE_PRELOADER} />
 						</View>
-						<View id={VIEW_CONSTANTS.VIEW_FRIENDS} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
-							<FriendsPanel id={PANEL_CONSTANTS.PANEL_FRIENDS} />
-							<FriendPanel id={PANEL_CONSTANTS.PANEL_FRIEND} />
-						</View>
 						<View id={VIEW_CONSTANTS.VIEW_PROFILE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
 							<ProfileInfoPanel id={PANEL_CONSTANTS.PANEL_PROFILE_INFO} />
 							<ProfileHistoryGeneratePanel id={PANEL_CONSTANTS.PANEL_PROFILE_HISTORY_GENERATE} />
@@ -213,7 +216,6 @@ const App = () => {
 							<GroupListPanel id={PANEL_CONSTANTS.PANEL_MONETIZATION_GROUP_LIST} />
 						</View>
 						<View id={VIEW_CONSTANTS.VIEW_SHOW_IMAGE} activePanel={activePanel} onSwipeBack={() => routeNavigator.back()}>
-							<ShareWallImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_SHARE_WALL} />
 							<ShareStoreImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_STORY_WALL} />
 							<ShareGetVipImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_GET_VIP} />
 							<ShowGeneratedImagePanel id={PANEL_CONSTANTS.PANEL_SHOW_IMAGE_VIEW_RESULT} />

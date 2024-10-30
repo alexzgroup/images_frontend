@@ -1,9 +1,11 @@
+import {LangEnum} from "../enum/LangEnum";
+
 export interface ITelegramUser {
     id: number;
     first_name: string;
     last_name: string;
     username: string;
-    language_code: string;
+    language_code: keyof typeof LangEnum;
     is_premium?: boolean;
     photo_url?: string;
 }

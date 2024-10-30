@@ -1,17 +1,20 @@
 import LabelsList from "../LabelsList";
 import {TypeColors} from "../../types/ColorTypes";
 import {Footer} from "@vkontakte/vkui";
-import React from "react";
-import {RecommendedImageLabels, NoRecommendedImageLabels} from "../../constants/AppConstants";
+import React, {useContext} from "react";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
-const RecommendedLabels = () => (
-    <React.Fragment>
-        <LabelsList type={TypeColors.success} labels={RecommendedImageLabels} header='Рекомендации к фотографиям:' />
-        <LabelsList type={TypeColors.error} labels={NoRecommendedImageLabels} header='Не рекомендуем использовать:' />
-        <Footer>
-            При генерации изображения вам может показываться реклама. Она позволяет бесплатно генерировать изображения.
-        </Footer>
-    </React.Fragment>
-)
+const RecommendedLabels = () => {
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    return (
+        <React.Fragment>
+            <LabelsList type={TypeColors.success} labels={lang.RECOMMENDED_IMAGE_LABELS} header={lang.DESCRIPTIONS.RECOMMENDED_PHOTOS} />
+            <LabelsList type={TypeColors.error} labels={lang.NO_RECOMMENDED_IMAGE_LABELS} header={lang.DESCRIPTIONS.NO_RECOMMENDED_PHOTOS} />
+            <Footer>
+                {lang.DESCRIPTIONS.RECOMMENDED}
+            </Footer>
+        </React.Fragment>
+    )
+}
 
 export default RecommendedLabels;

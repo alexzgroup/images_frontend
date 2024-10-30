@@ -21,12 +21,17 @@ export type voiceSubscribeType = {
     pending_cancel: number|null,
 }
 
+export type TLanguage = {
+    value: string,
+}
+
 export type imageType = {
     id: number,
     name: string,
     vip: 0|1,
     url?: string,
     labels?: []|string[],
+    language?: TLanguage,
 }
 
 export type exclusiveImageTypesType = {
@@ -34,6 +39,7 @@ export type exclusiveImageTypesType = {
     name: string,
     url: string,
     type: string,
+    language?: TLanguage,
 }
 
 export type typeVariantGroupType = {

@@ -18,6 +18,7 @@ const Content:React.FC = () => {
     const {uploadPhoto, generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const dispatch = useDispatch();
     const { webApp } = useTelegram();
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const shareStore = async () => {
         if (uploadPhoto && webApp) {
@@ -54,14 +55,14 @@ const Content:React.FC = () => {
             </div>
             <Spacing />
             {
-                uploadPhoto.image_type.name && <Subhead weight="2">Образ: <span style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.image_type.name}</span></Subhead>
+                uploadPhoto.image_type.name && <Subhead weight="2">{lang.MODALS.IMAGE}: <span style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.image_type.name}</span></Subhead>
             }
-            <Subhead weight="2">Создан: <span
+            <Subhead weight="2">{lang.MODALS.CREATE}: <span
                 style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.created_at}</span></Subhead>
             {
                 vkUserInfo?.is_premium &&
                 <React.Fragment>
-                    <Subhead weight="1" style={{width: '100%', textAlign: 'center'}}>Поделиться с друзьями</Subhead>
+                    <Subhead weight="1" style={{width: '100%', textAlign: 'center'}}>{lang.MODALS.SHARE_STORE_SHORT}</Subhead>
                     <Spacing/>
                     {
                         uploadPhoto?.available_share_free_image &&
@@ -78,8 +79,8 @@ const Content:React.FC = () => {
                                     }}
                                 />
                             }
-                            header="Посмотреть и поделиться в истории"
-                            subheader="Вы получите ещё +1 генерацию бесплатно!"
+                            header={lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY}
+                            subheader={lang.DESCRIPTIONS.SHOW_GENERATE_PANEL_GET_GENERATION}
                             actions={
                                 <Button
                                     before={<Icon28StoryOutline/>}
@@ -88,7 +89,7 @@ const Content:React.FC = () => {
                                     stretched
                                     onClick={shareStore}
                                 >
-                                    В истории
+                                    {lang.MODALS.IN_STORE}
                                 </Button>
                             }
                         />
@@ -103,7 +104,7 @@ const Content:React.FC = () => {
                                 stretched
                                 onClick={shareStore}
                             >
-                                В истории
+                                {lang.MODALS.IN_STORE}
                             </Button>
                         }
                     </ButtonGroup>

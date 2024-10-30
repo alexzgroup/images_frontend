@@ -1,9 +1,3 @@
-export const generateWordsArray = [
-    'генерация',
-    'генерации',
-    'генераций',
-];
-
 export const RecommendedImageLabels = [
     'Крупный план',
     'Чёткое изображение лица',

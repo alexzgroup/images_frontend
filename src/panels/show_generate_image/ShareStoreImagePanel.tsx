@@ -25,6 +25,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
 
     const params = useParams<'imageGeneratedId'>();
     const routeNavigator = useRouteNavigator();
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const shareStore = async (imageGeneratedId: number) => {
         if (uploadPhoto) {
@@ -52,12 +53,12 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader before={<PanelHeaderClose onClick={skipShareHistory}><Icon28CancelOutline /></PanelHeaderClose>}>Результат</PanelHeader>
+            <PanelHeader before={<PanelHeaderClose onClick={skipShareHistory}><Icon28CancelOutline /></PanelHeaderClose>}>{lang.HEADERS.SHOW_GET_VIP_IMAGE_PANEL}</PanelHeader>
             <Group>
                 <Placeholder
                     stretched
                     icon={<div className="pulseLine"><Icon56StoryCircleFillYellow height={98} width={98} /></div>}
-                    header={`${vkUserInfo?.first_name}, также не забудьте поделиться в истории ВКонтакте!`}
+                    header={`${vkUserInfo?.first_name}, ${lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}`}
                     action={
                     <>
                         {
@@ -75,9 +76,11 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                                         }}
                                     />
                                 }
-                                header="Посмотреть и поделиться в истории"
-                                subheader="Вы получите ещё +1 генерацию бесплатно!"
-                                actions={<Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched  appearance="overlay" size="l">Поделиться в истории ВК</Button>}
+                                header={lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY}
+                                subheader={lang.DESCRIPTIONS.SHOW_GENERATE_PANEL_GET_GENERATION}
+                                actions={<Button before={<Icon28StoryOutline/>} onClick={() => shareStore(Number(params?.imageGeneratedId))} stretched  appearance="overlay" size="l">
+                                    {lang.BUTTONS.SHOW_GENERATE_IMAGE_SHARE_STORY}
+                                </Button>}
                             />
                         }
                     </>

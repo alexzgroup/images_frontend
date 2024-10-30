@@ -1,4 +1,4 @@
-import React, {FC} from 'react';
+import React, {FC, useContext} from 'react';
 
 import {
     Button,
@@ -26,6 +26,7 @@ import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
 import GenerateImageResultShare from "../components/GenerateImage/GenerateImageResultShare";
 import {AdvertisementEnum, EAdsFormats} from "../types/ApiTypes";
 import ModalGetVipContent from "../components/RenestraVip/ModalGetVipContent";
+import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -47,6 +48,7 @@ const ModalRootComponent:FC = () => {
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const closeShowGenerateModal = () => {
         routeNavigator.hideModal()
@@ -68,7 +70,7 @@ const ModalRootComponent:FC = () => {
                 onClose={closeShowGenerateModal}
                 settlingHeight={100}
                 hideCloseButton={true}
-                header={<ModalPageHeader><Title level="3">Просмотр</Title></ModalPageHeader>}
+                header={<ModalPageHeader><Title level="3">{lang.MODALS.VIEW}</Title></ModalPageHeader>}
             >
                 <Div>
                     <GenerateImageResultShare />
@@ -78,8 +80,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_GET_VIP_PROFILE}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56DonateOutline />}
-                header="Чтобы сгенерировать данный образ, необходим VIP-статус"
-                subheader="Оформите подписку VK Donut на сумму от 179 рублей."
+                header={lang.MODALS.WHY_VIP}
+                subheader={lang.MODALS.AMOUNT_VIP}
                 actions={
                     <ButtonGroup mode="horizontal" stretched>
                         <Button
@@ -89,7 +91,7 @@ const ModalRootComponent:FC = () => {
                             stretched
                             onClick={() => routeNavigator.hideModal()}
                         >
-                            Закрыть
+                            {lang.MODALS.CLOSE}
                         </Button>
                         <Button
                             key="add"
@@ -97,7 +99,7 @@ const ModalRootComponent:FC = () => {
                             mode="primary"
                             stretched
                         >
-                            <Link target="_blank" href={getDonutUrl(platform)}>Оформить</Link>
+                            <Link target="_blank" href={getDonutUrl(platform)}>{lang.MODALS.BY}</Link>
                         </Button>
                     </ButtonGroup>
                 }
@@ -106,8 +108,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_DONUT_LIMIT}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56DonateOutline />}
-                header="Чтобы просматривать историю генерации полностью за 3 часа, необходим VIP-статус"
-                subheader="Оформите подписку VK Donut на сумму от 179 рублей."
+                header={lang.MODALS.VIP_HISTORY}
+                subheader={lang.MODALS.AMOUNT_VIP}
                 actions={
                     <ButtonGroup mode="horizontal" stretched>
                         <Button
@@ -117,7 +119,7 @@ const ModalRootComponent:FC = () => {
                             stretched
                             onClick={() => routeNavigator.hideModal()}
                         >
-                            Закрыть
+                            {lang.MODALS.CLOSE}
                         </Button>
                         <Button
                             key="add"
@@ -125,7 +127,7 @@ const ModalRootComponent:FC = () => {
                             mode="primary"
                             stretched
                         >
-                            <Link target="_blank" href={getDonutUrl(platform)}>Оформить</Link>
+                            <Link target="_blank" href={getDonutUrl(platform)}>{lang.MODALS.BY}</Link>
                         </Button>
                     </ButtonGroup>
                 }
@@ -133,7 +135,7 @@ const ModalRootComponent:FC = () => {
             <ModalCard
                 id={ModalTypes.MODAL_UPLOAD_PHOTO_PRELOADER}
                 onClose={() => !windowBlocked && routeNavigator.hideModal()}
-                header={<ModalPageHeader>Подготовка к публикации</ModalPageHeader>}
+                header={<ModalPageHeader>{lang.MODALS.GET_PRELOADER}</ModalPageHeader>}
             >
                 <PreloaderUploadPhoto />
             </ModalCard>
@@ -141,8 +143,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_DONUT}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56DonateOutline />}
-                header="Поздравляем!"
-                subheader="Вы оформили VIP статус."
+                header={lang.MODALS.CONGRATULATE}
+                subheader={lang.MODALS.CONGRATULATE_VIP}
                 actions={
                     <ButtonGroup mode="horizontal" stretched>
                         <Button
@@ -152,7 +154,7 @@ const ModalRootComponent:FC = () => {
                             stretched
                             onClick={() => routeNavigator.hideModal()}
                         >
-                            Закрыть
+                            {lang.MODALS.CLOSE}
                         </Button>
                     </ButtonGroup>
                 }
@@ -161,8 +163,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_GENERATED_IMAGE}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56PaletteOutline />}
-                header="Ваша генерация готова."
-                subheader="Перейдите по ссылке чтобы просмотреть результат."
+                header={lang.MODALS.READY_IMAGE}
+                subheader={lang.MODALS.GO_READY_IMAGE}
                 actions={
                     <ButtonGroup mode="horizontal" stretched>
                         <Button
@@ -172,7 +174,7 @@ const ModalRootComponent:FC = () => {
                             stretched
                             onClick={() => routeNavigator.push(`/show-generate-image/${generateImageId}/share-wall`)}
                         >
-                            Посмотреть результат
+                            {lang.MODALS.VIEW_IMAGE}
                         </Button>
                     </ButtonGroup>
                 }
@@ -181,8 +183,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_SUBSCRIBE_GROUP}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56Users3Outline />}
-                header="Поздравляем"
-                subheader="Вы успешно подписались на группу, теперь Вам доступна дополнительная генерация."
+                header={lang.MODALS.CONGRATULATE}
+                subheader={lang.MODALS.SUBSCRIBE_DESCRIPTION}
                 actions={
                     <ButtonGroup mode="vertical" stretched>
                         <Button
@@ -191,7 +193,7 @@ const ModalRootComponent:FC = () => {
                             stretched
                             onClick={() => routeNavigator.hideModal()}
                         >
-                            Закрыть
+                            {lang.MODALS.CLOSE}
                         </Button>
                     </ButtonGroup>
                 }
@@ -200,8 +202,8 @@ const ModalRootComponent:FC = () => {
                 id={ModalTypes.MODAL_UNSUBSCRIBE_GROUP}
                 onClose={() => routeNavigator.hideModal()}
                 icon={<Icon56InfoOutline />}
-                header="Внимание"
-                subheader="Вы вышли из группы, больше Вам не доступна дополнительная генерация."
+                header={lang.ALERT.WARNING}
+                subheader={lang.MODALS.UNSUBSCRIBE_DESCRIPTION}
             />
             <ModalPage
                 nav={ModalTypes.MODAL_PAY_VOICE}

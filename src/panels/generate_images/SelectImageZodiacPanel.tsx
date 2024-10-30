@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
 
 import {
     Alert,
@@ -15,10 +15,9 @@ import {
 } from '@vkontakte/vkui';
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {ModalTypes} from "../../modals/ModalRoot";
 import {useDispatch, useSelector} from "react-redux";
 import bridge from "@vkontakte/vk-bridge";
-import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
@@ -27,6 +26,7 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -35,7 +35,6 @@ interface Props {
 const PanelData = () => {
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
-    const dispatch = useDispatch()
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
@@ -56,6 +55,7 @@ const PanelData = () => {
     });
     const [zodiac, setZodiac] = React.useState<string>('');
     const [zodiacSelectError, setZodiacSelectError] = React.useState<string>('');
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openPreloaderGenerate = () => {
         setZodiacSelectError('');
@@ -64,39 +64,23 @@ const PanelData = () => {
                 <Alert
                     actions={[
                         {
-                            title: 'Понятно',
+                            title: lang.ALERT.ACCEPT,
                             autoClose: true,
                             mode: 'destructive',
                         },
                     ]}
                     onClose={() => routeNavigator.hidePopout()}
-                    header="Внимание!"
-                    text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
+                    header={lang.ALERT.WARNING}
+                    text={lang.ALERT.HAS_ACTIVE_GENERATE}
                 />
             );
         } else if (selectImageFile && params?.imageTypeId) {
             if (!zodiac) {
-                setZodiacSelectError('Выберите значение');
+                setZodiacSelectError(lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_ERROR_OPTIONS);
             } else {
                 routeNavigator.push('/generate/preloader', {state: {formData: {zodiac}, imageTypeId: params?.imageTypeId}})
             }
         }
-    }
-
-    const getUserToken = () => {
-        bridge.send('VKWebAppGetAuthToken', {
-            app_id: Number(process.env.REACT_APP_APP_ID),
-            scope: 'photos,wall'
-        })
-            .then((data) => {
-                if (data.access_token) {
-                    dispatch(setAccessToken(data.access_token))
-                    routeNavigator.showModal(ModalTypes.MODAL_SELECT_GENERATE_IMAGE)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
     }
 
     useEffect(() => {
@@ -127,7 +111,7 @@ const PanelData = () => {
                         imageType.zodiac &&
                             <FormItem
                                 status={zodiac ? 'valid' : (zodiacSelectError ? 'error' : 'default')}
-                                top="Знак зодиака"
+                                top={lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_ZODIAC}
                                 bottom={zodiacSelectError || ''}
                                 htmlFor="zodiac"
                                 style={{width: '100%'}}
@@ -135,7 +119,7 @@ const PanelData = () => {
                                 <CustomSelect
                                     onChange={(e) => setZodiac(e.target.value)}
                                     id="zodiac"
-                                    placeholder="Не выбран"
+                                    placeholder={lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_NOT_SELECTED}
                                     options={imageType.zodiac}
                                 />
                             </FormItem>
@@ -151,21 +135,21 @@ const PanelData = () => {
                                     mode='secondary'
                                     size="l"
                                 >
-                                    Будет доступно завтра
+                                    {lang.BUTTONS.SELECT_IMAGE_NAME_PANEL_TOMORROW}
                                 </Button>
                                 <Banner
                                     size="m"
                                     noPadding
                                     mode="image"
-                                    header="У Вас закончились генерации гороскопов."
-                                    subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
+                                    header={lang.TITLES.SELECT_IMAGE_ZODIAC_PANEL_NOT_AVAILABLE}
+                                    subheader={lang.DESCRIPTIONS.SELECT_IMAGE_NAME_PANEL_RETURN_TOMORROW}
                                     background={<div style={{background: ColorsList.error}}/>}
                                     style={{width: '100%', margin: '10px 0 5px 0'}}
                                 />
                             </React.Fragment>
                             :
                             <Button disabled={!selectImageFile} stretched size='l' onClick={openPreloaderGenerate}>
-                                Продолжить
+                                {lang.BUTTONS.SELECT_IMAGE_PANEL_CONTINUE}
                             </Button>
                     }
                 </Div>
@@ -173,10 +157,8 @@ const PanelData = () => {
             <Group>
                 <Banner
                     size="m"
-                    header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам доступна ещё 1 генерация!`
-                        : 'Доступно 0 генераций'}
-                    subheader={<Text>Каждый день вам доступна одна генерация гороскопа. В 00:00 по МСК счетчик обновляется.</Text>}
+                    header={lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_AVAILABLE_IMAGES + ' ' + imageType.generate_statistic.available_count_generate}
+                    subheader={<Text>{lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_EVERY_DAY_AVAILABLE_IMAGES}</Text>}
                 />
             </Group>
             <RecommendedLabels />
@@ -186,6 +168,7 @@ const PanelData = () => {
 
 const SelectImageZodiacPanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())
@@ -193,7 +176,7 @@ const SelectImageZodiacPanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>{lang.HEADERS.SELECT_IMAGE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

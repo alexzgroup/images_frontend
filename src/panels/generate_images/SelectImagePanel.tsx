@@ -25,7 +25,7 @@ import {
     Title
 } from '@vkontakte/vkui';
 
-import {Icon20CheckNewsfeedOutline, Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
+import {Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
@@ -39,8 +39,6 @@ import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/
 import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
 import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {trueWordForm} from "../../helpers/AppHelper";
-import {generateWordsArray} from "../../constants/AppConstants";
 import {GenerateStatistic, subscribe} from "../../Events/CustomEvents";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
@@ -55,9 +53,8 @@ interface Props {
 const PanelData = () => {
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
-    const dispatch = useDispatch()
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
@@ -78,6 +75,7 @@ const PanelData = () => {
     const [formDataError, setFormDataError] = useState(false)
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openPreloaderGenerate = () => {
         setFormDataError(false);
@@ -87,14 +85,14 @@ const PanelData = () => {
                 <Alert
                     actions={[
                         {
-                            title: 'Понятно',
+                            title: lang.ALERT.ACCEPT,
                             autoClose: true,
                             mode: 'destructive',
                         },
                     ]}
                     onClose={() => routeNavigator.hidePopout()}
-                    header="Внимание!"
-                    text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
+                    header={lang.ALERT.WARNING}
+                    text={lang.ALERT.HAS_ACTIVE_GENERATE}
                 />
             );
         } else if (selectImageFile && params?.imageTypeId) {
@@ -136,7 +134,7 @@ const PanelData = () => {
         })
             .then((data) => {
                 if (!data.result) {
-                    openSnackBar(<Icon28CancelCircleFillRed />, 'Ошибка, повторите попытку');
+                    openSnackBar(<Icon28CancelCircleFillRed />, lang.DESCRIPTIONS.ERROR_REPEAT);
                 }
             })
             .catch((error) => {
@@ -263,18 +261,18 @@ const PanelData = () => {
                                 </React.Fragment>
                                 :
                                 <Button disabled={selectImageFile === null} stretched size='l' onClick={openPreloaderGenerate}>
-                                    Продолжить
+                                    {lang.BUTTONS.SELECT_IMAGE_PANEL_CONTINUE}
                                 </Button>
                         }
                     </Div>
                 </Group>
                 {
                     !!imageType.img_type_to_variant_groups.length &&
-                    <Group header={<Header>Выберите опции генерации</Header>}>
+                    <Group header={<Header>{lang.TITLES.SELECT_IMAGE_PANEL_SELECT_OPTIONS}</Header>}>
                         {
                             formDataError &&
                                 <FormStatus header="Ошибка отправки формы" mode="error">
-                                    Необходимо выбрать варианты генерации
+                                    {lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_ERROR_OPTIONS}
                                 </FormStatus>
                         }
                             <FormLayout>
@@ -329,7 +327,7 @@ const PanelData = () => {
                             </FormLayout>
                     </Group>
                 }
-                <Group header={<Header>Пример генерации образа:</Header>}>
+                <Group header={<Header>{lang.TITLES.SELECT_IMAGE_PANEL_EXAMPLE}</Header>}>
                     <Div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
                         <div>
                             <Image
@@ -349,19 +347,8 @@ const PanelData = () => {
                 <Group>
                     <Banner
                         size="m"
-                        header={imageType.generate_statistic.available_count_generate
-                            ? `Сегодня вам ${imageType.generate_statistic.available_count_generate === 1 ? 'доступна' : 'доступно'} ещё ${trueWordForm(imageType.generate_statistic.available_count_generate, generateWordsArray)}!`
-                            : 'Доступно 0 генераций'}
-                        subheader={<Text>Каждый день вам доступно по {trueWordForm(imageType.generate_statistic.available_day_limit, generateWordsArray)}.
-                            {
-                                !userDbData?.subscribe && <React.Fragment>
-                                    <br/>Чтобы получить 1 дополнительную генерацию в день, подпишитесь на нашу группу.
-                                </React.Fragment>
-                            }
-                        </Text>}
-                        actions={
-                            !userDbData?.subscribe && <Button onClick={subscribeGroup} before={<Icon20CheckNewsfeedOutline />} size='s'>Подписаться на сообщество VK</Button>
-                        }
+                        header={lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_AVAILABLE_IMAGES + ' ' + imageType.generate_statistic.available_count_generate}
+                        subheader={<Text>{lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_EVERY_DAY_AVAILABLE_IMAGES} {imageType.generate_statistic.available_day_limit}</Text>}
                     />
                 </Group>
             <RecommendedLabels />
@@ -372,6 +359,7 @@ const PanelData = () => {
 
 const SelectImagePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())
@@ -379,7 +367,7 @@ const SelectImagePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>{lang.HEADERS.SELECT_IMAGE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

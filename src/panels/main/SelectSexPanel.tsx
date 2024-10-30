@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useContext} from 'react';
 
 import {Button, ButtonGroup, Panel, PanelHeader, Placeholder} from '@vkontakte/vkui';
 import {Icon28Crown, Icon28LikeCircleFillRed, Icon56ErrorOutline} from "@vkontakte/icons";
@@ -9,6 +9,7 @@ import {ReduxSliceUserInterface, setUserDbData} from "../../redux/slice/UserSlic
 import {apiEditUser, apiInitUser} from "../../api/AxiosApi";
 import {hideAppLoading} from "../../redux/slice/AppStatusesSlice";
 import {setFavoriteImageTypes, setGenerateImagesNotShareWall, setPopularImageTypes} from "../../redux/slice/ImageSlice";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -18,6 +19,7 @@ const SelectSexPanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const updateSex = (sex: 1|2) => {
         if (userDbData?.id) {
@@ -39,27 +41,27 @@ const SelectSexPanel: React.FC<Props> = ({id}) => {
     }
 
     return <Panel id={id}>
-                <PanelHeader>Выберите пол</PanelHeader>
+                <PanelHeader>{lang.HEADERS.SELECT_SEX_PANEL}</PanelHeader>
                 <Placeholder
                     stretched
                     icon={<Icon56ErrorOutline />}
-                    header="Для выбора нажмите кнопку"
+                    header={lang.TITLES.SELECT_SEX_PANEL_PLACEHOLDER_TITLE}
                     action={
                         <ButtonGroup mode='vertical'>
                             <Button before={<Icon28LikeCircleFillRed/>}
                                     appearance="negative"
                                     mode="outline"
                                     stretched
-                                    onClick={() => updateSex(1)} size='l'>Женский</Button>
+                                    onClick={() => updateSex(1)} size='l'>{lang.BUTTONS.SELECT_SEX_PANEL_WOMEN}</Button>
                             <Button before={<Icon28Crown/>}
                                     appearance="accent"
                                     mode="primary"
                                     stretched
-                                    onClick={() => updateSex(2)} size='l'>Мужской</Button>
+                                    onClick={() => updateSex(2)} size='l'>{lang.BUTTONS.SELECT_SEX_PANEL_MEN}</Button>
                         </ButtonGroup>
                     }
                 >
-                    Необходимо выбрать пол, в дальнейшем вы можете его поменять в разделе профиль.
+                    {lang.DESCRIPTIONS.SELECT_SEX_PANEL_FOOTER}
                 </Placeholder>
            </Panel>
 }

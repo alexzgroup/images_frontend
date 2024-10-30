@@ -1,13 +1,15 @@
-import React from "react";
+import React, {useContext} from "react";
 import RenestraTitleWithVip from "./RenestraTitleWithVip";
 import {Button, Spacing, Title} from "@vkontakte/vkui";
 import vipLogo from "../../assets/images/vip_logo.png";
 import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 const GetVipBanner:React.FC<{actionSubscription: () => void}> = ({actionSubscription}) => {
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     return (
         <div className="vip-block">
@@ -23,7 +25,7 @@ const GetVipBanner:React.FC<{actionSubscription: () => void}> = ({actionSubscrip
                 }}>
                     <RenestraTitleWithVip/>
                     <Spacing/>
-                    <Title className="golden_text" level="1">У Вас активен VIP статус!</Title>
+                    <Title className="golden_text" level="1">{lang.DESCRIPTIONS.VIP_BANNER_ACTIVE}</Title>
                 </div>
                 <div style={{
                     display: "flex",
@@ -35,11 +37,11 @@ const GetVipBanner:React.FC<{actionSubscription: () => void}> = ({actionSubscrip
                         flexBasis: '50%',
                         alignSelf: 'center'
                     }}>
-                        <Title style={{color: 'white'}} level="3">Вы получили:</Title>
+                        <Title style={{color: 'white'}} level="3">{lang.DESCRIPTIONS.VIP_BANNER_GET}</Title>
                         <Spacing/>
-                        <p>20 генераций в день</p>
-                        <p>Эксклюзивные образы</p>
-                        <p>и другие преимущества!</p>
+                        <p>{lang.DESCRIPTIONS.VIP_BLOCK_1}</p>
+                        <p>{lang.DESCRIPTIONS.VIP_BLOCK_2}</p>
+                        <p>{lang.DESCRIPTIONS.VIP_BLOCK_3}</p>
                     </div>
                     <div style={{
                         alignSelf: 'start',
@@ -58,7 +60,7 @@ const GetVipBanner:React.FC<{actionSubscription: () => void}> = ({actionSubscrip
             <Button style={{color: 'black'}} className="gold_button" onClick={actionSubscription}
                     stretched>
                 {
-                    !!userDbData?.voice_subscribe?.pending_cancel ? 'Возобновить подписку' : 'Отменить подписку'
+                    !!userDbData?.voice_subscribe?.pending_cancel ? lang.DESCRIPTIONS.VIP_RESUME : lang.DESCRIPTIONS.VIP_CANCEL
                 }
             </Button>
         </div>

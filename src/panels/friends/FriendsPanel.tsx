@@ -1,4 +1,4 @@
-import React, {ReactElement, Suspense, useEffect, useRef} from 'react';
+import React, {ReactElement, Suspense, useContext, useEffect, useRef} from 'react';
 
 import {
     Avatar,
@@ -28,6 +28,7 @@ import {setAccessToken} from "../../redux/slice/UserSlice";
 import InfiniteScroll from "react-infinite-scroll-loader-y";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import PromiseWrapper from "../../api/PromiseWrapper";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 
 interface Props {
@@ -50,6 +51,7 @@ const PanelContent: React.FC = () => {
 
     const appFriendsIds = useRef([]);
     const allAnyFriends = useRef<FriendType[]>([]);
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
 
@@ -165,17 +167,7 @@ const PanelContent: React.FC = () => {
 
     const init = () => {
         return new Promise(async (resolve) => {
-            const {result: scopes} = await bridge.send('VKWebAppCheckAllowedScopes', {
-                scopes: 'friends',
-            });
-
-            const findScope = scopes.find(item => item.scope === 'friends' && item.allowed);
-
-            if (!!findScope) {
-                getToken((value: boolean) => resolve(value));
-            } else {
-                resolve(false);
-            }
+            resolve(true);
         })
     }
 
@@ -269,8 +261,9 @@ const PanelContent: React.FC = () => {
 }
 
 const FriendsPanel: React.FC<Props> = ({id}) => {
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
     return (<Panel id={id}>
-            <PanelHeader>Друзья</PanelHeader>
+            <PanelHeader>{lang.HEADERS.FRIENDS_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="regular"/>}>
                 <PanelContent/>
             </Suspense>

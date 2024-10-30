@@ -1,4 +1,4 @@
-import React, {FC} from "react";
+import React, {FC, useContext} from "react";
 import {addAdvertisement, getVoiceSubscription} from "../../api/AxiosApi";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface, setUserVip, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
@@ -17,12 +17,14 @@ import {
 import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {AdvertisementEnum, EAdsFormats} from "../../types/ApiTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
     const dispatch = useDispatch();
     const routeNavigator = useRouteNavigator();
     const metaParams = useMetaParams<{imageGeneratedId?: string}>();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openVoicePayModal = async () => {
         const voiceSubscriptionId = await getVoiceSubscription();
@@ -68,11 +70,11 @@ const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
         }}>
             <img width={320} style={{margin: 'auto', display: 'block'}} src={golden_light} alt="golden_light"/>
             <RenestraTitleWithVip />
-            <Title level="2">Оформление подписки VIP!</Title>
+            <Title level="2">{lang.TITLES.VIP_MODAL_GET_VIP}</Title>
             <Button onClick={openVoicePayModal} className="gold_button" style={{width: '100%', marginTop: 5}}>
-                <div style={{color: 'black'}}>Оформить подписку</div>
+                <div style={{color: 'black'}}>{lang.BUTTONS.VIP_MODAL_GET}</div>
             </Button>
-            <Title className="golden_text" level='2'>Всего 20 голосов в месяц.</Title>
+            <Title className="golden_text" level='2'>{lang.DESCRIPTIONS.VIP_MODAL_TOTAL_AMOUNT}</Title>
             {pageContent &&
                 <React.Fragment>
                     <Button onClick={skipVip}
@@ -80,20 +82,18 @@ const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
                             size="l"
                             style={{width: '100%', marginTop: 5}}
                     >
-                        Пропустить
+                        {lang.BUTTONS.VIP_MODAL_CONTINUE}
                     </Button>
-                    <Title className="golden_text" style={{textAlign: 'center'}} level='3'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Title>
+                    <Title className="golden_text" style={{textAlign: 'center'}} level='3'>{lang.DESCRIPTIONS.VIP_MODAL_MOTIVATION}</Title>
                 </React.Fragment>
             }
             <List>
-                <Cell disabled before={<Icon36CameraOutline fill='FFAA38'/>}>20 генераций в день</Cell>
-                <Cell disabled before={<Icon28AccessibilityOutline width={36} height={36} fill='FFAA38'/>}>Приоритетная
-                    очередь</Cell>
-                <Cell disabled before={<Icon28PaletteOutline width={36} height={36} fill='FFAA38'/>}>Эксклюзивные
-                    образы</Cell>
-                <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>Отсутствие рекламы</Cell>
+                <Cell disabled before={<Icon36CameraOutline fill='FFAA38'/>}>{lang.DESCRIPTIONS.VIP_BLOCK_1}</Cell>
+                <Cell disabled before={<Icon28AccessibilityOutline width={36} height={36} fill='FFAA38'/>}>{lang.DESCRIPTIONS.VIP_MODAL_VIP_TEXT_1}</Cell>
+                <Cell disabled before={<Icon28PaletteOutline width={36} height={36} fill='FFAA38'/>}>{lang.DESCRIPTIONS.VIP_BLOCK_2}</Cell>
+                <Cell disabled before={<Icon36AdvertisingOutline fill='FFAA38'/>}>{lang.DESCRIPTIONS.VIP_MODAL_VIP_TEXT_2}</Cell>
             </List>
-            {!pageContent && <Title className="golden_text" style={{textAlign: 'center'}} level='3'>Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!</Title>}
+            {!pageContent && <Title className="golden_text" style={{textAlign: 'center'}} level='3'>{lang.DESCRIPTIONS.VIP_MODAL_MOTIVATION}</Title>}
         </div>
     )
 }

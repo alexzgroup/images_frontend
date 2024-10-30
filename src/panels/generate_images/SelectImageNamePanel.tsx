@@ -1,4 +1,4 @@
-import React, {Suspense, useEffect, useState} from 'react';
+import React, {Suspense, useContext, useEffect, useState} from 'react';
 
 import {
     Alert,
@@ -29,6 +29,7 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -40,6 +41,7 @@ const PanelData = () => {
     const dispatch = useDispatch()
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
@@ -63,14 +65,14 @@ const PanelData = () => {
                 <Alert
                     actions={[
                         {
-                            title: 'Понятно',
+                            title: lang.ALERT.ACCEPT,
                             autoClose: true,
                             mode: 'destructive',
                         },
                     ]}
                     onClose={() => routeNavigator.hidePopout()}
-                    header="Внимание!"
-                    text="У Вас есть не обработанная генерация, мы оповестим Вас когда она будет готова, после этого вы сможете сгенерировать свой новый образ."
+                    header={lang.ALERT.WARNING}
+                    text={lang.ALERT.HAS_ACTIVE_GENERATE}
                 />
             );
         } else if (selectImageFile && params?.imageTypeId) {
@@ -123,21 +125,21 @@ const PanelData = () => {
                                     mode='secondary'
                                     size="l"
                                 >
-                                    Будет доступно завтра
+                                    {lang.BUTTONS.SELECT_IMAGE_NAME_PANEL_TOMORROW}
                                 </Button>
                                 <Banner
                                     size="m"
                                     noPadding
                                     mode="image"
-                                    header="У Вас закончились генерации значения имени."
-                                    subheader={'Возвращайтесь завтра в 00:00 по МСК!'}
+                                    header={lang.TITLES.SELECT_IMAGE_NAME_PANEL_NOT_AVAILABLE}
+                                    subheader={lang.DESCRIPTIONS.SELECT_IMAGE_NAME_PANEL_RETURN_TOMORROW}
                                     background={<div style={{background: ColorsList.error}}/>}
                                     style={{width: '100%', margin: '10px 0 5px 0'}}
                                 />
                             </React.Fragment>
                             :
                             <Button disabled={!selectImageFile} stretched size='l' onClick={openPreloaderGenerate}>
-                                Продолжить
+                                {lang.BUTTONS.SELECT_IMAGE_PANEL_CONTINUE}
                             </Button>
                     }
                 </Div>
@@ -145,17 +147,15 @@ const PanelData = () => {
             <Group>
                 <MiniInfoCell mode="accent" before={<Icon36Favorite fill={ColorsList.primary} />} textWrap="full">
                     <Title weight="2" level="2">
-                        Узнай, как тебя охарактеризовывает твоё имя и внешность!
+                        {lang.DESCRIPTIONS.SELECT_IMAGE_NAME_PANEL_WHAT_ARE_YOU}
                     </Title>
                 </MiniInfoCell>
             </Group>
             <Group>
                 <Banner
                     size="m"
-                    header={imageType.generate_statistic.available_count_generate
-                        ? `Сегодня вам доступна ещё 1 генерация!`
-                        : 'Доступно 0 генераций'}
-                    subheader={<Text>Каждый день вам доступна одна генерация значения имени. В 00:00 по МСК счетчик обновляется.</Text>}
+                    header={lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_AVAILABLE_IMAGES + ' ' + imageType.generate_statistic.available_count_generate}
+                    subheader={<Text>{lang.DESCRIPTIONS.SELECT_IMAGE_NAME_PANEL_EVERY_DAY_AVAILABLE_IMAGES}</Text>}
                 />
             </Group>
             <RecommendedLabels />
@@ -165,6 +165,7 @@ const PanelData = () => {
 
 const SelectImageNamePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())
@@ -172,7 +173,7 @@ const SelectImageNamePanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader before={<ButtonHeaderBack />}>Загрузите фотографию</PanelHeader>
+            <PanelHeader before={<ButtonHeaderBack />}>{lang.HEADERS.SELECT_IMAGE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />} >
                 <PanelData />
             </Suspense>

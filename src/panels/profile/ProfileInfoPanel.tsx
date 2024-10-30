@@ -18,6 +18,7 @@ const PanelContent:React.FC<{vkUserInfo: ITelegramUser}>  = ({vkUserInfo}) => {
     const [user, setUser] = useState<UserWithGeneratedInfoType>();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const init = () => {
         return new Promise(async (resolve) => {
@@ -81,8 +82,8 @@ const PanelContent:React.FC<{vkUserInfo: ITelegramUser}>  = ({vkUserInfo}) => {
             {
                 (!!user?.total_generate) &&
                     <Group header={<Header
-                        aside={<RouterLink to={"/profile/history-generated/" + userDbData?.id}>Показать все</RouterLink>}>История
-                        генераций</Header>}>
+                        aside={<RouterLink to={"/profile/history-generated/" + userDbData?.id}>{lang.BUTTONS.PROFILE_INFO_PANEL_MORE}</RouterLink>}>
+                        {lang.DESCRIPTIONS.PROFILE_PANEL_HISTORY}</Header>}>
                         <HistoryGenerateImages history_generate={user.history_generate} />
                     </Group>
             }
@@ -106,9 +107,10 @@ const PanelContent:React.FC<{vkUserInfo: ITelegramUser}>  = ({vkUserInfo}) => {
 
 const ProfileInfoPanel: React.FC<{id: string}> = ({id}) => {
     const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
     return (
         <Panel id={id}>
-            <PanelHeader>Профиль</PanelHeader>
+            <PanelHeader>{lang.HEADERS.PROFILE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />}>
                 {vkUserInfo && <PanelContent vkUserInfo={vkUserInfo} />}
             </Suspense>

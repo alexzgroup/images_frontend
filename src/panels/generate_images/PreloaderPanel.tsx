@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useRef, useState} from 'react';
+import React, {memo, useContext, useEffect, useRef, useState} from 'react';
 
 import {
     Alert,
@@ -29,6 +29,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -43,6 +44,7 @@ type formDataType = {
 const PreloaderPanel: React.FC<Props> = ({id}) => {
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const [step, setStep] = useState<number>(1)
     const [responseGenerate, setResponseGenerate] = useState<generateImageType & {loading: boolean}>({
@@ -84,7 +86,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                     <Alert
                         actions={[
                             {
-                                title: 'Понятно',
+                                title: lang.ALERT.ACCEPT,
                                 autoClose: true,
                                 mode: 'cancel',
                             },
@@ -93,7 +95,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                             routeNavigator.hidePopout();
                             routeNavigator.back();
                         }}
-                        header="Внимание!"
+                        header={lang.ALERT.WARNING}
                         text={response.message}
                     />
                 );
@@ -137,7 +139,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                 (formDataParams?.imageTypeId && selectImageFile)
                     ?
                     <React.Fragment>
-                        <PanelHeader>Генерация началась</PanelHeader>
+                        <PanelHeader>{lang.HEADERS.PRELOADER_PANEL}</PanelHeader>
                         <Group>
                             <CardGrid size="l">
                                 <Card className="animate-gradient">
@@ -155,7 +157,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                                 before={step === 1 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                                 expandable={false}
                             >
-                                Запущен процесс генерации
+                                {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_1}
                             </MiniInfoCell>
                             {
                                 step > 1 &&
@@ -164,7 +166,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                                     before={step === 2 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                                     expandable={false}
                                 >
-                                    Подключение к серверу генерации
+                                    {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_2}
                                 </MiniInfoCell>
                             }
                             {
@@ -174,7 +176,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                                     before={step === 3 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                                     expandable={false}
                                 >
-                                    Подбираем образ для Вас
+                                    {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_3}
                                 </MiniInfoCell>
                             }
                             {
@@ -184,7 +186,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                                     before={step === 4 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                                     expandable={false}
                                 >
-                                    Подготавливаем результат
+                                    {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_4}
                                 </MiniInfoCell>
                             }
                             {
@@ -194,21 +196,21 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                                     before={(step === 5 || !responseGenerate.loading) ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                                     expandable={false}
                                 >
-                                    Ещё немного...
+                                    {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_5}
                                 </MiniInfoCell>
                             }
                         </Group>
                     </React.Fragment>
                     :
                     <React.Fragment>
-                        <PanelHeader>Генерация завершена</PanelHeader>
+                        <PanelHeader>{lang.TITLES.PRELOADER_PANEL_FINISH}</PanelHeader>
                         <Placeholder
                             stretched
                             icon={<Icon56ErrorTriangleOutline fill={ColorsList.error} />}
-                            header="Генерация закончилась!"
+                            header={lang.DESCRIPTIONS.PRELOADER_PANEL_FINISH}
                             action={<Button size="m" onClick={() => routeNavigator.back()}>Повторить</Button>}
                         >
-                            Вернитесь на экран генерации изображений.
+                            {lang.DESCRIPTIONS.PRELOADER_PANEL_FINISH_DESCRIPTION}
                         </Placeholder>
                     </React.Fragment>
             }

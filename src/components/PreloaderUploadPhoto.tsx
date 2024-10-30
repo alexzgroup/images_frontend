@@ -1,10 +1,12 @@
-import React, {FC, useEffect, useState} from "react";
+import React, {FC, useContext, useEffect, useState} from "react";
 import {MiniInfoCell, Spinner} from "@vkontakte/vkui";
 import {Icon20CheckCircleFillGreen} from "@vkontakte/icons";
 import {ColorsList} from "../types/ColorTypes";
+import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
 
 export const PreloaderUploadPhoto:FC = () => {
     const [step, setStep] = useState<number>(1)
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     useEffect(() => {
         let stepLocal = 1;
@@ -28,7 +30,7 @@ export const PreloaderUploadPhoto:FC = () => {
                 before={step === 1 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                 expandable={false}
             >
-                Выставляем высокое разрешение
+                {lang.MODALS.UPLOAD_PHOTO_1}
             </MiniInfoCell>
             {
                 step > 1 &&
@@ -37,7 +39,7 @@ export const PreloaderUploadPhoto:FC = () => {
                     before={step === 2 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                     expandable={false}
                 >
-                    Сохраняем изображение ВКонтакте
+                    {lang.MODALS.UPLOAD_PHOTO_2}
                 </MiniInfoCell>
             }
             {
@@ -47,7 +49,7 @@ export const PreloaderUploadPhoto:FC = () => {
                     before={step === 3 ? <Spinner size="regular" style={{color: ColorsList.primary}} /> : <Icon20CheckCircleFillGreen />}
                     expandable={false}
                 >
-                    Создаём запись на вашей стене
+                    {lang.MODALS.UPLOAD_PHOTO_3}
                 </MiniInfoCell>
             }
             {
@@ -57,7 +59,7 @@ export const PreloaderUploadPhoto:FC = () => {
                     before={<Spinner size="regular" style={{color: ColorsList.primary}} />}
                     expandable={false}
                 >
-                    Ещё немного...
+                    {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_5}
                 </MiniInfoCell>
             }
         </React.Fragment>

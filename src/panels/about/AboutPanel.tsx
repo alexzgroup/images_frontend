@@ -1,4 +1,4 @@
-import React, {ReactElement} from 'react';
+import React, {ReactElement, useContext} from 'react';
 
 import {
     Caption,
@@ -25,6 +25,7 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
 import VipBlock from "../../components/RenestraVip/VipBlock";
 import GetVipBanner from "../../components/RenestraVip/GetVipBanner";
+import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 interface Props {
     id: string;
@@ -35,6 +36,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
 
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
+    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openSnackBar = (icon: JSX.Element, text: string): void => {
         if (snackbar) return;
@@ -76,7 +78,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
 
     return (
         <Panel id={id}>
-            <PanelHeader>О приложении</PanelHeader>
+            <PanelHeader>{lang.HEADERS.ABOUT_PANEL}</PanelHeader>
             <Group>
                 <CardGrid size="l">
                     <Card mode='shadow'>
@@ -85,18 +87,18 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                             hasActive={false}
                             hasHover={false}
                             before={<Image size={56} src={girl_image}/>}
-                            subtitle="Генератор изображений"
+                            subtitle={lang.TITLES.ABOUT_PANEL_SUBTITLE}
                         >
-                            Ренестра (Renestra)
+                            {lang.TITLES.ABOUT_PANEL_APP_NAME}
                         </SimpleCell>
                         <Div>
-                            <Caption>Приложение генерирует образы из ваших фотографий с помощью ИИ.</Caption>
+                            <Caption>{lang.DESCRIPTIONS.ABOUT_PANEL_AI_DESCRIPTION}</Caption>
                             <Spacing/>
                             <Caption>
-                                Начиная пользоваться приложением, вы соглашаетесь с {" "}
-                                <Link target='_blank' href={UrlConstants.URL_POLITIC}>политикой конфиденциальности</Link>
+                                {lang.DESCRIPTIONS.ABOUT_PANEL_POLITIC_START} {" "}
+                                <Link target='_blank' href={UrlConstants.URL_POLITIC}>{lang.DESCRIPTIONS.ABOUT_PANEL_POLITIC}</Link>
                                 {" "} и {" "}
-                                <Link target='_blank' href={UrlConstants.URL_RULE_APP}>правилами пользования приложением</Link>.
+                                <Link target='_blank' href={UrlConstants.URL_RULE_APP}>{lang.DESCRIPTIONS.ABOUT_PANEL_RULES}</Link>.
                             </Caption>
                         </Div>
                     </Card>
@@ -115,7 +117,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
                     }
                 </CardGrid>
             </Group>
-            <Footer>Привет от омских разработчиков!</Footer>
+            <Footer>{lang.DESCRIPTIONS.ABOUT_PANEL_HI}</Footer>
             {snackbar}
         </Panel>
     )
