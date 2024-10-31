@@ -7,11 +7,11 @@ export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {
     const getLabelJSX = (label: string) => {
         switch (label) {
             case 'popular':
-                return <ColorLabel type={TypeColors.success} text='Популярно'/>
+                return <ColorLabel key={1} type={TypeColors.success} text='Популярно'/>
             case 'new':
-                return <ColorLabel type={TypeColors.error} text='Новое'/>
+                return <ColorLabel key={2} type={TypeColors.error} text='Новое'/>
             case 'vip':
-                return <ColorLabel type={TypeColors.warning} text='Vip'/>
+                return <ColorLabel key={3} type={TypeColors.warning} text='Vip'/>
             default:
                 return <React.Fragment />
         }

@@ -17,19 +17,18 @@ import {
 import {Icon36Favorite} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {ModalTypes} from "../../modals/ModalRoot";
 import {useDispatch, useSelector} from "react-redux";
-import bridge from "@vkontakte/vk-bridge";
-import {ReduxSliceUserInterface, setAccessToken} from "../../redux/slice/UserSlice";
+import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType} from "../../types/ApiTypes";
+import {AdvertisementEnum, imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {ModalTypes} from "../../modals/ModalRoot";
 
 interface Props {
     id: string;
@@ -38,7 +37,6 @@ interface Props {
 const PanelData = () => {
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
-    const dispatch = useDispatch()
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
@@ -80,32 +78,10 @@ const PanelData = () => {
         }
     }
 
-    const getUserToken = () => {
-        bridge.send('VKWebAppGetAuthToken', {
-            app_id: Number(process.env.REACT_APP_APP_ID),
-            scope: 'photos,wall'
-        })
-            .then((data) => {
-                if (data.access_token) {
-                    dispatch(setAccessToken(data.access_token))
-                    routeNavigator.showModal(ModalTypes.MODAL_SELECT_GENERATE_IMAGE)
-                }
-            })
-            .catch((error) => {
-                console.log(error);
-            });
-    }
-
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
         if (!userDbData?.is_vip) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch(() => {});
+            // routeNavigator.showModal(ModalTypes.MODAL_TG_TADS)
         }
     }, []);
 

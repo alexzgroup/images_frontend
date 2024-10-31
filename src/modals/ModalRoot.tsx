@@ -20,13 +20,12 @@ import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
 import {PreloaderUploadPhoto} from "../components/PreloaderUploadPhoto";
 import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
-import bridge from "@vkontakte/vk-bridge";
-import {addAdvertisement} from "../api/AxiosApi";
-import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
 import GenerateImageResultShare from "../components/GenerateImage/GenerateImageResultShare";
-import {AdvertisementEnum, EAdsFormats} from "../types/ApiTypes";
 import ModalGetVipContent from "../components/RenestraVip/ModalGetVipContent";
 import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {TadsWidget} from "react-tads-widget";
+import {addAdvertisement} from "../api/AxiosApi";
+import {AdvertisementEnum} from "../types/ApiTypes";
 
 export enum ModalTypes {
     MODAL_GET_VIP_PROFILE = 'modal_get_vip_profile',
@@ -39,6 +38,7 @@ export enum ModalTypes {
     MODAL_UNSUBSCRIBE_GROUP = 'modal_unsubscribe_group',
     MODAL_PAY_VOICE = 'modal_pay_voice',
     MODAL_SHOW_GENERATED_IMAGE = 'modal_show_generated_image',
+    MODAL_TG_TADS = 'modal_tg_tads',
 }
 
 const ModalRootComponent:FC = () => {
@@ -47,20 +47,11 @@ const ModalRootComponent:FC = () => {
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const closeShowGenerateModal = () => {
         routeNavigator.hideModal()
-        if (!userDbData?.is_vip) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch(() => {});
-        }
+        // routeNavigator.showModal(ModalTypes.MODAL_TG_TADS)
     }
 
     return (
@@ -213,6 +204,17 @@ const ModalRootComponent:FC = () => {
             >
                 <ModalGetVipContent />
             </ModalPage>
+            <ModalCard
+                id={ModalTypes.MODAL_TG_TADS}
+                onClose={() => routeNavigator.hideModal()}
+            >
+                <TadsWidget
+                    id={process.env.REACT_APP_TG_TADS_WIDGET_ID}
+                    onShowReward={(adId) => addAdvertisement({type: AdvertisementEnum.tg_tads}).then()}
+                    onAdsNotFound={() => console.log(4444)}
+                    debug={true}
+                />
+            </ModalCard>
         </ModalRoot>
     )
 }

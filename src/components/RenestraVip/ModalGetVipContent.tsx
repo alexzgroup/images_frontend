@@ -1,10 +1,10 @@
 import React, {FC, useContext} from "react";
-import {addAdvertisement, getVoiceSubscription} from "../../api/AxiosApi";
+import {getVoiceSubscription} from "../../api/AxiosApi";
 import bridge from "@vkontakte/vk-bridge";
-import {ReduxSliceUserInterface, setUserVip, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
+import {setUserVip, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
 import {publish} from "../../Events/CustomEvents";
 import {ModalTypes} from "../../modals/ModalRoot";
-import {useDispatch, useSelector} from "react-redux";
+import {useDispatch} from "react-redux";
 import golden_light from "../../assets/images/golden_light.png";
 import RenestraTitleWithVip from "./RenestraTitleWithVip";
 import {Button, Cell, List, Title} from "@vkontakte/vkui";
@@ -15,15 +15,12 @@ import {
     Icon36CameraOutline
 } from "@vkontakte/icons";
 import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {AdvertisementEnum, EAdsFormats} from "../../types/ApiTypes";
-import {RootStateType} from "../../redux/store/ConfigureStore";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
 
 const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
     const dispatch = useDispatch();
     const routeNavigator = useRouteNavigator();
     const metaParams = useMetaParams<{imageGeneratedId?: string}>();
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openVoicePayModal = async () => {
@@ -49,15 +46,6 @@ const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
     }
 
     const skipVip = () => {
-        if (!userDbData?.is_vip) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch(() => {});
-        }
         routeNavigator.push(`/show-generate-image/${metaParams?.imageGeneratedId}`)
     }
 

@@ -16,17 +16,19 @@ import {
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {useDispatch, useSelector} from "react-redux";
-import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
-import {addAdvertisement, apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
-import {AdvertisementEnum, EAdsFormats, imageTypeStatisticType} from "../../types/ApiTypes";
+import {apiGetImageTypeWithStatistic} from "../../api/AxiosApi";
+import {imageTypeStatisticType} from "../../types/ApiTypes";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {ModalTypes} from "../../modals/ModalRoot";
+import {ShowPromiseResult} from "../../declarations/adsgram";
+import {useTelegram} from "../../context/TelegramProvider";
 
 interface Props {
     id: string;
@@ -56,6 +58,7 @@ const PanelData = () => {
     const [zodiac, setZodiac] = React.useState<string>('');
     const [zodiacSelectError, setZodiacSelectError] = React.useState<string>('');
     const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {AdController} = useTelegram();
 
     const openPreloaderGenerate = () => {
         setZodiacSelectError('');
@@ -86,13 +89,12 @@ const PanelData = () => {
     useEffect(() => {
         setImageType(PromiseWrapper(apiGetImageTypeWithStatistic(Number(params?.imageTypeId))))
         if (!userDbData?.is_vip) {
-            bridge.send("VKWebAppShowNativeAds", {
-                ad_format: EAdsFormats.INTERSTITIAL,
-            }).then((data) => {
-                if (data.result) {
-                    addAdvertisement({type: AdvertisementEnum.window}).then();
-                }
-            }).catch(() => {});
+            // routeNavigator.showModal(ModalTypes.MODAL_TG_TADS)
+            AdController?.show().then((result: ShowPromiseResult) => {
+                console.log('AD S:::', result);
+            }).catch((result: ShowPromiseResult) => {
+                console.log('AD E:::', result);
+            })
         }
     }, []);
 

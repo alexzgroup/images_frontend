@@ -17,6 +17,8 @@ declare global {
             REACT_APP_PUSHER_HOST: string,
             REACT_APP_DONUT_URL_CLIENT: string,
             REACT_APP_TG_URL: string,
+            REACT_APP_TG_TADS_WIDGET_ID: string,
+            REACT_APP_TG_ADSGRAM_BLOCK_ID: string,
         }
     }
 }

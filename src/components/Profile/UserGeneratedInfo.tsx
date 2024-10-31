@@ -9,7 +9,7 @@ const UserGenerateInfo: React.FC<{user: UserWithGeneratedInfoType}> = ({user}) =
     const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
     return (
         <RichCell
-            before={<Avatar size={72} initials={Array.from(user?.first_name)[0] + '' + Array.from(user?.last_name)[0]} gradientColor="blue" />}
+            before={<Avatar size={72} initials={Array.from(user?.first_name)[0] + '' + (user?.last_name ? Array.from(user?.last_name)[0] : '')} gradientColor="blue" />}
             text={
                 <React.Fragment>
                     <MiniInfoCell style={{paddingLeft: 0}} before={<Icon20Like fill={ColorsList.primary} />}>

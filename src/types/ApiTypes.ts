@@ -168,15 +168,11 @@ export type GroupToChatBootType = {
 export enum AdvertisementEnum {
     banner='banner',
     window='window',
+    tg_tads='tg_tads',
 }
 
 export type AdvertisementType = {
     type: AdvertisementEnum,
-}
-
-export enum EAdsFormats {
-    REWARD = "reward",
-    INTERSTITIAL = "interstitial"
 }
 
 export type FormDataOptionType = {

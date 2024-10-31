@@ -16,20 +16,14 @@ import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {BlockerFunction} from "@remix-run/router/router";
 import {Icon20CheckCircleFillGreen, Icon56ErrorTriangleOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
-import {
-    AdvertisementEnum,
-    EAdsFormats,
-    FormDataOptionType,
-    generateImageType,
-    sendGenerateImageType
-} from "../../types/ApiTypes";
-import {addAdvertisement, apiGenerateImage} from "../../api/AxiosApi";
+import {FormDataOptionType, generateImageType, sendGenerateImageType} from "../../types/ApiTypes";
+import {apiGenerateImage} from "../../api/AxiosApi";
 import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
-import bridge from "@vkontakte/vk-bridge";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {ModalTypes} from "../../modals/ModalRoot";
 
 interface Props {
     id: string;
@@ -106,13 +100,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     useEffect(() => {
         if (formDataParams?.imageTypeId && selectImageFile) {
             if (!userDbData?.is_vip) {
-                bridge.send("VKWebAppShowNativeAds", {
-                    ad_format: EAdsFormats.INTERSTITIAL,
-                }).then((data) => {
-                    if (data.result) {
-                        addAdvertisement({type: AdvertisementEnum.window}).then();
-                    }
-                }).catch();
+                // routeNavigator.showModal(ModalTypes.MODAL_TG_TADS)
             }
 
             routeNavigator.block(blockerFunction);
