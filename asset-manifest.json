@@ -1,11 +1,13 @@
 {
   "files": {
     "main.css": "/images_frontend/static/css/main.c4b7edde.css",
-    "main.js": "/images_frontend/static/js/main.39239ab1.js",
-    "static/js/495.0e3e6f5c.chunk.js": "/images_frontend/static/js/495.0e3e6f5c.chunk.js",
+    "main.js": "/images_frontend/static/js/main.3a4ff721.js",
+    "static/js/495.54f04246.chunk.js": "/images_frontend/static/js/495.54f04246.chunk.js",
     "static/js/877.3711cdca.chunk.js": "/images_frontend/static/js/877.3711cdca.chunk.js",
-    "static/js/256.4660607b.chunk.js": "/images_frontend/static/js/256.4660607b.chunk.js",
+    "static/js/256.1275282f.chunk.js": "/images_frontend/static/js/256.1275282f.chunk.js",
     "static/media/vip_logo.png": "/images_frontend/static/media/vip_logo.4866c8df3429d6b7f509.png",
+    "static/media/select_image_profile_man.jpg": "/images_frontend/static/media/select_image_profile_man.4fe33ec58a7989070a57.jpg",
+    "static/media/select_image_profile_girl.jpg": "/images_frontend/static/media/select_image_profile_girl.b0cb18d58d2834005f72.jpg",
     "static/media/FloridaVibesByTurbologo.otf": "/images_frontend/static/media/FloridaVibesByTurbologo.207c2e09086f0833982f.otf",
     "static/media/roboto-latin-700-normal.woff2": "/images_frontend/static/media/roboto-latin-700-normal.4535474e1cf8598695ad.woff2",
     "static/media/roboto-latin-500-normal.woff2": "/images_frontend/static/media/roboto-latin-500-normal.7077203b1982951ecf76.woff2",
@@ -65,13 +67,13 @@
     "static/media/roboto-greek-ext-400-normal.woff": "/images_frontend/static/media/roboto-greek-ext-400-normal.16eb83b4a3b1ea994243.woff",
     "index.html": "/images_frontend/index.html",
     "main.c4b7edde.css.map": "/images_frontend/static/css/main.c4b7edde.css.map",
-    "main.39239ab1.js.map": "/images_frontend/static/js/main.39239ab1.js.map",
-    "495.0e3e6f5c.chunk.js.map": "/images_frontend/static/js/495.0e3e6f5c.chunk.js.map",
+    "main.3a4ff721.js.map": "/images_frontend/static/js/main.3a4ff721.js.map",
+    "495.54f04246.chunk.js.map": "/images_frontend/static/js/495.54f04246.chunk.js.map",
     "877.3711cdca.chunk.js.map": "/images_frontend/static/js/877.3711cdca.chunk.js.map",
-    "256.4660607b.chunk.js.map": "/images_frontend/static/js/256.4660607b.chunk.js.map"
+    "256.1275282f.chunk.js.map": "/images_frontend/static/js/256.1275282f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.c4b7edde.css",
-    "static/js/main.39239ab1.js"
+    "static/js/main.3a4ff721.js"
   ]
 }
