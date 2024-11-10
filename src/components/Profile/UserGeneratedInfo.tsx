@@ -3,10 +3,10 @@ import {Avatar, Caption, MiniInfoCell, RichCell, Title} from "@vkontakte/vkui";
 import {Icon20ClockOutline, Icon20Like, Icon20PalleteOutline} from "@vkontakte/icons";
 import {UserWithGeneratedInfoType} from "../../types/ApiTypes";
 import {ColorsList} from "../../types/ColorTypes";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 const UserGenerateInfo: React.FC<{user: UserWithGeneratedInfoType}> = ({user}) => {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     return (
         <RichCell
             before={<Avatar size={72} initials={Array.from(user?.first_name)[0] + '' + (user?.last_name ? Array.from(user?.last_name)[0] : '')} gradientColor="blue" />}

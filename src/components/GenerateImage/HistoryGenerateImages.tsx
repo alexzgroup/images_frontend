@@ -1,6 +1,6 @@
 import React, {FC, useContext} from "react";
 import {GeneratedImageType} from "../../types/ApiTypes";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {Card, CardGrid, Div, Image} from "@vkontakte/vkui";
 import {setGenerateImageId} from "../../redux/slice/ImageSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
@@ -8,7 +8,6 @@ import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {useDispatch} from "react-redux";
 
 const HistoryGenerateImages:FC<{history_generate: GeneratedImageType[]}> = ({history_generate}) => {
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch();
 
@@ -20,8 +19,7 @@ const HistoryGenerateImages:FC<{history_generate: GeneratedImageType[]}> = ({his
     return (
         <React.Fragment>
             {
-                isMobileSize
-                ?
+
                     <CardGrid size="s">
                         {
                             history_generate.map((item, key) => (
@@ -37,20 +35,6 @@ const HistoryGenerateImages:FC<{history_generate: GeneratedImageType[]}> = ({his
                             ))
                         }
                     </CardGrid>
-                    :
-                    <Div style={{display: 'flex', gap: 5, flexGrow: 1, flexWrap: 'wrap', justifyContent: 'flex-start'}}>
-                        {
-                            history_generate.map((item, key) => (
-                                <div key={key} onClick={() => showGeneratedImage(item.id)}>
-                                    <Image
-                                        size={96}
-                                        src={item.url}
-                                        borderRadius="m"
-                                    />
-                                </div>
-                            ))
-                        }
-                    </Div>
             }
         </React.Fragment>
     )

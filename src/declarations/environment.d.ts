@@ -19,6 +19,7 @@ declare global {
             REACT_APP_TG_URL: string,
             REACT_APP_TG_TADS_WIDGET_ID: string,
             REACT_APP_TG_ADSGRAM_BLOCK_ID: string,
+            REACT_APP_ROOT_GIT_URL: string,
         }
     }
 }

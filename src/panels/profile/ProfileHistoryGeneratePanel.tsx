@@ -8,13 +8,13 @@ import {useParams} from "@vkontakte/vk-mini-apps-router";
 import {Icon56ErrorTriangleOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import HistoryGenerateImages from "../../components/GenerateImage/HistoryGenerateImages";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 
 const PanelContent: React.FC = () => {
     const [generatedImages, setGeneratedImages] = useState<GeneratedImageType[]>([]);
     const params = useParams<'userId'>();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const init = () => {
         return new Promise(async (resolve) => {
@@ -44,7 +44,7 @@ const PanelContent: React.FC = () => {
 }
 
 const ProfileHistoryGeneratePanel: React.FC<{id: string}> = ({id}) => {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     return (
         <Panel id={id}>
             <PanelHeader before={<ButtonHeaderBack />}>{lang.HEADERS.HISTORY_PANEL}</PanelHeader>

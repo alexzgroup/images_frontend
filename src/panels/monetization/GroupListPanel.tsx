@@ -11,7 +11,7 @@ import {
     SimpleCell,
     Snackbar
 } from '@vkontakte/vkui';
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+
 import {
     Icon28AddSquareOutline,
     Icon28ArchiveOutline,
@@ -28,6 +28,7 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ColorsList, TypeColors} from "../../types/ColorTypes";
 import {hideAppLoading, showAppLoading} from "../../redux/slice/AppStatusesSlice";
 import {generatePassword} from "../../helpers/AppHelper";
+import {useTelegram} from "../../context/TelegramProvider";
 
 interface Props {
     id: string;
@@ -41,16 +42,16 @@ type GroupListType = GroupInfo & {
 export const ListGroup = () => {
     const [groups, setGroups] = useState<GroupListType[]>([]);
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {access_token} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
-
+    const { userTg} = useTelegram();
+    
     const getGroups = () => {
         return new Promise(async (resolve, reject) => {
             const { response } = await bridge.send('VKWebAppCallAPIMethod', {
                 method: 'groups.get',
                 params: {
-                    user_id: Number(vkUserInfo?.id),
+                    user_id: Number(userTg?.id),
                     filter: 'admin',
                     extended: 1,
                     v: process.env.REACT_APP_V_API,

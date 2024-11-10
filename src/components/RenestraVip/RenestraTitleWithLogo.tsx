@@ -1,7 +1,7 @@
 import RenestraTitleWithVip from "./RenestraTitleWithVip";
 import vipLogo from "../../assets/images/vip_logo.png";
 import React, {useContext} from "react";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 const styleGridDiv = {
     alignSelf: 'start',
@@ -11,7 +11,7 @@ const styleGridDiv = {
 
 export const RenestraTitleWithLogo = () =>
 {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     return (
         <div style={{
             display: "flex",

@@ -2,14 +2,14 @@ import React, {useContext} from 'react';
 
 import {Button, Panel, Placeholder} from '@vkontakte/vkui';
 import {Icon56DoNotDisturbOutline} from "@vkontakte/icons";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 interface Props {
     id: string;
 }
 
 const OfflinePanel: React.FC<Props> = ({id}) => {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     return (<Panel id={id}>
                 <Placeholder

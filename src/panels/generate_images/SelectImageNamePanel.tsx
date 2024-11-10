@@ -27,7 +27,7 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {ModalTypes} from "../../modals/ModalRoot";
 
 interface Props {
@@ -39,7 +39,7 @@ const PanelData = () => {
     const routeNavigator = useRouteNavigator();
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
@@ -54,6 +54,7 @@ const PanelData = () => {
             name: '',
             vip: 0,
             url: '',
+            type: "default",
         }
     });
 
@@ -141,7 +142,7 @@ const PanelData = () => {
 
 const SelectImageNamePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())

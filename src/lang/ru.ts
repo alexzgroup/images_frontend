@@ -33,6 +33,7 @@ export const Lang = {
         ABOUT_PANEL_APP_NAME: "Ренестра (Renestra)",
         SHOW_GENERATE_PANEL_SHARE_STORY: "Посмотреть и поделиться в истории",
         VIP_MODAL_GET_VIP: "Оформление подписки VIP!",
+        SETTINGS: "Настройки",
     },
     BUTTONS: {
         HOME_PANEL_GO: "Поехали",
@@ -47,6 +48,7 @@ export const Lang = {
         VIP_MODAL_GET: "Оформить подписку",
         VIP_MODAL_CONTINUE: "Пропустить",
         OPEN_GALLERY: "Открыть галерею",
+        OPEN: "Открыть",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Примерь на себя стильный образ, стань воином или фэнтези персонажем с помощью ИИ.",
@@ -99,6 +101,8 @@ export const Lang = {
         CLICK_BEFORE_POLITIC: "Нажимая продолжить, вы соглашаетесь с",
         AND: "и",
         ERROR_REPEAT: "Ошибка, повторите попытку",
+        ABOUT_AS: "О нас",
+        NO_RESULT: "Нет элементов",
     },
     ALERT: {
         WARNING: "Внимание!",
@@ -127,6 +131,7 @@ export const Lang = {
         VIEW_IMAGE: "Посмотреть результат",
         SUBSCRIBE_DESCRIPTION: "Вы успешно подписались на группу, теперь Вам доступна дополнительная генерация.",
         UNSUBSCRIBE_DESCRIPTION: "Вы вышли из группы, больше Вам не доступна дополнительная генерация.",
+        SHARE_TEXT: "Мой образ сгенерировало приложение Renestra AI",
     },
     RECOMMENDED_IMAGE_LABELS: [
         "Крупный план",

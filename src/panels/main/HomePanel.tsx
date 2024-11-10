@@ -25,7 +25,8 @@ import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
 import VipBlock from "../../components/RenestraVip/VipBlock";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
+import {Box} from "@mui/material";
 
 interface Props {
     id: string;
@@ -35,7 +36,7 @@ const HomePanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {popularImageTypes, favoriteImageTypes} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {

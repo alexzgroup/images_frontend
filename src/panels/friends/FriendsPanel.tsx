@@ -28,7 +28,7 @@ import {setAccessToken} from "../../redux/slice/UserSlice";
 import InfiniteScroll from "react-infinite-scroll-loader-y";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import PromiseWrapper from "../../api/PromiseWrapper";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 
 interface Props {
@@ -51,7 +51,7 @@ const PanelContent: React.FC = () => {
 
     const appFriendsIds = useRef([]);
     const allAnyFriends = useRef<FriendType[]>([]);
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const urlApp = 'https://vk.com/app' + process.env.REACT_APP_APP_ID;
 
@@ -261,7 +261,7 @@ const PanelContent: React.FC = () => {
 }
 
 const FriendsPanel: React.FC<Props> = ({id}) => {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     return (<Panel id={id}>
             <PanelHeader>{lang.HEADERS.FRIENDS_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="regular"/>}>

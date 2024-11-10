@@ -22,7 +22,7 @@ import {clearSelectImageFile, ReduxSliceImageInterface} from "../../redux/slice/
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {ModalTypes} from "../../modals/ModalRoot";
 
 interface Props {
@@ -38,7 +38,7 @@ type formDataType = {
 const PreloaderPanel: React.FC<Props> = ({id}) => {
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const [step, setStep] = useState<number>(1)
     const [responseGenerate, setResponseGenerate] = useState<generateImageType & {loading: boolean}>({

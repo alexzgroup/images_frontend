@@ -6,7 +6,7 @@ import {addAllowMessages, getAllowMessages} from "../api/AxiosApi";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface, setUserAllowMessages} from "../redux/slice/UserSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../context/AppContext";
 
 type AllowMessagesBannerType = {
     callbackSuccess: () => void,
@@ -14,7 +14,6 @@ type AllowMessagesBannerType = {
 const AllowMessagesBanner:FC<AllowMessagesBannerType> = ({callbackSuccess}) => {
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const allowNotice = () => {
         bridge.send('VKWebAppAllowMessagesFromGroup', {
@@ -51,7 +50,7 @@ const AllowMessagesBanner:FC<AllowMessagesBannerType> = ({callbackSuccess}) => {
                         subheader="Получайте уведомления об успешной генерации ваших аватарок и о появлении новых образов."
                         background={<div style={{background: ColorsList.success}} />}
                         style={{width: '100%', margin: '10px 0 5px 0'}}
-                        actions={<Button onClick={getStatusAllowMessages} mode={isMobileSize ? "primary" : "secondary"}>Проверить уведомления</Button>}
+                        actions={<Button onClick={getStatusAllowMessages} >Проверить уведомления</Button>}
                     />
                     :
                     <Banner
@@ -62,7 +61,7 @@ const AllowMessagesBanner:FC<AllowMessagesBannerType> = ({callbackSuccess}) => {
                         subheader="Получайте уведомления об успешной генерации ваших аватарок и о появлении новых образов."
                         background={<div style={{background: ColorsList.error}} />}
                         style={{width: '100%', margin: '10px 0 5px 0'}}
-                        actions={<Button onClick={allowNotice} mode={isMobileSize ? "primary" : "secondary"}>Включить</Button>}
+                        actions={<Button onClick={allowNotice} >Включить</Button>}
                     />
             }
         </React.Fragment>

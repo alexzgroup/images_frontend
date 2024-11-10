@@ -9,12 +9,12 @@ import {
 import React, {FC, useContext} from "react";
 import {useActiveVkuiLocation, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {VIEW_CONSTANTS} from "../constants/RouterConstants";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../context/AppContext";
 
 const TabBarWrapper:FC<{}> = () => {
     const { view: activeView } = useActiveVkuiLocation();
     const routeNavigator = useRouteNavigator();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
 return (
     <Tabbar>

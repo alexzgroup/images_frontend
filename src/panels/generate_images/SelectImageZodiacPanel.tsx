@@ -25,7 +25,7 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import RecommendedLabels from "../../components/GenerateImage/RecommendedLabels";
 import SelectImageSection from "../../components/GenerateImage/SelectImageSection";
 import ButtonHeaderBack from "../../components/ButtonHeaderBack";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {ModalTypes} from "../../modals/ModalRoot";
 import {ShowPromiseResult} from "../../declarations/adsgram";
 import {useTelegram} from "../../context/TelegramProvider";
@@ -53,11 +53,12 @@ const PanelData = () => {
             name: '',
             vip: 0,
             url: '',
+            type: "default",
         }
     });
     const [zodiac, setZodiac] = React.useState<string>('');
     const [zodiacSelectError, setZodiacSelectError] = React.useState<string>('');
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     const {AdController} = useTelegram();
 
     const openPreloaderGenerate = () => {
@@ -170,7 +171,7 @@ const PanelData = () => {
 
 const SelectImageZodiacPanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())

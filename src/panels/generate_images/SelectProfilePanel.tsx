@@ -29,7 +29,7 @@ import {useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {ModalTypes} from "../../modals/ModalRoot";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 interface Props {
     id: string;
@@ -45,7 +45,7 @@ export const LoadingImageTypes:FC = () => {
     const routeNavigator = useRouteNavigator();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageTypes, setImageTypes] = useState<ImageTypeFromRequest|null>(null);
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const openImageType = (imageTypeItem: imageType) => {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
@@ -181,7 +181,7 @@ export const LoadingImageTypes:FC = () => {
 }
 
 const SelectProfilePanel: React.FC<Props> = ({id}) => {
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     return (
         <Panel id={id}>
             <PanelHeader>{lang.HEADERS.SELECT_PROFILE_PANEL}</PanelHeader>

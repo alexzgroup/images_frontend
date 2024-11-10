@@ -22,7 +22,7 @@ import {
     TabsItem,
     Title
 } from '@vkontakte/vkui';
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {
     Icon24MessageAddBadgeOutline,
     Icon24PaymentCardClockOutline,
@@ -39,6 +39,7 @@ import {useDispatch} from "react-redux";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {setAccessToken} from "../../redux/slice/UserSlice";
 import PromiseWrapper from "../../api/PromiseWrapper";
+import {useTelegram} from "../../context/TelegramProvider";
 
 interface Props {
     id: string;
@@ -49,7 +50,7 @@ enum TabEnum {
 }
 
 export const TotalInfo = () => {
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const { userTg} = useTelegram();
     const [selectedTab, setSelectedTab] = useState<TabEnum>(TabEnum.groups);
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
     const [monetizationData, setMonetizationData] = useState<monetizationDataType>({
@@ -135,9 +136,9 @@ export const TotalInfo = () => {
                 <CardGrid size='l'>
                     <Card mode='shadow'>
                         <SimpleCell
-                            before={<Avatar size={48} initials={Array.from(vkUserInfo?.first_name || '')[0] + '' + Array.from(vkUserInfo?.last_name || '')[0]} gradientColor="blue" />}
+                            before={<Avatar size={48} initials={Array.from(userTg?.first_name || '')[0] + '' + Array.from(userTg?.last_name || '')[0]} gradientColor="blue" />}
                         >
-                            {vkUserInfo?.first_name + ' ' + vkUserInfo?.last_name}
+                            {userTg?.first_name + ' ' + userTg?.last_name}
                         </SimpleCell>
                         <Header style={{height: 'auto'}} mode='secondary' aside={<Icon24PaymentCardClockOutline fill='var(--vkui--color_accent_blue)' />}>
                             Ваш общий текущий баланс:

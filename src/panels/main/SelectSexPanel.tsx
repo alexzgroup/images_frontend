@@ -9,7 +9,7 @@ import {ReduxSliceUserInterface, setUserDbData} from "../../redux/slice/UserSlic
 import {apiEditUser, apiInitUser} from "../../api/AxiosApi";
 import {hideAppLoading} from "../../redux/slice/AppStatusesSlice";
 import {setFavoriteImageTypes, setGenerateImagesNotShareWall, setPopularImageTypes} from "../../redux/slice/ImageSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 interface Props {
     id: string;
@@ -19,7 +19,7 @@ const SelectSexPanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const updateSex = (sex: 1|2) => {
         if (userDbData?.id) {

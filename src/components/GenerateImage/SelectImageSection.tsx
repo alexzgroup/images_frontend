@@ -4,12 +4,12 @@ import {UrlConstants} from "../../constants/UrlConstants";
 import React, {FC, useContext, useState} from "react";
 import {useDispatch} from "react-redux";
 import {setSelectImageFile} from "../../redux/slice/ImageSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 const SelectImageSection:FC = () => {
     const [selectImage, setSelectImage] = useState<string>('');
     const dispatch = useDispatch();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
             return;

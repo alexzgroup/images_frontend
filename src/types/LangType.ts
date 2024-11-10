@@ -35,6 +35,7 @@ export type TLang = {
         ABOUT_PANEL_APP_NAME: string,
         SHOW_GENERATE_PANEL_SHARE_STORY: string,
         VIP_MODAL_GET_VIP: string,
+        SETTINGS: string,
     },
     BUTTONS: {
         HOME_PANEL_GO: string,
@@ -49,6 +50,7 @@ export type TLang = {
         VIP_MODAL_GET: string,
         VIP_MODAL_CONTINUE: string,
         OPEN_GALLERY: string,
+        OPEN: string,
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: string,
@@ -101,6 +103,8 @@ export type TLang = {
         CLICK_BEFORE_POLITIC: string,
         AND: string,
         ERROR_REPEAT: string,
+        ABOUT_AS: string,
+        NO_RESULT: string,
     },
     ALERT: {
         WARNING: string,
@@ -129,6 +133,7 @@ export type TLang = {
         VIEW_IMAGE: string,
         SUBSCRIBE_DESCRIPTION: string,
         UNSUBSCRIBE_DESCRIPTION: string,
+        SHARE_TEXT: string,
     },
     RECOMMENDED_IMAGE_LABELS: string[],
     NO_RECOMMENDED_IMAGE_LABELS: string[],

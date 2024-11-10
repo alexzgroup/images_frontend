@@ -1,5 +1,11 @@
 import {createSlice, PayloadAction} from '@reduxjs/toolkit'
-import {favoriteImageType, GenerateImageNoShareType, imageType, uploadPhotoType} from "../../types/ApiTypes";
+import {
+    favoriteImageType,
+    GenerateImageNoShareType,
+    generateImageType,
+    imageType,
+    uploadPhotoType
+} from "../../types/ApiTypes";
 
 type uploadPhotoSliceType = uploadPhotoType & {
     photoUploadId: string,

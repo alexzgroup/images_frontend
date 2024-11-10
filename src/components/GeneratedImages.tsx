@@ -3,13 +3,12 @@ import {Avatar, Button, Div, Header, HorizontalCell, HorizontalScroll, IconButto
 import {GeneratedImageType} from "../types/ApiTypes";
 import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {Icon56UserSquareOutline} from "@vkontakte/icons";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../context/AppContext";
 
 
 const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
     const routeNavigator = useRouteNavigator();
     const [showAll, setShowAll] = useState<boolean>(false)
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
 
     const openAllImages = () => {
         setShowAll(!showAll)
@@ -28,7 +27,7 @@ const GeneratedImages:FC<{images: GeneratedImageType[]}> = ({images}) => {
                                 flexGrow: 1,
                                 flexWrap: 'wrap',
                                 gap: 5,
-                                justifyContent: isMobileSize ? 'space-between' : '',
+                                justifyContent: 'space-between',
                             }}>
                                 {
                                     images.map((item, key) => (

@@ -8,17 +8,18 @@ import PromiseWrapper from "../../api/PromiseWrapper";
 import {getUserProfileGenerateInfo} from "../../api/AxiosApi";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import VipBlock from "../../components/RenestraVip/VipBlock";
 import GetVipBanner from "../../components/RenestraVip/GetVipBanner";
 import HistoryGenerateImages from "../../components/GenerateImage/HistoryGenerateImages";
 import type {ITelegramUser} from "../../types/Telegram";
+import {useTelegram} from "../../context/TelegramProvider";
 
 const PanelContent:React.FC<{vkUserInfo: ITelegramUser}>  = ({vkUserInfo}) => {
     const [user, setUser] = useState<UserWithGeneratedInfoType>();
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const init = () => {
         return new Promise(async (resolve) => {
@@ -106,13 +107,13 @@ const PanelContent:React.FC<{vkUserInfo: ITelegramUser}>  = ({vkUserInfo}) => {
 }
 
 const ProfileInfoPanel: React.FC<{id: string}> = ({id}) => {
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const { userTg} = useTelegram();
+    const {lang} = useContext<TAppContext>(AppContext);
     return (
         <Panel id={id}>
             <PanelHeader>{lang.HEADERS.PROFILE_PANEL}</PanelHeader>
             <Suspense fallback={<PanelSpinner size="medium" />}>
-                {vkUserInfo && <PanelContent vkUserInfo={vkUserInfo} />}
+                {userTg && <PanelContent vkUserInfo={userTg} />}
             </Suspense>
         </Panel>
     )

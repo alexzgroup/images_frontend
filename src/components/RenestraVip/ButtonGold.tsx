@@ -1,14 +1,12 @@
-import {Button, ButtonProps} from "@vkontakte/vkui";
 import React from "react";
 import {ModalTypes} from "../../modals/ModalRoot";
-import {useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
+import {Button, ButtonProps} from "@mui/material";
+import {useNavigate} from "react-router-dom";
+
 
 export const ButtonGold = (props: ButtonProps) => {
-    const routeNavigator = useRouteNavigator();
-    return <Button {...props} onClick={() => routeNavigator.showModal(ModalTypes.MODAL_PAY_VOICE)} className="gold_button">
-        <div style={{
-            color: "black",
-            fontSize: 16,
-        }}>{props.children}</div>
+    const navigate = useNavigate();
+    return <Button {...props} onClick={() => navigate(ModalTypes.MODAL_PAY_VOICE)} className="gold_button">
+        {props.children}
     </Button>
 }

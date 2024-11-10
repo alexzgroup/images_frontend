@@ -24,7 +24,7 @@ import SelectProfilePanel from "./panels/generate_images/SelectProfilePanel";
 import ModalRootComponent, {ModalTypes} from "./modals/ModalRoot";
 import './assets/css/style.scss';
 import SelectImagePanel from "./panels/generate_images/SelectImagePanel";
-import {AdaptiveContext} from "./context/AdaptiveContext";
+import {AppContext} from "./context/AppContext";
 import AboutPanel from "./panels/about/AboutPanel";
 import WelcomePanel from "./panels/monetization/WelcomePanel";
 import ProfilePanel from "./panels/monetization/ProfilePanel";
@@ -89,7 +89,8 @@ const App = () => {
 			authEndpoint: process.env.REACT_APP_URL_API + "pusher/auth",
 			auth: {
 				headers: {
-					'X-Referer': window.location.href,
+					'X-Referer': (window as any).Telegram?.WebApp.initData,
+					'x-platform': 'tg',
 				},
 			},
 		}
@@ -174,13 +175,6 @@ const App = () => {
 	}, [userTg]);
 
 	return (
-		<AdaptiveContext.Provider value={
-			{
-				isMobileSize,
-				vkUserInfo,
-				lang,
-			}
-		}>
 		<SplitLayout
 			popout={appIsLoading ? <ScreenSpinner style={{backgroundColor: 'var(--vkui--color_background)'}} size='large' /> : routerPopout}
 			modal={<ModalRootComponent />}
@@ -227,7 +221,6 @@ const App = () => {
 				</SplitCol>
 			}
 		</SplitLayout>
-		</AdaptiveContext.Provider>
 	);
 }
 

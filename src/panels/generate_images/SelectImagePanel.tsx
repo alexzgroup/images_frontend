@@ -28,7 +28,7 @@ import {
 import {Icon28CancelCircleFillRed, Icon48ArrowRightOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import example_man_generated from '../../assets/images/example_man_generated.png'
 import example_woman_generated from '../../assets/images/example_woman_generated.jpg'
 import {useDispatch, useSelector} from "react-redux";
@@ -54,7 +54,6 @@ const PanelData = () => {
     const params = useParams<'imageTypeId'>();
     const routeNavigator = useRouteNavigator();
     const {selectImageFile} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [imageType, setImageType] = useState<imageTypeStatisticType>({
         generate_statistic: {
@@ -69,13 +68,14 @@ const PanelData = () => {
             name: '',
             vip: 0,
             url: '',
+            type: 'default',
         }
     });
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const [formDataError, setFormDataError] = useState(false)
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
     const [snackbar, setSnackbar] = React.useState<ReactElement | null>(null);
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const openPreloaderGenerate = () => {
         setFormDataError(false);
@@ -243,7 +243,7 @@ const PanelData = () => {
                                                     </React.Fragment>
                                                     :
                                                     <React.Fragment>
-                                                        <ButtonGold style={{width: isMobileSize ? '100%' : 'auto'}}>Оформить подписку VIP</ButtonGold>
+                                                        <ButtonGold>Оформить подписку VIP</ButtonGold>
                                                         <Spacing />
                                                         <div className="gold_light">
                                                             <div className="vip-block">
@@ -328,7 +328,7 @@ const PanelData = () => {
                     </Group>
                 }
                 <Group header={<Header>{lang.TITLES.SELECT_IMAGE_PANEL_EXAMPLE}</Header>}>
-                    <Div style={{display: "flex", alignItems: 'center', justifyContent: isMobileSize ? "space-between" : 'space-around'}}>
+                    <Div>
                         <div>
                             <Image
                                 src={userDbData?.sex === 2 ? example_man_generated : example_woman_generated}
@@ -359,7 +359,7 @@ const PanelData = () => {
 
 const SelectImagePanel: React.FC<Props> = ({id}) => {
     const dispatch = useDispatch()
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     useEffect(() => {
         dispatch(clearSelectImageFile())

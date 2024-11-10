@@ -1,25 +1,26 @@
 import React, {useContext, useEffect} from 'react';
 
 import {Button, ButtonGroup, Group, Panel, PanelHeader, PanelSpinner, Placeholder} from '@vkontakte/vkui';
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {apiGetGenerateImage} from "../../api/AxiosApi";
 import {useDispatch, useSelector} from "react-redux";
 import {ColorsList} from "../../types/ColorTypes";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
+import {useTelegram} from "../../context/TelegramProvider";
 
 interface Props {
     id: string;
 }
 
 const ShareWallImagePanel: React.FC<Props> = ({id}) => {
-    const {vkUserInfo, isMobileSize} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const routeNavigator = useRouteNavigator();
     const params = useParams<'imageGeneratedId'>();
     const dispatch = useDispatch();
-
+    const { userTg} = useTelegram();
 
     useEffect(() => {
         (async () => {
@@ -62,14 +63,14 @@ const ShareWallImagePanel: React.FC<Props> = ({id}) => {
                                     </svg>
                                 </div>
                             </div>}
-                            header={`${vkUserInfo?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
+                            header={`${userTg?.first_name}, ваш новый образ готов! Поделитесь с друзьями вашим перевоплощением и соберите много лайков и комментариев!`}
                             action={
                             <>
                                 <ButtonGroup mode='vertical'>
                                     <Button mode="secondary"
                                             onClick={() => routeNavigator.push(`/show-generate-image/${params?.imageGeneratedId}/share-story`)}
                                             stretched
-                                            size={isMobileSize ? 'm' : 'l'}>Пропустить</Button>
+                                            >Пропустить</Button>
                                 </ButtonGroup>
                             </>
                             }

@@ -2,7 +2,7 @@ import React, {useContext} from 'react';
 
 import {Banner, Button, Group, Panel, PanelHeader, PanelHeaderClose, Placeholder} from '@vkontakte/vkui';
 import bridge from "@vkontakte/vk-bridge";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {getStoryBoxData} from "../../helpers/AppHelper";
 import {useParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
 import {updateShareGenerateImage} from "../../api/AxiosApi";
@@ -13,19 +13,20 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
 import {ColorsList} from "../../types/ColorTypes";
+import {useTelegram} from "../../context/TelegramProvider";
 
 interface Props {
     id: string;
 }
 
 const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-
+    const { userTg} = useTelegram();
     const params = useParams<'imageGeneratedId'>();
     const routeNavigator = useRouteNavigator();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const shareStore = async (imageGeneratedId: number) => {
         if (uploadPhoto) {
@@ -58,7 +59,7 @@ const ShareStoreImagePanel: React.FC<Props> = ({id}) => {
                 <Placeholder
                     stretched
                     icon={<div className="pulseLine"><Icon56StoryCircleFillYellow height={98} width={98} /></div>}
-                    header={`${vkUserInfo?.first_name}, ${lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}`}
+                    header={`${userTg?.first_name}, ${lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}`}
                     action={
                     <>
                         {

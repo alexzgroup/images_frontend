@@ -22,7 +22,7 @@ import {PreloaderUploadPhoto} from "../components/PreloaderUploadPhoto";
 import {ReduxSliceStatusesInterface} from "../redux/slice/AppStatusesSlice";
 import GenerateImageResultShare from "../components/GenerateImage/GenerateImageResultShare";
 import ModalGetVipContent from "../components/RenestraVip/ModalGetVipContent";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../context/AppContext";
 import {TadsWidget} from "react-tads-widget";
 import {addAdvertisement} from "../api/AxiosApi";
 import {AdvertisementEnum} from "../types/ApiTypes";
@@ -47,7 +47,7 @@ const ModalRootComponent:FC = () => {
     const platform = usePlatform();
     const {generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const {windowBlocked} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const closeShowGenerateModal = () => {
         routeNavigator.hideModal()

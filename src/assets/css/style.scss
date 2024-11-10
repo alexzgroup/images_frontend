@@ -1,3 +1,17 @@
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';
+
+:root {
+  --black_gradient: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
+  --gold_gradient: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+}
+
+body {
+  margin: 0;
+}
+
 @font-face {
   font-family: 'FloridaVibesByTurbologo';
   src: url('../fonts/FloridaVibesByTurbologo.otf');
@@ -11,12 +25,11 @@
   inherits: false;
 }
 
-.vkuiButton {
-  .vkuiLink {
-    color: currentColor;
-    &:hover {
-      text-decoration: none;
-    }
+.vip-block {
+  span {
+    background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
   }
 }
 
@@ -63,17 +76,39 @@
 
 .pulseLine {
   position: relative;
-  &::after {
+  overflow: hidden;
+  &::before {
     content: '';
     position: absolute;
-    width: 100%;
-    height: 100%;
     top: 0;
-    left: 0;
-    background: var(--vkui--color_accent_orange);
-    border-radius: 50%;
-    z-index: 1;
-    animation: pulseLine 3s cubic-bezier(1, 0.5, 0, 0.5) infinite;
+    height: 100%;
+    width: 45px;
+    transform: skewX(-45deg); // Наклон
+    left: -150%;
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
+    animation: flareAnimation 3s infinite linear; // Время и тип анимации можно менять
+  }
+  //position: relative;
+  //&::before {
+  //  content: '';
+  //  position: absolute;
+  //  width: 100%;
+  //  height: 100%;
+  //  top: 0;
+  //  left: 0;
+  //  background: var(--vkui--color_accent_orange);
+  //  border-radius: 50%;
+  //  z-index: 1;
+  //  animation: pulseLine 3s cubic-bezier(1, 0.5, 0, 0.5) infinite;
+  //}
+}
+
+@keyframes flareAnimation {
+  0% {
+    left: -150%;
+  }
+  100% {
+    left: 150%;
   }
 }
 
@@ -84,107 +119,21 @@
   -webkit-text-fill-color: transparent;
 }
 
-.vip-block {
-  border-radius: var(--vkui--size_border_radius_paper--regular);
-  background: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
-  padding: 10px;
-  box-sizing: border-box;
-  p {
-    font-size: 14px;
-    margin: 5px 0px;
-    line-height: 1;
-    text-align: left;
-    color: white;
-  }
-  h1, h5 {
-    color: white;
-  }
-}
+
 
 .vip-modal-page {
   .vkuiModalPage__in {
     background: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
     padding: 15px;
   }
-  h1, h2, span {
-    color: white;
-  }
+
   h4 {
-    background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+    background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #fafa00 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     line-height: 1;
     font-size: 14px;
   }
-}
-
-.renestra-vip-title {
-  h1, h2 {
-    font-family: FloridaVibesByTurbologo, serif;
-    line-height: 1;
-    font-weight: normal;
-  }
-  h1 {
-    font-size: 48px;
-  }
-  h2 {
-    font-size: 32px;
-  }
-  h2, h5 {
-    color: white;
-  }
-}
-
-.gold_light {
-  position: relative;
-  box-sizing: border-box;
-  z-index: 1;
-  padding: 5px 0px;
-
-  --card-height: 50vh;
-  --opacity: .75;
-
-  &::before {
-    width: 100%;
-    content: "";
-    height: 100%;
-    border-radius: 10px;
-    background-image: linear-gradient(var(--rotateGold), #f9f295, #E0AA3e 43%, #e0aa3e);
-    position: absolute;
-    z-index: -1;
-    top: 0;
-    left: 0;
-    animation: spin 2.5s linear infinite;
-    opacity: var(--opacity);
-  }
-
-  &::after {
-    position: absolute;
-    content: "";
-    top: calc(var(--card-height) / 18);
-    left: 0;
-    right: 0;
-    z-index: -1;
-    height: 100%;
-    width: 100%;
-    margin: 0 auto;
-    transform: scale(0.8);
-    filter: blur(calc(var(--card-height) / 6));
-    background-image: linear-gradient(var(--rotateGold), #f9f295, #E0AA3e 43%, #e0aa3e);
-    opacity: var(--opacity);
-    transition: opacity .5s;
-    animation: spin 2.5s linear infinite;
-  }
-}
-
-.gold_button {
-  padding: 5px 16px;
-  /* Золотой градиент */
-  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
-  border-radius: 10px;
-  font-weight: bold;
-  font-size: 16px;
-  color: black;
 }
 
 @keyframes spin {
@@ -261,10 +210,3 @@
   100%{background-position:0% 50%}
 }
 
-@media only screen and (max-width: 480px) {
-  .vip-block {
-    p {
-      font-size: 12px;
-    }
-  }
-}

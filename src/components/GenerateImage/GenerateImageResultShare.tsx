@@ -4,7 +4,7 @@ import {ShareTypeEnum} from "../../types/ApiTypes";
 import {apiGetGenerateImage, updateShareGenerateImage} from "../../api/AxiosApi";
 import PromiseWrapper from "../../api/PromiseWrapper";
 import {ReduxSliceImageInterface, setUploadPhoto} from "../../redux/slice/ImageSlice";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 import {useDispatch, useSelector} from "react-redux";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {Icon28StoryOutline} from "@vkontakte/icons";
@@ -14,11 +14,11 @@ import {useTelegram} from "../../context/TelegramProvider";
 const Content:React.FC = () => {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [loading, setLoading] = useState<boolean>(false);
-    const {vkUserInfo} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const { userTg} = useTelegram();
     const {uploadPhoto, generateImageId} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
     const dispatch = useDispatch();
     const { webApp } = useTelegram();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const shareStore = async () => {
         if (uploadPhoto && webApp) {
@@ -60,7 +60,7 @@ const Content:React.FC = () => {
             <Subhead weight="2">{lang.MODALS.CREATE}: <span
                 style={{color: 'var(--vkui--color_tabbar_text_inactive)'}}>{uploadPhoto.created_at}</span></Subhead>
             {
-                vkUserInfo?.is_premium &&
+                userTg?.is_premium &&
                 <React.Fragment>
                     <Subhead weight="1" style={{width: '100%', textAlign: 'center'}}>{lang.MODALS.SHARE_STORE_SHORT}</Subhead>
                     <Spacing/>

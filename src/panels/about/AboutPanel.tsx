@@ -25,7 +25,7 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface, setUserVoiceSubscription} from "../../redux/slice/UserSlice";
 import VipBlock from "../../components/RenestraVip/VipBlock";
 import GetVipBanner from "../../components/RenestraVip/GetVipBanner";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 interface Props {
     id: string;
@@ -36,7 +36,7 @@ const AboutPanel: React.FC<Props> = ({id}) => {
 
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const openSnackBar = (icon: JSX.Element, text: string): void => {
         if (snackbar) return;

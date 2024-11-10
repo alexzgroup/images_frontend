@@ -15,13 +15,13 @@ import {
     Icon36CameraOutline
 } from "@vkontakte/icons";
 import {useMetaParams, useRouteNavigator} from "@vkontakte/vk-mini-apps-router";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 const ModalGetVipContent:FC<{pageContent?: boolean}> = ({pageContent}) => {
     const dispatch = useDispatch();
     const routeNavigator = useRouteNavigator();
     const metaParams = useMetaParams<{imageGeneratedId?: string}>();
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const openVoicePayModal = async () => {
         const voiceSubscriptionId = await getVoiceSubscription();

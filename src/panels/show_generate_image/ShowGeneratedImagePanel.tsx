@@ -11,7 +11,7 @@ import {ReduxSliceImageInterface} from "../../redux/slice/ImageSlice";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {Icon28StoryOutline} from "@vkontakte/icons";
 import {ColorsList} from "../../types/ColorTypes";
-import {AdaptiveContext, AdaptiveContextType} from "../../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../../context/AppContext";
 
 interface Props {
     id: string;
@@ -21,7 +21,7 @@ const ShowGeneratedImagePanel: React.FC<Props> = ({id}) => {
     const routeNavigator = useRouteNavigator();
     const params = useParams<'imageGeneratedId'>();
     const {uploadPhoto} = useSelector<RootStateType, ReduxSliceImageInterface>(state => state.image)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     const shareStore = async (imageGeneratedId: number) => {
         if (uploadPhoto) {

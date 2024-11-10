@@ -29,6 +29,7 @@ export type imageType = {
     id: number,
     name: string,
     vip: 0|1,
+    type: 'default'|'name'|'zodiac',
     url?: string,
     labels?: []|string[],
     language?: TLanguage,
@@ -183,6 +184,9 @@ export type FormDataOptionType = {
 export type GeneratedImageType = {
     id: number,
     url: string,
+    created_at?: string,
+    image_type_id?: number,
+    image_type: imageType,
 }
 
 export type GeneratedImagesType = {

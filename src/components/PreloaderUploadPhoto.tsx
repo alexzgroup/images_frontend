@@ -2,11 +2,11 @@ import React, {FC, useContext, useEffect, useState} from "react";
 import {MiniInfoCell, Spinner} from "@vkontakte/vkui";
 import {Icon20CheckCircleFillGreen} from "@vkontakte/icons";
 import {ColorsList} from "../types/ColorTypes";
-import {AdaptiveContext, AdaptiveContextType} from "../context/AdaptiveContext";
+import {AppContext, TAppContext} from "../context/AppContext";
 
 export const PreloaderUploadPhoto:FC = () => {
     const [step, setStep] = useState<number>(1)
-    const {lang} = useContext<AdaptiveContextType>(AdaptiveContext);
+    const {lang} = useContext<TAppContext>(AppContext);
 
     useEffect(() => {
         let stepLocal = 1;
