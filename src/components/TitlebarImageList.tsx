@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {useContext, useEffect, useState} from 'react';
+import {useContext, useEffect, useRef, useState} from 'react';
 import ImageList from '@mui/material/ImageList';
 import ImageListItem from '@mui/material/ImageListItem';
 import ImageListItemBar from '@mui/material/ImageListItemBar';
@@ -14,23 +14,36 @@ import {
     Container,
     DialogActions,
     DialogContent,
-    DialogTitle,
     Grid2,
-    Link,
     List,
+    Link as Mlink,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Typography
+    Typography, useTheme
 } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
-import {IosShare, Timer, Visibility, Warning} from "@mui/icons-material";
+import {Share, Timer, Visibility, Warning} from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
 import {updateShareGenerateImage} from "../api/AxiosApi";
 import {useTelegram} from "../context/TelegramProvider";
+import {TransitionProps} from "@mui/material/transitions";
+import Slide from "@mui/material/Slide";
+import AppBar from "@mui/material/AppBar";
+import Toolbar from "@mui/material/Toolbar";
+import {Link, useNavigate} from 'react-router-dom';
+
+const Transition = React.forwardRef(function Transition(
+    props: TransitionProps & {
+        children: React.ReactElement;
+    },
+    ref: React.Ref<unknown>,
+) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
 
 export default function TitlebarImageList({history_generate, showBtn}: {
     history_generate: GeneratedImageType[],
@@ -40,6 +53,9 @@ export default function TitlebarImageList({history_generate, showBtn}: {
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [image, setImage] = useState<GeneratedImageType|null>(null);
     const { webApp, userTg } = useTelegram();
+    const ref = useRef<React.ReactNode| null>(null);
+    const theme = useTheme();
+    const navigate = useNavigate();
 
     const handleClose = () => {
         setImage(null);
@@ -72,20 +88,21 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                     showBtn &&
                         <Grid2 size={6}>
                             <ListSubheader component="div" sx={{textAlign: 'right'}}>
-                                <Link href={`/profile/history-generated/${userDbData?.id}`}>{lang.BUTTONS.PROFILE_INFO_PANEL_MORE}</Link>
+                                <Link style={{color: theme.palette.primary.dark}}  to={`/history/${userDbData?.id}`}>{lang.BUTTONS.PROFILE_INFO_PANEL_MORE}</Link>
                             </ListSubheader>
                         </Grid2>
                 }
             </Grid2>
             {
                 !!history_generate.length ?
-                    <ImageList sx={{ height: 450, mb: 0 }}>
+                    <ImageList cols={2} rowHeight={180} sx={{ height: history_generate.length > 2 ? 450 : 200, mb: 0 }}>
                         {history_generate.map((item, index) => (
-                            <ImageListItem cols={history_generate.length > 2 ? 1 : 2} key={item.id + index}>
+                            <ImageListItem sx={{overflow: 'hidden'}} rows={1} cols={1} key={item.id + index}>
                                 <img
                                     src={`${item.url}`}
                                     alt={item.url}
                                     loading="lazy"
+                                    style={{width:'100%', height:'auto'}}
                                 />
                                 <ImageListItemBar
                                     title={item.image_type.name}
@@ -113,49 +130,54 @@ export default function TitlebarImageList({history_generate, showBtn}: {
             {
                 image &&
                 <Dialog
-                    onClose={handleClose}
-                    aria-labelledby="customized-dialog-title"
+                    scroll="body"
+                    fullScreen
                     open={!!image}
+                    onClose={handleClose}
+                    TransitionComponent={Transition}
                 >
-                    <DialogTitle sx={{ m: 0, p: 2 }} id="customized-dialog-title">
-                        {image.image_type.name}
-                    </DialogTitle>
-                    <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        sx={(theme) => ({
-                            position: 'absolute',
-                            right: 8,
-                            top: 8,
-                            color: theme.palette.grey[500],
-                        })}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                    <DialogContent dividers>
-                        <List>
-                            <ListItem dense>
-                                <ListItemIcon>
-                                    <Timer color="primary" />
-                                </ListItemIcon>
-                                <ListItemText primary={`${image.created_at}`} />
-                            </ListItem>
-                        </List>
-                        <Avatar src={image.url} variant="rounded" sx={{
-                            width: '100%',
-                            height: 'auto',
-                        }} />
+                    <AppBar sx={{ position: 'relative' }}>
+                        <Toolbar>
+                            <IconButton
+                                edge="start"
+                                color="inherit"
+                                onClick={handleClose}
+                                aria-label="close"
+                            >
+                                <CloseIcon />
+                            </IconButton>
+                            <Typography sx={{ ml: 2, flex: 1 }} variant="h6" component="div">
+                                {image.image_type.name}
+                            </Typography>
+                        </Toolbar>
+                    </AppBar>
+                    <Box ref={ref}>
+                        <Container>
+                            <DialogContent dividers>
+                                <List>
+                                    <ListItem dense>
+                                        <ListItemIcon>
+                                            <Timer color="primary" />
+                                        </ListItemIcon>
+                                        <ListItemText primary={`${image.created_at}`} />
+                                    </ListItem>
+                                </List>
+                                <Avatar src={image.url} variant="rounded" sx={{
+                                    width: '100%',
+                                    height: 'auto',
+                                }} />
 
-                    </DialogContent>
-                    {
-                        userTg?.is_premium &&
-                            <DialogActions>
-                                <Button startIcon={<IosShare />} fullWidth variant="contained" autoFocus onClick={shareStore}>
-                                    {lang.MODALS.SHARE_STORE_SHORT}
-                                </Button>
-                            </DialogActions>
-                    }
-
+                            </DialogContent>
+                            {
+                                userTg?.is_premium &&
+                                <DialogActions>
+                                    <Button startIcon={<Share />} fullWidth variant="contained" autoFocus onClick={shareStore}>
+                                        {lang.MODALS.SHARE_STORE_SHORT}
+                                    </Button>
+                                </DialogActions>
+                            }
+                        </Container>
+                    </Box>
                 </Dialog>
             }
         </Box>

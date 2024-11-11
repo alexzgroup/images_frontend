@@ -41,11 +41,14 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
     const {lang} = useContext<TAppContext>(AppContext);
 
     const [step, setStep] = useState<number>(1)
+
     const [responseGenerate, setResponseGenerate] = useState<generateImageType & {loading: boolean}>({
         loading: false,
         result: false,
         message: '',
         id: 0,
+        // @ts-ignore
+        image: '',
     })
     const routeNavigator = useRouteNavigator();
     const dispatch = useDispatch();
@@ -67,6 +70,7 @@ const PreloaderPanel: React.FC<Props> = ({id}) => {
                 options: formDataParams.formData,
             }
 
+            // @ts-ignore
             const response = await apiGenerateImage(data)
             setResponseGenerate({...response, loading: true})
             blockedWindow.current = false;

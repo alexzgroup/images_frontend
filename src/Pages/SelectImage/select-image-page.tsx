@@ -1,40 +1,41 @@
 import {
+    Alert,
     Avatar,
     Box,
     Button,
+    ButtonGroup,
     Card,
     CardActions,
     CardContent,
     CardHeader,
+    Checkbox,
     Chip,
-    FormControl, FormControlLabel, FormGroup, FormLabel,
+    FormControl,
+    FormControlLabel,
+    FormGroup,
+    FormLabel,
     InputLabel,
     Link,
     MenuItem,
     Paper,
+    Radio,
+    RadioGroup,
     Select,
     SelectChangeEvent,
     Stack,
     Step,
     Stepper,
-    Checkbox,
     styled,
-    Typography, RadioGroup, Radio, ButtonGroup, IconButton
+    Typography
 } from '@mui/material';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import PageWrapper from "../../components/PageWrapper";
 import {AppContext, TAppContext} from "../../context/AppContext";
 import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../../redux/slice/UserSlice";
-import {
-    exclusiveImageTypesType,
-    favoriteImageType,
-    FormDataOptionType,
-    imageType,
-    imageTypeStatisticType
-} from "../../types/ApiTypes";
+import {FormDataOptionType, imageTypeStatisticType} from "../../types/ApiTypes";
 import {CloudSync, CloudUpload, PsychologyAlt} from "@mui/icons-material";
-import {useLoaderData} from "react-router-dom";
+import {useLoaderData, useSubmit} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {hideAppLoading} from '../../redux/slice/AppStatusesSlice';
 import {UrlConstants} from "../../constants/UrlConstants";
@@ -53,17 +54,20 @@ const VisuallyHiddenInput = styled('input')({
     width: 1,
 });
 
+type TError = {image?: boolean, options?: boolean, zodiac?: boolean}
+
 export default function SelectImagePage() {
     const {lang} = useContext<TAppContext>(AppContext);
     const [imageFile, setImageFile] = useState<File>();
-    const [image, setImage] = useState<string>('');
+    let [image, setImage] = useState<string>('');
     const [formZodiac, setFormZodiac] = useState('');
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
     const {item, img_type_to_variant_groups, type_variant_to_img_group_variants, zodiac} = useLoaderData() as imageTypeStatisticType;
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
-    const [formDataError, setFormDataError] = useState(false)
+    const [formDataError, setFormDataError] = useState<TError|null>(null)
+    const submit = useSubmit();
 
     const loadImage = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (!e.target.files) {
@@ -77,8 +81,27 @@ export default function SelectImagePage() {
         }
     }
 
+    const validateForm = () => {
+        let errors:TError = {};
+
+        if (!imageFile && item.type === 'default') {
+            errors.image = true;
+        }
+
+        if (item.type === 'default' && !!img_type_to_variant_groups.length && !formData.length ) {
+            errors.options = true;
+        }
+
+        if (item.type === 'zodiac' && !formZodiac ) {
+            errors.zodiac = true;
+        }
+
+        return !!Object.keys(errors).length ? errors : null;
+    }
+
     const handleChangeZodiac = (e: SelectChangeEvent) => {
         setFormZodiac(e.target.value);
+        setFormDataError(null);
     }
 
     const handleChangeOption = (e: ChangeEvent<HTMLInputElement>) => {
@@ -94,8 +117,62 @@ export default function SelectImagePage() {
         setFormData(Array.from(data, (item) => item));
     }
 
-    const generateImage = () => {
+    // function objectToFormData(obj, formData = new FormData(), parentKey = '') {
+    //     for (const key in obj) {
+    //         if (obj.hasOwnProperty(key)) {
+    //             const value = obj[key];
+    //             const formKey = parentKey ? `${parentKey}[${key}]` : key;
+    //
+    //             if (typeof value === 'object' && !(value instanceof File)) {
+    //                 // Рекурсивный вызов для вложенных объектов
+    //                 objectToFormData(value, formData, formKey);
+    //             } else {
+    //                 // Добавляем значение в FormData
+    //                 formData.append(formKey, value);
+    //             }
+    //         }
+    //     }
+    //
+    //     return formData;
+    // }
 
+    const arrayToFormData = (array: FormDataOptionType[], formData = new FormData(), parentKey = '') => {
+        array.forEach((obj, index) => {
+            for (const key in obj) {
+                if (obj.hasOwnProperty(key)) {
+                    const value = obj[key as keyof FormDataOptionType];
+                    const formKey = `${parentKey}[${index}][${key}]`; // Индексация для ключей
+
+                    // if (typeof value === 'object' && !(value instanceof File)) {
+                    //     // Рекурсивный вызов для вложенных объектов
+                    //     objectToFormData(value, formData, formKey);
+                    // } else {
+                        formData.append(formKey, value as never);
+                    // }
+                }
+            }
+        });
+
+        return formData;
+    }
+
+    const generateImage = () => {
+        const errors = validateForm();
+        setFormDataError(errors);
+
+        if (!errors) {
+            let formDataPost = new FormData();
+
+            if (item.type === 'zodiac') {
+                formDataPost.append('options[zodiac]', formZodiac);
+            } else {
+                formDataPost = arrayToFormData(formData, new FormData(), 'options');
+            }
+
+            formDataPost.append("image_file", imageFile as File);
+            formDataPost.append("image_type_id", String(item.id));
+            submit(formDataPost, {method: "post", action: "/generate-image", encType: "multipart/form-data"});
+        }
     }
 
     useEffect(() => {
@@ -120,7 +197,6 @@ export default function SelectImagePage() {
 
         setDisabledOptions(disabled);
     }, [formData])
-
 
     return (
         <React.Fragment>
@@ -163,6 +239,20 @@ export default function SelectImagePage() {
                             <Link underline="none" target='_blank' href={UrlConstants.URL_RULE_APP}>{lang.DESCRIPTIONS.ABOUT_PANEL_RULES}</Link>.
                         </Typography>
                     </CardActions>
+                    {
+                        formDataError &&
+                            <Stack sx={{ width: '100%' }} spacing={1}>
+                                {
+                                    formDataError.options && <Alert severity="error">{lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_ERROR_OPTIONS}</Alert>
+                                }
+                                {
+                                    formDataError.image && <Alert severity="error">{lang.DESCRIPTIONS.SELECT_IMAGE}</Alert>
+                                }
+                                {
+                                    formDataError.zodiac && <Alert severity="error">{lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_ERROR_OPTIONS}</Alert>
+                                }
+                            </Stack>
+                    }
                 </Paper>
                 {
                     item.type === 'name' &&
@@ -185,6 +275,7 @@ export default function SelectImagePage() {
                                     labelId="demo-simple-select-label"
                                     id="demo-simple-select"
                                     name="zodiac"
+                                    error={formDataError?.zodiac}
                                     label={lang.DESCRIPTIONS.SELECT_IMAGE_ZODIAC_PANEL_ZODIAC}
                                     onChange={handleChangeZodiac}
                                 >
@@ -207,7 +298,7 @@ export default function SelectImagePage() {
                             <CardContent>
                                 {
                                     img_type_to_variant_groups.map((group, groupKey) => (
-                                        <FormControl>
+                                        <FormControl error={formDataError?.options}>
                                             <FormLabel component="legend" id={`options-group-${groupKey}`}>{group.group.name}</FormLabel>
                                             {
                                                 img_type_to_variant_groups.length > 1

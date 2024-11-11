@@ -71,7 +71,7 @@ export const apiAddAppToGroup = (group_id: number) => {
  * Запрос на генерацию картинки в ИИ
  * @param data
  */
-export const apiGenerateImage = (data: sendGenerateImageType) => {
+export const apiGenerateImage = (data: FormData) => {
     return axiosApi.postForm(`generate_image/add`, data).then((r: {data: generateImageType}) => r.data);
 };
 

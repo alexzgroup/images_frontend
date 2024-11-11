@@ -1,4 +1,10 @@
-import {apiGetImageTypes, apiGetImageTypeWithStatistic, apiInitUser, getUserProfileGenerateInfo} from "../AxiosApi";
+import {
+    apiGetImageTypes,
+    apiGetImageTypeWithStatistic,
+    apiInitUser,
+    getGeneratedImages,
+    getUserProfileGenerateInfo
+} from "../AxiosApi";
 import {AppConfigureStore} from "../../redux/store/ConfigureStore";
 import {showAppLoading} from "../../redux/slice/AppStatusesSlice";
 
@@ -22,3 +28,8 @@ export const loaderImageType = async ({ params }: {params: {imageTypeId?: number
     AppConfigureStore.dispatch(showAppLoading())
     return await apiGetImageTypeWithStatistic(params.imageTypeId as number);
 };
+
+export const loaderHistoryImages = async ({ params }: {params: {userId?: number}}) => {
+    AppConfigureStore.dispatch(showAppLoading())
+    return await getGeneratedImages(params.userId as number);
+}

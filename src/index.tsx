@@ -1,12 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import {createBrowserRouter, RouterProvider,} from "react-router-dom";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {Provider} from 'react-redux'
 import {AppConfigureStore} from "./redux/store/ConfigureStore";
 import {TelegramProvider} from "./context/TelegramProvider";
 import DefaultLayout from "./Pages/Layouts/DefaultLayout";
 import ErrorPage from "./Pages/error-page";
-import {loaderImageType, loaderImageTypes, loaderInit, loaderProfileInfo} from "./api/loaders/ApiLoaders";
+import {
+    loaderHistoryImages,
+    loaderImageType,
+    loaderImageTypes,
+    loaderInit,
+    loaderProfileInfo
+} from "./api/loaders/ApiLoaders";
 import HomePage from "./Pages/home-page";
 import AboutPage from "./Pages/about-page";
 import ProfilePage from "./Pages/profile-page";
@@ -15,6 +21,8 @@ import SelectImageTypePage from "./Pages/SelectImage/select-image-type-page";
 import SelectImagePage from "./Pages/SelectImage/select-image-page";
 import {ModalProvider} from "./context/ModalProvider";
 import SelectSexPage from "./Pages/select-sex";
+import GenerateImagePage, {action as generateImageAction} from "./Pages/generate-image-page";
+import HistoryImagesPage from "./Pages/history-images-page";
 
 const router = createBrowserRouter([
     {
@@ -41,6 +49,11 @@ const router = createBrowserRouter([
                 element: <SelectImagePage />,
             },
             {
+                path: 'generate-image',
+                action: generateImageAction,
+                element: <GenerateImagePage />,
+            },
+            {
                 path: 'about',
                 element: <AboutPage />
             },
@@ -48,6 +61,11 @@ const router = createBrowserRouter([
                 path: 'profile',
                 loader: loaderProfileInfo,
                 element: <ProfilePage />,
+            },
+            {
+                path: "history/:userId",
+                loader: loaderHistoryImages,
+                element: <HistoryImagesPage />,
             },
         ],
     },

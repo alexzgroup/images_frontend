@@ -126,6 +126,8 @@ export type uploadPhotoType = {
 
 export type generateImageType = operationWithMessageType & {
     id: number,
+    image: GeneratedImageType,
+    image_type: imageType,
 }
 
 export type monetizationDataType = {
@@ -206,7 +208,8 @@ export type ResponseUploadPhotoType = {
 
 export enum ShareTypeEnum {
     SHARE_WALL = "share_wall",
-    SHARE_HISTORY = "share_history"
+    SHARE_HISTORY = "share_history",
+    SHARE_TG_STORY = "share_tg_story",
 }
 
 export type GenerateProfileInfoType = {
