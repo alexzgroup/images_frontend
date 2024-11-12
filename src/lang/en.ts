@@ -49,6 +49,7 @@ export const Lang = {
         VIP_MODAL_CONTINUE: "Skip",
         OPEN_GALLERY: "Open Gallery",
         OPEN: "Open",
+        SHARE: "Share",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Try on a stylish look, become a warrior or fantasy character with the help of AI.",

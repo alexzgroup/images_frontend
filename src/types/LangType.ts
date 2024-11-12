@@ -51,6 +51,7 @@ export type TLang = {
         VIP_MODAL_CONTINUE: string,
         OPEN_GALLERY: string,
         OPEN: string,
+        SHARE: string,
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: string,

@@ -15,7 +15,6 @@ import {
     operationResultType,
     operationWithMessageType,
     ResponseUploadPhotoType,
-    sendGenerateImageType,
     ShareTypeEnum,
     UploadPhotoToServerType,
     uploadPhotoType,

@@ -49,6 +49,7 @@ export const Lang = {
         VIP_MODAL_CONTINUE: "Пропустить",
         OPEN_GALLERY: "Открыть галерею",
         OPEN: "Открыть",
+        SHARE: "Поделиться",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Примерь на себя стильный образ, стань воином или фэнтези персонажем с помощью ИИ.",

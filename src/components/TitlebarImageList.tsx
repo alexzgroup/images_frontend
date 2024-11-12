@@ -16,11 +16,11 @@ import {
     DialogContent,
     Grid2,
     List,
-    Link as Mlink,
     ListItem,
     ListItemIcon,
     ListItemText,
-    Typography, useTheme
+    Typography,
+    useTheme
 } from '@mui/material';
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
@@ -34,7 +34,7 @@ import {TransitionProps} from "@mui/material/transitions";
 import Slide from "@mui/material/Slide";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
-import {Link, useNavigate} from 'react-router-dom';
+import {Link} from 'react-router-dom';
 
 const Transition = React.forwardRef(function Transition(
     props: TransitionProps & {
@@ -55,7 +55,6 @@ export default function TitlebarImageList({history_generate, showBtn}: {
     const { webApp, userTg } = useTelegram();
     const ref = useRef<React.ReactNode| null>(null);
     const theme = useTheme();
-    const navigate = useNavigate();
 
     const handleClose = () => {
         setImage(null);
@@ -110,7 +109,7 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                                     actionIcon={
                                         <IconButton
                                             onClick={() => setImage(item)}
-                                            sx={{ color: 'background.paper' }}
+                                            sx={{ color: theme.palette.common.white }}
                                             aria-label={`info about ${item.image_type.name}`}
                                         >
                                             <Visibility />

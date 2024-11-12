@@ -1,29 +1,27 @@
 import {
     Alert,
     AlertTitle,
-    Avatar,
-    Card, CardActions,
+    Avatar, Box, Button, ButtonGroup,
+    Card,
+    CardActions,
     CardContent,
     CardHeader,
-    CardMedia, IconButton,
+    CardMedia, Container,
+    IconButton, Paper,
     Skeleton,
-    Step,
-    StepLabel,
-    Stepper,
     Typography
 } from '@mui/material';
-import React, {memo, useContext, useEffect, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import PageWrapper from "../components/PageWrapper";
 import {AppContext, TAppContext} from "../context/AppContext";
-import girl_image from '../assets/images/icons/girl_icon.png';
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
 import {useTelegram} from "../context/TelegramProvider";
-import {useActionData, useLoaderData} from "react-router-dom";
+import {useActionData} from "react-router-dom";
 import {generateImageType, ShareTypeEnum} from "../types/ApiTypes";
 import {apiGenerateImage, updateShareGenerateImage} from "../api/AxiosApi";
-import {Share} from "@mui/icons-material";
+import {Diversity1, Share, Warning} from "@mui/icons-material";
 
 type Taction = {
     request: Request,
@@ -131,21 +129,35 @@ const Media = (props: MediaProps) =>  {
 export default function GenerateImagePage(){
     const {lang} = useContext<TAppContext>(AppContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const { userTg} = useTelegram();
+    const { userTg, webApp} = useTelegram();
     const [image, setImage] = useState<generateImageType>()
     const formData = useActionData() as FormData;
-    const [step, setStep] = useState(1);
+    const [step, setStep] = useState(2);
+    const [error, setError] = useState('');
+
+    const shareStore = async () => {
+        if (image && webApp) {
+            webApp.shareToStory(image.image.url, {
+                text: lang.MODALS.SHARE_TEXT,
+                widget_link: {
+                    url: process.env.REACT_APP_TG_URL,
+                    name: 'Образ: ' + image.image_type.name,
+                }
+            })
+            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
+        }
+    }
 
     useEffect(() => {
         async function init(){
              const response = await apiGenerateImage(formData)
              setImage(response)
             if (response.result) {
-                setStep(3)
+                setStep(userTg?.is_premium ? 2 : 3)
             } else {
-
+                setStep(0)
+                setError(response.message);
             }
-
         }
         init()
     }, []);
@@ -154,11 +166,25 @@ export default function GenerateImagePage(){
         <React.Fragment>
             <PageWrapper title={lang.HEADERS.VIEW_GENERATE}>
                 {
+                    step === 0 &&
+                        <Alert severity="error">
+                            <AlertTitle>{lang.HEADERS.OFFLINE_PANEL}</AlertTitle>
+                            {error}
+                        </Alert>
+                }
+                {
                     step === 1 &&
                         <Alert severity="info">
                             <AlertTitle>{lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_1}</AlertTitle>
                             {lang.DESCRIPTIONS.PRELOADER_PANEL_STEP_4}
                         </Alert>
+                }
+                {
+                    step === 2 &&
+                    <Alert severity="info">
+                        <AlertTitle>{lang.DESCRIPTIONS.PRELOADER_PANEL_FINISH}</AlertTitle>
+                        {lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY}
+                    </Alert>
                 }
                 {
                     step === 3 &&
@@ -171,7 +197,27 @@ export default function GenerateImagePage(){
                     step === 3 && <Media image={image} />
                 }
                 {
+                    step === 2 && <Paper sx={{height: '50vh'}} square elevation={0}>
+                        <Container sx={{display: 'flex', flexFlow: 'column', height: '100%', justifyContent: 'space-around', alignItems: 'center'}}>
+                            <Diversity1 color="secondary" sx={{width: 140, height: 140}} />
+                            <ButtonGroup variant="contained" aria-label="Basic button group">
+                                <Button color="info" onClick={() => setStep(3)}>
+                                    {lang.BUTTONS.VIP_MODAL_CONTINUE}
+                                </Button>
+                                <Button startIcon={<Share />} autoFocus onClick={shareStore}>
+                                    {lang.BUTTONS.SHARE}
+                                </Button>
+                            </ButtonGroup>
+                        </Container>
+                    </Paper>
+                }
+                {
                     step === 1 && <Media loading />
+                }
+                {
+                    step === 0 && <Box sx={{height: '50vh'}} display="flex" justifyContent="center" alignItems="center">
+                        <Warning color="error" sx={{width: 180, height: 180}} />
+                    </Box>
                 }
             </PageWrapper>
         </React.Fragment>

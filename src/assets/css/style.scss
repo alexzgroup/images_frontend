@@ -88,19 +88,6 @@ body {
     background: linear-gradient(90deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.4));
     animation: flareAnimation 3s infinite linear; // Время и тип анимации можно менять
   }
-  //position: relative;
-  //&::before {
-  //  content: '';
-  //  position: absolute;
-  //  width: 100%;
-  //  height: 100%;
-  //  top: 0;
-  //  left: 0;
-  //  background: var(--vkui--color_accent_orange);
-  //  border-radius: 50%;
-  //  z-index: 1;
-  //  animation: pulseLine 3s cubic-bezier(1, 0.5, 0, 0.5) infinite;
-  //}
 }
 
 @keyframes flareAnimation {
