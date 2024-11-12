@@ -1,5 +1,5 @@
 import * as React from 'react';
-import {ChangeEvent, FormEvent, useContext, useRef, useState} from 'react';
+import {useContext, useRef, useState} from 'react';
 import Dialog from '@mui/material/Dialog';
 import AppBar from '@mui/material/AppBar';
 import Toolbar from '@mui/material/Toolbar';
@@ -26,8 +26,7 @@ import {RootStateType} from "../../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface, setUserDbData} from "../../redux/slice/UserSlice";
 import {Save} from "@mui/icons-material";
 import {apiEditUser, apiInitUser} from "../../api/AxiosApi";
-import {setFavoriteImageTypes, setGenerateImagesNotShareWall, setPopularImageTypes} from "../../redux/slice/ImageSlice";
-import {hideAppLoading} from "../../redux/slice/AppStatusesSlice";
+import {setFavoriteImageTypes, setPopularImageTypes} from "../../redux/slice/ImageSlice";
 
 
 const Transition = React.forwardRef(function Transition(

@@ -9,7 +9,7 @@ import {Female, Male} from "@mui/icons-material";
 import {blue, pink} from "@mui/material/colors";
 import {apiEditUser, apiInitUser} from "../api/AxiosApi";
 import {hideAppLoading, showAppLoading} from "../redux/slice/AppStatusesSlice";
-import {setFavoriteImageTypes, setGenerateImagesNotShareWall, setPopularImageTypes} from "../redux/slice/ImageSlice";
+import {setFavoriteImageTypes, setPopularImageTypes} from "../redux/slice/ImageSlice";
 import {useNavigate} from "react-router-dom";
 
 export default  function SelectSexPage() {
@@ -23,12 +23,11 @@ export default  function SelectSexPage() {
         apiEditUser(userDbData?.id as number,  {sex})
             .then(async (r) => {
                 if (r.result && userDbData) {
-                    const {popular_image_types, user, favorite_image_types, generated_images_not_share_wall} = await apiInitUser();
+                    const {popular_image_types, user, favorite_image_types} = await apiInitUser();
 
                     dispatch(setUserDbData(user));
                     dispatch(setPopularImageTypes(popular_image_types));
                     dispatch(setFavoriteImageTypes(favorite_image_types));
-                    dispatch(setGenerateImagesNotShareWall(generated_images_not_share_wall));
                     dispatch(hideAppLoading());
 
                     navigate('/');

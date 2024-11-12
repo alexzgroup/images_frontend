@@ -7,7 +7,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideAppLoading, ReduxSliceStatusesInterface} from "../../redux/slice/AppStatusesSlice";
 import {useTelegram} from "../../context/TelegramProvider";
 import {initUserApiType} from "../../types/ApiTypes";
-import {setFavoriteImageTypes, setGenerateImagesNotShareWall, setPopularImageTypes} from "../../redux/slice/ImageSlice";
+import {setFavoriteImageTypes, setPopularImageTypes} from "../../redux/slice/ImageSlice";
 import {setUserDbData} from "../../redux/slice/UserSlice";
 import {DEV_USER_VK_IDS} from "../../constants/UserConstants";
 import {LangEnum} from "../../enum/LangEnum";
@@ -21,7 +21,7 @@ import {useModalPage} from "../../context/ModalProvider";
 
 const DefaultLayout: React.FC  = () => {
     const { userTg, webApp} = useTelegram();
-    const {popular_image_types, user, favorite_image_types, generated_images_not_share_wall} = useLoaderData() as initUserApiType;
+    const {popular_image_types, user, favorite_image_types} = useLoaderData() as initUserApiType;
     const [lang, setLang] = useState<TLang>(Lang);
     const {appIsLoading} = useSelector<RootStateType, ReduxSliceStatusesInterface>(state => state.appStatuses)
     const {modal} = useModalPage();
@@ -51,7 +51,6 @@ const DefaultLayout: React.FC  = () => {
                     dispatch(setUserDbData(user));
                     dispatch(setPopularImageTypes(popular_image_types));
                     dispatch(setFavoriteImageTypes(favorite_image_types));
-                    dispatch(setGenerateImagesNotShareWall(generated_images_not_share_wall));
                     dispatch(hideAppLoading());
 
                     if (!user.sex) {

@@ -137,25 +137,6 @@ export type monetizationDataType = {
     groups: groupType[]|[],
 }
 
-export type socketImageType = {
-    data: {
-        status: boolean,
-        id: number,
-    }
-}
-
-export type socketSubscribeType = {
-    data: {
-        subscribe: boolean,
-    }
-}
-
-export type sendGenerateImageType = {
-    image_file: File,
-    image_type_id: number,
-    options: FormDataOptionType[]|[],
-}
-
 export type AddGroupChatBootType = {
     vk_group_id: number,
     secret_key: string,
@@ -169,8 +150,6 @@ export type GroupToChatBootType = {
 }
 
 export enum AdvertisementEnum {
-    banner='banner',
-    window='window',
     tg_tads='tg_tads',
 }
 
@@ -207,8 +186,6 @@ export type ResponseUploadPhotoType = {
 }
 
 export enum ShareTypeEnum {
-    SHARE_WALL = "share_wall",
-    SHARE_HISTORY = "share_history",
     SHARE_TG_STORY = "share_tg_story",
 }
 

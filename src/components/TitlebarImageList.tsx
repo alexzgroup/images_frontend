@@ -63,13 +63,13 @@ export default function TitlebarImageList({history_generate, showBtn}: {
     const shareStore = async () => {
         if (image && webApp) {
             webApp.shareToStory(image.url, {
-                text: lang.MODALS.SHARE_TEXT,
+                text: lang.SHARE_TEXT[image.image_type.type],
                 widget_link: {
                     url: process.env.REACT_APP_TG_URL,
                     name: 'Образ: ' + image.image_type.name,
                 }
             })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
+            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_TG_STORY)
         }
     }
 

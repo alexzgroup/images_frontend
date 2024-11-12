@@ -144,7 +144,7 @@ export default function GenerateImagePage(){
                     name: 'Образ: ' + image.image_type.name,
                 }
             })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
+            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_TG_STORY)
         }
     }
 
