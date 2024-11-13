@@ -1,9 +1,12 @@
 import axios from 'axios';
 import {
     AddGroupChatBootType,
-    AdvertisementType, exclusiveImageTypesType, favoriteImageType,
+    AdvertisementType,
+    exclusiveImageTypesType,
+    favoriteImageType,
     GeneratedImagesType,
-    generateImageType, GenerateProfileInfoType,
+    generateImageType,
+    GenerateProfileInfoType,
     GroupToChatBootType,
     imageType,
     imageTypeStatisticType,
@@ -12,7 +15,6 @@ import {
     operationResultType,
     operationWithMessageType,
     ResponseUploadPhotoType,
-    sendGenerateImageType,
     ShareTypeEnum,
     UploadPhotoToServerType,
     uploadPhotoType,
@@ -22,7 +24,8 @@ const axiosApi =  axios.create({
     baseURL: process.env.REACT_APP_URL_API,
     responseType: 'json',
     headers: {
-        'X-Referer': window.location.href,
+        'X-Referer': (window as any).Telegram?.WebApp.initData,
+        'x-platform': 'tg',
     },
     withCredentials: false,
 });
@@ -67,8 +70,8 @@ export const apiAddAppToGroup = (group_id: number) => {
  * Запрос на генерацию картинки в ИИ
  * @param data
  */
-export const apiGenerateImage = (data: sendGenerateImageType) => {
-    return axiosApi.post(`generate_image/add`, data).then((r: {data: generateImageType}) => r.data);
+export const apiGenerateImage = (data: FormData) => {
+    return axiosApi.postForm(`generate_image/add`, data).then((r: {data: generateImageType}) => r.data);
 };
 
 /**
@@ -178,8 +181,10 @@ export const getVoiceSubscription = () => {
 }
 
 /**
- * Добавляет событие добавления кнопки MVP
+ * Редактирует пользователя
+ * @param user_id
+ * @param dataUpdate
  */
-export const addMvpButton = () => {
-    return axiosApi.post(`add_user_to_mvp`).then((r: {data: operationResultType}) => r.data);
-}
+export const apiEditUser = (user_id: number, dataUpdate: {}) => {
+    return axiosApi.post(`user-edit/${user_id}`, {dataUpdate}).then((r: {data: operationResultType}) => r.data);
+};

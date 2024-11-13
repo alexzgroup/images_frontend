@@ -1,4 +1,4 @@
-import {UserInfo} from "@vkontakte/vk-bridge";
+import {ITelegramUser} from "./Telegram";
 
 export type userApiType = {
     balance: number,
@@ -21,12 +21,18 @@ export type voiceSubscribeType = {
     pending_cancel: number|null,
 }
 
+export type TLanguage = {
+    value: string,
+}
+
 export type imageType = {
     id: number,
     name: string,
     vip: 0|1,
+    type: 'default'|'name'|'zodiac',
     url?: string,
     labels?: []|string[],
+    language?: TLanguage,
 }
 
 export type exclusiveImageTypesType = {
@@ -34,6 +40,7 @@ export type exclusiveImageTypesType = {
     name: string,
     url: string,
     type: string,
+    language?: TLanguage,
 }
 
 export type typeVariantGroupType = {
@@ -119,6 +126,8 @@ export type uploadPhotoType = {
 
 export type generateImageType = operationWithMessageType & {
     id: number,
+    image: GeneratedImageType,
+    image_type: imageType,
 }
 
 export type monetizationDataType = {
@@ -126,25 +135,6 @@ export type monetizationDataType = {
     subscribes: number,
     total_pays: number,
     groups: groupType[]|[],
-}
-
-export type socketImageType = {
-    data: {
-        status: boolean,
-        id: number,
-    }
-}
-
-export type socketSubscribeType = {
-    data: {
-        subscribe: boolean,
-    }
-}
-
-export type sendGenerateImageType = {
-    image_url: string,
-    image_type_id: number,
-    options: FormDataOptionType[]|[],
 }
 
 export type AddGroupChatBootType = {
@@ -160,17 +150,11 @@ export type GroupToChatBootType = {
 }
 
 export enum AdvertisementEnum {
-    banner='banner',
-    window='window',
+    tg_tads='tg_tads',
 }
 
 export type AdvertisementType = {
     type: AdvertisementEnum,
-}
-
-export enum EAdsFormats {
-    REWARD = "reward",
-    INTERSTITIAL = "interstitial"
 }
 
 export type FormDataOptionType = {
@@ -181,6 +165,9 @@ export type FormDataOptionType = {
 export type GeneratedImageType = {
     id: number,
     url: string,
+    created_at?: string,
+    image_type_id?: number,
+    image_type: imageType,
 }
 
 export type GeneratedImagesType = {
@@ -199,8 +186,7 @@ export type ResponseUploadPhotoType = {
 }
 
 export enum ShareTypeEnum {
-    SHARE_WALL = "share_wall",
-    SHARE_HISTORY = "share_history"
+    SHARE_TG_STORY = "share_tg_story",
 }
 
 export type GenerateProfileInfoType = {
@@ -210,4 +196,4 @@ export type GenerateProfileInfoType = {
     history_generate: GeneratedImageType[],
 }
 
-export type UserWithGeneratedInfoType = UserInfo & GenerateProfileInfoType
+export type UserWithGeneratedInfoType = ITelegramUser & GenerateProfileInfoType

@@ -69,3 +69,19 @@ Go to created folder and run:
 [npm-url]: https://npmjs.com/package/@vkontakte/create-vk-mini-app
 [deps]: https://img.shields.io/david/vkcom/create-vk-mini-app.svg
 [deps-url]: https://david-dm.org/vkcom/create-vk-mini-app
+
+## Для настройки деплоя с GitHub Pages необходимо выполнить следующие шаги: 2-5
+
+* Установить пакет gh-pages с помощью команды npm install gh-pages --save-dev.
+* Создать папку «dist» и разместить в ней все файлы для деплоя (index.html, styles.css, main.js и другие).
+* Отредактировать файл package.json. 
+* Добавить в него строку перед скриптами: "homepage": "https://{имя вашей учётной записи}.github.io/{имя репозитория}/". 
+* И непосредственно в скрипты: "predeploy": "npm run build", "deploy": "gh-pages -d build".
+* Написать в консоли npm run deploy. Должно появиться сообщение с «Published».
+
+## Для настройки GitHub Pages нужно:
+
+* Перейти в настройки репозитория и в разделе Code and automation нажать на Pages.
+* В подразделе Source раздела Build and deployment выбрать Deploy from a branch.
+* В подразделе Branch выбрать ветку gh-pages и место /root, откуда будут грузиться документы.
+* После успешной настройки можно перейти по ссылке типа username.github.io, чтобы увидеть результат.
