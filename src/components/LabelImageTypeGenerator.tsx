@@ -17,7 +17,15 @@ export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {
                     variant="caption"
                     component="div">Top</Typography>
             case 'new':
-                return <FiberNew color="secondary" />
+                return <Typography sx={(theme) => ({
+                    color: theme.palette.common.white,
+                    bgcolor: theme.palette.secondary.dark,
+                    display: 'inline-block',
+                    px: 0.5,
+                    borderRadius: 1,
+                })}
+                   variant="caption"
+                   component="div">New</Typography>
             case 'vip':
                 return <Paid color="warning" />
             default:

@@ -68,9 +68,6 @@ export const Lang = {
         GENERATE_INFO_LAST_IMAGE: "Last generation:",
         GENERATE_INFO_TOTAL_IMAGE: "Total generations:",
         ABOUT_PANEL_AI_DESCRIPTION: "The application generates images from your photos using AI.",
-        ABOUT_PANEL_POLITIC_START: "By starting to use the application, you agree to",
-        ABOUT_PANEL_POLITIC: "privacy policy",
-        ABOUT_PANEL_RULES: "application usage rules",
         ABOUT_PANEL_HI: "Greetings from Omsk developers!",
         VIP_BANNER_ACTIVE: "You have VIP status active!",
         VIP_BANNER_GET: "You have received:",
@@ -92,6 +89,7 @@ export const Lang = {
         ERROR_REPEAT: "Error, try again",
         ABOUT_AS: "About as",
         NO_RESULT: "No results",
+        SHARE_MESSAGE: "Share the attachment with your friends",
     },
     ALERT: {
         WARNING: "Attention!",

@@ -186,7 +186,8 @@ export type ResponseUploadPhotoType = {
 }
 
 export enum ShareTypeEnum {
-    SHARE_TG_STORY = "share_tg_story",
+    SHARE_HISTORY = "share_history",
+    SHARE_WALL = "share_wall",
 }
 
 export type GenerateProfileInfoType = {

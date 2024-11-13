@@ -68,9 +68,6 @@ export const Lang = {
         GENERATE_INFO_LAST_IMAGE: "Последняя генерация:",
         GENERATE_INFO_TOTAL_IMAGE: "Всего генераций:",
         ABOUT_PANEL_AI_DESCRIPTION: "Приложение генерирует образы из ваших фотографий с помощью ИИ.",
-        ABOUT_PANEL_POLITIC_START: "Начиная пользоваться приложением, вы соглашаетесь с",
-        ABOUT_PANEL_POLITIC: "политикой конфиденциальности",
-        ABOUT_PANEL_RULES: "правилами пользования приложением",
         ABOUT_PANEL_HI: "Привет от омских разработчиков!",
         VIP_BANNER_ACTIVE: "У Вас активен VIP статус!",
         VIP_BANNER_GET: "Вы получили:",
@@ -92,6 +89,7 @@ export const Lang = {
         ERROR_REPEAT: "Ошибка, повторите попытку",
         ABOUT_AS: "О нас",
         NO_RESULT: "Нет элементов",
+        SHARE_MESSAGE: "Поделиться вложением с друзьями",
     },
     ALERT: {
         WARNING: "Внимание!",

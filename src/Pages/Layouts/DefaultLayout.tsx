@@ -18,6 +18,7 @@ import '../../assets/css/style.scss'
 import {createTheme, ThemeProvider} from '@mui/material/styles';
 import PagePreloader from "../../components/PagePreloader";
 import {useModalPage} from "../../context/ModalProvider";
+import ScrollToTop from "../../helpers/ScrollToTop";
 
 const DefaultLayout: React.FC  = () => {
     const { userTg, webApp} = useTelegram();
@@ -59,7 +60,7 @@ const DefaultLayout: React.FC  = () => {
                 }
             }
             fetchData();
-    }, [userTg]);
+    }, []);
 
     return (
         <AppContext.Provider value={{
@@ -67,6 +68,7 @@ const DefaultLayout: React.FC  = () => {
         }}>
             <ThemeProvider theme={theme}>
                 <Box sx={{ pb: (user.sex ? '50px' : 0) }}>
+                    <ScrollToTop />
                         <Outlet/>
                     {
                         location.pathname !== '/select-sex' &&

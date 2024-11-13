@@ -1,6 +1,6 @@
 import {Box, Button, CardActions, CardContent, CardHeader, CardMedia, Grid2, Typography} from "@mui/material";
 import vipLogo from "../../assets/images/vip_logo.png";
-import {orange} from "@mui/material/colors";
+import {orange, common} from "@mui/material/colors";
 import React, {useContext} from "react";
 import {AppContext, TAppContext} from "../../context/AppContext";
 import {useModalPage} from "../../context/ModalProvider";
@@ -57,14 +57,13 @@ export default function VipPageBanner({showBottom}: {
                         sx={{py: 0}}
                         title={lang.HEADERS.HOME_PANEL}
                         subheader={lang.DESCRIPTIONS.HOME_PANEL_TOP}
-                        avatar={<Typography sx={{px: 1, borderRadius: 1, color: orange[800], background: 'var(--gold_gradient)'}} >VIP</Typography>}
+                        avatar={<Typography sx={{px: 1, borderRadius: 1, color: common.black, background: 'var(--gold_gradient)'}} >VIP</Typography>}
                     />
             }
             <CardActions>
                 <Button
                     onClick={() => setModal(<VipFullPageModal />)}
-                    color='inherit'
-                    fullWidth sx={{background: 'var(--gold_gradient)', mx: 1}}>
+                    fullWidth sx={{background: 'var(--gold_gradient)', mx: 1, color: common.black}}>
                     {lang.TITLES.VIP_BLOCK_GOLD_BUTTON}
                 </Button>
             </CardActions>

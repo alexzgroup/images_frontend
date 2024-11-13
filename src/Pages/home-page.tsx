@@ -19,7 +19,7 @@ import girl_image from '../assets/images/icons/girl_icon.png';
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceImageInterface} from "../redux/slice/ImageSlice";
-import {Palette} from "@mui/icons-material";
+import {AutoFixHigh, Palette} from "@mui/icons-material";
 import {useNavigate} from "react-router-dom";
 import {imageType} from "../types/ApiTypes";
 import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
@@ -46,8 +46,8 @@ const HomePage: React.FC = () => {
 
     return (
         <React.Fragment>
-            <PageWrapper title={lang.HEADERS.MAIN_PANEL}>
-                <Card square elevation={2} sx={{mb: 1}}>
+            <PageWrapper>
+                <Card square elevation={2} sx={{my: 1}}>
                     <CardHeader
                         avatar={
                             <Avatar
@@ -58,7 +58,12 @@ const HomePage: React.FC = () => {
                         subheader={lang.DESCRIPTIONS.HOME_PANEL_TOP}
                     />
                     <CardActions disableSpacing>
-                        <Button onClick={() => navigate("select-image-type")} size="small" variant="contained">{lang.BUTTONS.HOME_PANEL_GO}</Button>
+                        <Button
+                            startIcon={<AutoFixHigh />}
+                            fullWidth
+                            onClick={() => navigate("select-image-type")}
+                            size="small"
+                            variant="contained">{lang.BUTTONS.HOME_PANEL_GO}</Button>
                     </CardActions>
                 </Card>
                 {

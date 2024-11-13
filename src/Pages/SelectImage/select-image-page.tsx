@@ -5,7 +5,6 @@ import {
     Button,
     ButtonGroup,
     Card,
-    CardActions,
     CardContent,
     CardHeader,
     Checkbox,
@@ -15,7 +14,6 @@ import {
     FormGroup,
     FormLabel,
     InputLabel,
-    Link,
     MenuItem,
     Paper,
     Radio,
@@ -25,8 +23,7 @@ import {
     Stack,
     Step,
     Stepper,
-    styled,
-    Typography
+    styled
 } from '@mui/material';
 import React, {ChangeEvent, useContext, useEffect, useState} from 'react';
 import PageWrapper from "../../components/PageWrapper";
@@ -38,7 +35,6 @@ import {CloudSync, CloudUpload, PsychologyAlt} from "@mui/icons-material";
 import {useLoaderData, useSubmit} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
 import {hideAppLoading} from '../../redux/slice/AppStatusesSlice';
-import {UrlConstants} from "../../constants/UrlConstants";
 import example_man_generated from "../../assets/images/example_man_generated.png";
 import example_woman_generated from "../../assets/images/example_woman_generated.jpg";
 
@@ -201,7 +197,7 @@ export default function SelectImagePage() {
     return (
         <React.Fragment>
             <PageWrapper back title={lang.HEADERS.SELECT_IMAGE_PANEL} >
-                <Paper square elevation={2} sx={{mb: 1}}>
+                <Paper square elevation={2} sx={{mb: 1, pb: 1}}>
                     <Box display="flex" alignItems="center" justifyContent="center" sx={{flexFlow: 'column', textAlign: 'center'}}>
                         <Avatar
                             src={image}
@@ -231,17 +227,9 @@ export default function SelectImagePage() {
                                 </Button>
                         }
                     </Box>
-                    <CardActions>
-                        <Typography sx={{textAlign: 'center'}} color="textSecondary" variant="caption" component="div">
-                                {lang.DESCRIPTIONS.CLICK_BEFORE_POLITIC} {" "}
-                            <Link underline="none" target='_blank' href={UrlConstants.URL_POLITIC}>{lang.DESCRIPTIONS.ABOUT_PANEL_POLITIC}</Link>{" "}
-                                {lang.DESCRIPTIONS.AND}{" "}
-                            <Link underline="none" target='_blank' href={UrlConstants.URL_RULE_APP}>{lang.DESCRIPTIONS.ABOUT_PANEL_RULES}</Link>.
-                        </Typography>
-                    </CardActions>
                     {
                         formDataError &&
-                            <Stack sx={{ width: '100%' }} spacing={1}>
+                            <Stack sx={{ width: '100%', pt: 1 }} spacing={1}>
                                 {
                                     formDataError.options && <Alert severity="error">{lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_ERROR_OPTIONS}</Alert>
                                 }

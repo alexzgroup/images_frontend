@@ -83,7 +83,7 @@ export default function VipFullPageModal() {
                         {lang.TITLES.VIP_MODAL_GET_VIP}
                     </Typography>
                     <CardActions>
-                        <Button color='inherit' fullWidth sx={{background: 'var(--gold_gradient)', mx: 1}}>
+                        <Button fullWidth sx={{background: 'var(--gold_gradient)', mx: 1, color: common.black}}>
                             {lang.BUTTONS.VIP_MODAL_GET}
                         </Button>
                     </CardActions>

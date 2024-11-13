@@ -69,7 +69,7 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                     name: 'Образ: ' + image.image_type.name,
                 }
             })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_TG_STORY)
+            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
         }
     }
 

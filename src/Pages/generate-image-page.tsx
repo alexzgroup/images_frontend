@@ -45,13 +45,13 @@ const Media = (props: MediaProps) =>  {
     const shareStore = async () => {
         if (image && webApp) {
             webApp.shareToStory(image.image.url, {
-                text: lang.MODALS.SHARE_TEXT,
+                text: lang.SHARE_TEXT[image.image_type.type],
                 widget_link: {
                     url: process.env.REACT_APP_TG_URL,
                     name: 'Образ: ' + image.image_type.name,
                 }
             })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_TG_STORY)
+            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
         }
     }
 
@@ -132,32 +132,43 @@ export default function GenerateImagePage(){
     const { userTg, webApp} = useTelegram();
     const [image, setImage] = useState<generateImageType>()
     const formData = useActionData() as FormData;
-    const [step, setStep] = useState(2);
+    const [step, setStep] = useState(1);
     const [error, setError] = useState('');
 
-    const shareStore = async () => {
-        if (image && webApp) {
-            webApp.shareToStory(image.image.url, {
-                text: lang.MODALS.SHARE_TEXT,
-                widget_link: {
-                    url: process.env.REACT_APP_TG_URL,
-                    name: 'Образ: ' + image.image_type.name,
-                }
-            })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_TG_STORY)
+    const share = async () => {
+        if (userTg?.is_premium) {
+            if (image && webApp) {
+                webApp.shareToStory(image.image.url, {
+                    text: lang.SHARE_TEXT[image.image_type.type],
+                    widget_link: {
+                        url: process.env.REACT_APP_TG_URL,
+                        name: 'Образ: ' + image.image_type.name,
+                    }
+                })
+                updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
+            }
+        } else {
+             if (/*image && */webApp) {
+                 const link = 'https://t.me/Auto_Shop_72_bot/open_app?userId=' + String(userTg?.id) + '&imageId=' + String(5);
+                 const title = encodeURI('Это моя генерация');
+                 const shareLink = `https://t.me/share/url?url=${encodeURI(link)}&text=${title}`;
+                 webApp.openTelegramLink(shareLink);
+                // updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_WALL)
+             }
         }
     }
 
     useEffect(() => {
         async function init(){
-             const response = await apiGenerateImage(formData)
-             setImage(response)
-            if (response.result) {
-                setStep(userTg?.is_premium ? 2 : 3)
-            } else {
-                setStep(0)
-                setError(response.message);
-            }
+            //  const response = await apiGenerateImage(formData)
+            //  setImage(response)
+            // if (response.result) {
+            //     setStep(userTg?.is_premium ? 2 : 3)
+            // } else {
+            //     setStep(0)
+            //     setError(response.message);
+            // }
+            setStep(2)
         }
         init()
     }, []);
@@ -183,7 +194,7 @@ export default function GenerateImagePage(){
                     step === 2 &&
                     <Alert severity="info">
                         <AlertTitle>{lang.DESCRIPTIONS.PRELOADER_PANEL_FINISH}</AlertTitle>
-                        {lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY}
+                        {userTg?.is_premium ? lang.TITLES.SHOW_GENERATE_PANEL_SHARE_STORY : lang.DESCRIPTIONS.SHARE_MESSAGE}
                     </Alert>
                 }
                 {
@@ -199,15 +210,13 @@ export default function GenerateImagePage(){
                 {
                     step === 2 && <Paper sx={{height: '50vh'}} square elevation={0}>
                         <Container sx={{display: 'flex', flexFlow: 'column', height: '100%', justifyContent: 'space-around', alignItems: 'center'}}>
-                            <Diversity1 color="secondary" sx={{width: 140, height: 140}} />
-                            <ButtonGroup variant="contained" aria-label="Basic button group">
-                                <Button color="info" onClick={() => setStep(3)}>
-                                    {lang.BUTTONS.VIP_MODAL_CONTINUE}
-                                </Button>
-                                <Button startIcon={<Share />} autoFocus onClick={shareStore}>
+                            <Box id="animateHeartWrapper">
+                                <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
+                                <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
+                            </Box>
+                                <Button fullWidth variant="contained" startIcon={<Share />} autoFocus onClick={share}>
                                     {lang.BUTTONS.SHARE}
                                 </Button>
-                            </ButtonGroup>
                         </Container>
                     </Paper>
                 }

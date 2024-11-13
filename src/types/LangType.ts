@@ -68,9 +68,6 @@ export type TLang = {
         GENERATE_INFO_LAST_IMAGE: string,
         GENERATE_INFO_TOTAL_IMAGE: string,
         ABOUT_PANEL_AI_DESCRIPTION: string,
-        ABOUT_PANEL_POLITIC_START: string,
-        ABOUT_PANEL_POLITIC: string,
-        ABOUT_PANEL_RULES: string,
         ABOUT_PANEL_HI: string,
         VIP_BANNER_ACTIVE: string,
         VIP_BANNER_GET: string,
@@ -92,6 +89,7 @@ export type TLang = {
         ERROR_REPEAT: string,
         ABOUT_AS: string,
         NO_RESULT: string,
+        SHARE_MESSAGE: string,
     },
     ALERT: {
         WARNING: string,

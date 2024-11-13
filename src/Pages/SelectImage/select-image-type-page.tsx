@@ -50,7 +50,7 @@ export default function SelectImageTypePage() {
         if (imageTypeItem.vip && !userDbData?.is_vip) {
             setModal(<VipFullPageModal />);
         } else {
-            navigate(`/select-image/${imageTypeItem.id}`)
+            navigate(`/select-image/${imageTypeItem.id}`, {preventScrollReset: true})
         }
     }
 

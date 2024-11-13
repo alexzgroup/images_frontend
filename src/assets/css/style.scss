@@ -56,22 +56,22 @@ body {
 
 #animateHeartWrapper {
   box-sizing: border-box;
-  padding: 20px;
   position: relative;
-    & > .animateHeart {
-      &:first-child {
-        position: absolute;
-        top: 0;
-        right: 0;
-        z-index: 0;
-        animation: pulse 2.5s linear infinite;
-      }
-      &:last-child {
-        z-index: 1;
-        position: relative;
-        animation: pulse 2.5s linear infinite;
-      }
+  & > svg {
+    &:first-child {
+      position: absolute;
+      top: 0;
+      right: 0;
+      z-index: 0;
+      animation: pulse 1.5s linear infinite;
     }
+
+    &:last-child {
+      z-index: 1;
+      position: relative;
+      animation: pulse 1.5s linear infinite;
+    }
+  }
 }
 
 .pulseLine {

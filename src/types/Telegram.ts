@@ -59,4 +59,5 @@ export interface IWebApp {
     };
     HapticFeedback: any;
     shareToStory: (media_url: string, params: IStoryShareParams) => void;
+    openTelegramLink: (url: string) => void;
 }

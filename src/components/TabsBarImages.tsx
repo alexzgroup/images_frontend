@@ -55,7 +55,7 @@ export default function TabsBarImages({images}: {images: TImageType[]}) {
                                         </CardContent>
                                 }
                                 <CardActions>
-                                    <Button onClick={() => navigate(`/select-image/${item.id}`)} variant="contained">
+                                    <Button fullWidth onClick={() => navigate(`/select-image/${item.id}`)} variant="contained">
                                         {lang.BUTTONS.OPEN}
                                     </Button>
                                 </CardActions>
