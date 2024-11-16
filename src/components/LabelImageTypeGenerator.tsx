@@ -1,5 +1,5 @@
 import React from "react";
-import {FiberNew, Paid} from "@mui/icons-material";
+import {Paid} from "@mui/icons-material";
 import {Typography} from "@mui/material";
 
 export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {

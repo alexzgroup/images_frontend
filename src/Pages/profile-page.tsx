@@ -29,10 +29,6 @@ const ProfilePage: React.FC = () => {
 
     return (
         <React.Fragment>
-            {/*<PageWrapper title={lang.HEADERS.PROFILE_PANEL} after={<Avatar sx={(theme) => ({*/}
-            {/*    color: theme.palette.text.primary,*/}
-            {/*    bgcolor: theme.palette.background.paper,*/}
-            {/*})}>*/}
             <PageWrapper title={lang.HEADERS.PROFILE_PANEL} after={<IconButton
                     onClick={() => setModal(<SettingsModal />)}
                     size="large"
@@ -73,7 +69,7 @@ const ProfilePage: React.FC = () => {
                         </ListItem>
                     </List>
                 </Paper>
-                <Paper square elevation={2} sx={{my: 1}}>
+                <Paper square elevation={1} sx={{my: 1, pb: 1}}>
                     <TitlebarImageList history_generate={history_generate} showBtn />
                 </Paper>
                 {

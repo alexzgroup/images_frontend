@@ -6,11 +6,10 @@ import ImageListItemBar from '@mui/material/ImageListItemBar';
 import ListSubheader from '@mui/material/ListSubheader';
 import IconButton from '@mui/material/IconButton';
 import {AppContext, TAppContext} from "../context/AppContext";
-import {GeneratedImageType, ShareTypeEnum} from "../types/ApiTypes";
+import {GeneratedImageType} from "../types/ApiTypes";
 import {
     Avatar,
     Box,
-    Button,
     Container,
     DialogActions,
     DialogContent,
@@ -25,25 +24,14 @@ import {
 import {useSelector} from "react-redux";
 import {RootStateType} from "../redux/store/ConfigureStore";
 import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
-import {Share, Timer, Visibility, Warning} from "@mui/icons-material";
+import {Timer, Visibility, Warning} from "@mui/icons-material";
 import Dialog from "@mui/material/Dialog";
 import CloseIcon from "@mui/icons-material/Close";
-import {updateShareGenerateImage} from "../api/AxiosApi";
-import {useTelegram} from "../context/TelegramProvider";
-import {TransitionProps} from "@mui/material/transitions";
-import Slide from "@mui/material/Slide";
 import AppBar from "@mui/material/AppBar";
 import Toolbar from "@mui/material/Toolbar";
 import {Link} from 'react-router-dom';
-
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>,
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import ShareButton from "./ShareButton";
+import {TransitionBottom} from "../helpers/Transitions";
 
 export default function TitlebarImageList({history_generate, showBtn}: {
     history_generate: GeneratedImageType[],
@@ -52,26 +40,12 @@ export default function TitlebarImageList({history_generate, showBtn}: {
     const {lang} = useContext<TAppContext>(AppContext);
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const [image, setImage] = useState<GeneratedImageType|null>(null);
-    const { webApp, userTg } = useTelegram();
     const ref = useRef<React.ReactNode| null>(null);
     const theme = useTheme();
 
     const handleClose = () => {
         setImage(null);
     };
-
-    const shareStore = async () => {
-        if (image && webApp) {
-            webApp.shareToStory(image.url, {
-                text: lang.SHARE_TEXT[image.image_type.type],
-                widget_link: {
-                    url: process.env.REACT_APP_TG_URL,
-                    name: 'Образ: ' + image.image_type.name,
-                }
-            })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
-        }
-    }
 
     useEffect(() => {
         return setImage(null);
@@ -94,7 +68,7 @@ export default function TitlebarImageList({history_generate, showBtn}: {
             </Grid2>
             {
                 !!history_generate.length ?
-                    <ImageList cols={2} rowHeight={180} sx={{ height: history_generate.length > 2 ? 450 : 200, mb: 0 }}>
+                    <ImageList cols={2} rowHeight={180} sx={{ mb: 0 }}>
                         {history_generate.map((item, index) => (
                             <ImageListItem sx={{overflow: 'hidden'}} rows={1} cols={1} key={item.id + index}>
                                 <img
@@ -133,7 +107,7 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                     fullScreen
                     open={!!image}
                     onClose={handleClose}
-                    TransitionComponent={Transition}
+                    TransitionComponent={TransitionBottom}
                 >
                     <AppBar sx={{ position: 'relative' }}>
                         <Toolbar>
@@ -167,14 +141,9 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                                 }} />
 
                             </DialogContent>
-                            {
-                                userTg?.is_premium &&
-                                <DialogActions>
-                                    <Button startIcon={<Share />} fullWidth variant="contained" autoFocus onClick={shareStore}>
-                                        {lang.MODALS.SHARE_STORE_SHORT}
-                                    </Button>
-                                </DialogActions>
-                            }
+                            <DialogActions>
+                                <ShareButton image={image} image_type={image.image_type} />
+                            </DialogActions>
                         </Container>
                     </Box>
                 </Dialog>

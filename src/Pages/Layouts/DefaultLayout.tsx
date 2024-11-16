@@ -67,7 +67,7 @@ const DefaultLayout: React.FC  = () => {
             lang
         }}>
             <ThemeProvider theme={theme}>
-                <Box sx={{ pb: (user.sex ? '50px' : 0) }}>
+                <Box sx={{ pb: (user.sex ? 'calc(50px + var(--safe-area-inset-bottom))' : 0) }}>
                     <ScrollToTop />
                         <Outlet/>
                     {

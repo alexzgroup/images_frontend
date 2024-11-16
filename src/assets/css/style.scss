@@ -6,6 +6,7 @@
 :root {
   --black_gradient: linear-gradient(194.65deg, #191919 0%, #1F1F1F 19%, #333333 48.5%, #3D3D3D 77.5%, #101010 100%);
   --gold_gradient: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
+  --safe-area-inset-bottom: env(safe-area-inset-bottom);
 }
 
 body {
@@ -30,27 +31,6 @@ body {
     background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-  }
-}
-
-.counterCol {
-  text-align: center;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 10px;
-  color: white;
-  font-size: 14px;
-  background: linear-gradient(180deg, #F8D498 0%, #E9BA78 26.5%, #FFAA38 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  h1 {
-    font-size: 42px;
-    margin-bottom: 5px;
-  }
-  .delimiter {
-    font-size: 32px;
-    font-weight: bold;
   }
 }
 

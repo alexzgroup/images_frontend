@@ -6,8 +6,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import {TransitionProps} from '@mui/material/transitions';
 import {useModalPage} from "../../context/ModalProvider";
 import {AppContext, TAppContext} from "../../context/AppContext";
 import {
@@ -27,16 +25,7 @@ import {ReduxSliceUserInterface, setUserDbData} from "../../redux/slice/UserSlic
 import {Save} from "@mui/icons-material";
 import {apiEditUser, apiInitUser} from "../../api/AxiosApi";
 import {setFavoriteImageTypes, setPopularImageTypes} from "../../redux/slice/ImageSlice";
-
-
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>,
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import {TransitionBottom} from "../../helpers/Transitions";
 
 export default function SettingsModal() {
     const {setModal} = useModalPage();
@@ -79,7 +68,7 @@ export default function SettingsModal() {
                 fullScreen
                 open={true}
                 onClose={handleClose}
-                TransitionComponent={Transition}
+                TransitionComponent={TransitionBottom}
             >
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>

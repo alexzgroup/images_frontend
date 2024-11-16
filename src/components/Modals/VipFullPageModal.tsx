@@ -10,8 +10,6 @@ import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
 import CloseIcon from '@mui/icons-material/Close';
-import Slide from '@mui/material/Slide';
-import {TransitionProps} from '@mui/material/transitions';
 import {useModalPage} from "../../context/ModalProvider";
 import {AppContext, TAppContext} from "../../context/AppContext";
 import {Box, CardActions, CardMedia, Grid2, ListItem, ListItemIcon} from "@mui/material";
@@ -19,15 +17,7 @@ import vipLogo from "../../assets/images/vip_logo.png";
 import {common, orange} from "@mui/material/colors";
 import {AutoFixHigh, Diversity3, Palette, PanTool} from "@mui/icons-material";
 import StarFields from "../StarFields";
-
-const Transition = React.forwardRef(function Transition(
-    props: TransitionProps & {
-        children: React.ReactElement;
-    },
-    ref: React.Ref<unknown>,
-) {
-    return <Slide direction="up" ref={ref} {...props} />;
-});
+import {TransitionBottom} from "../../helpers/Transitions";
 
 export default function VipFullPageModal() {
     const {setModal} = useModalPage();
@@ -45,7 +35,7 @@ export default function VipFullPageModal() {
                 fullScreen
                 open={true}
                 onClose={handleClose}
-                TransitionComponent={Transition}
+                TransitionComponent={TransitionBottom}
             >
                 <AppBar sx={{ position: 'relative' }}>
                     <Toolbar>

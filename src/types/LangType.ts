@@ -38,6 +38,7 @@ export type TLang = {
         OPEN_GALLERY: string,
         OPEN: string,
         SHARE: string,
+        SHARE_MESSAGE: string,
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: string,
@@ -90,11 +91,18 @@ export type TLang = {
         ABOUT_AS: string,
         NO_RESULT: string,
         SHARE_MESSAGE: string,
+        TIME: {
+            DAYS: string,
+            HOURS: string,
+            MINUTE: string,
+            SECONDS: string,
+        },
     },
     ALERT: {
         WARNING: string,
         ACCEPT: string,
         HAS_ACTIVE_GENERATE: string,
+        VIP_ENDED: string,
     },
     MODALS: {
         VIEW: string,

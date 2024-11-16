@@ -38,6 +38,7 @@ export const Lang = {
         OPEN_GALLERY: "Open Gallery",
         OPEN: "Open",
         SHARE: "Share",
+        SHARE_MESSAGE: "In message",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Try on a stylish look, become a warrior or fantasy character with the help of AI.",
@@ -79,7 +80,7 @@ export const Lang = {
         VIP_MODAL_MOTIVATION: "Take full advantage of VIP status now!",
         VIP_MODAL_VIP_TEXT_1: "Priority queue",
         VIP_MODAL_VIP_TEXT_2: "No ads",
-        SHARE_STORY_NOT_FORGET: "also do not forget to share in the history!",
+        SHARE_STORY_NOT_FORGET: "Also don't forget to share with your friends!",
         RECOMMENDED: "When generating an image, you may be shown ads. It allows you to generate images for free.",
         RECOMMENDED_PHOTOS: "Photo Recommendations:",
         NO_RECOMMENDED_PHOTOS: "We do not recommend using:",
@@ -90,11 +91,18 @@ export const Lang = {
         ABOUT_AS: "About as",
         NO_RESULT: "No results",
         SHARE_MESSAGE: "Share the attachment with your friends",
+        TIME: {
+            DAYS: "days",
+            HOURS: "hours",
+            MINUTE: "minutes",
+            SECONDS: "seconds",
+        },
     },
     ALERT: {
         WARNING: "Attention!",
         ACCEPT: "Understood",
         HAS_ACTIVE_GENERATE: "You have an unprocessed generation, we will notify you when it is ready, after that you can generate your new image.",
+        VIP_ENDED: "You have run out of VIP status, to renew your subscription, renew or renew it.",
     },
     MODALS: {
         VIEW: "View",

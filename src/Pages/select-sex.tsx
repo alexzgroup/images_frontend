@@ -1,4 +1,4 @@
-import {Box, Button, ButtonGroup} from '@mui/material';
+import {Box, Button, ButtonGroup, Stack} from '@mui/material';
 import React, {useContext} from 'react';
 import PageWrapper from "../components/PageWrapper";
 import {AppContext, TAppContext} from "../context/AppContext";
@@ -11,6 +11,8 @@ import {apiEditUser, apiInitUser} from "../api/AxiosApi";
 import {hideAppLoading, showAppLoading} from "../redux/slice/AppStatusesSlice";
 import {setFavoriteImageTypes, setPopularImageTypes} from "../redux/slice/ImageSlice";
 import {useNavigate} from "react-router-dom";
+import femaleImage from '../assets/images/female-select-sex.svg';
+import maleImage from '../assets/images/male-select-sex.svg';
 
 export default  function SelectSexPage() {
     const {lang} = useContext<TAppContext>(AppContext);
@@ -41,10 +43,16 @@ export default  function SelectSexPage() {
                 <Box display="flex" sx={{height: 'calc(100vh - 48px)'}}>
                     <ButtonGroup sx={{flexShrink: 0, flexGrow: 1}} fullWidth variant="text" aria-label="Basic button group">
                         <Button onClick={() => selectSex(2)} sx={{color: blue[700]}}>
-                            <Male fontSize="large" />
+                            <Stack spacing={2} direction="column" sx={{ alignItems: 'center' }}>
+                                <Male sx={{fontSize: 72}} />
+                                <img src={maleImage} style={{width: '100%'}} alt="Renestra" />
+                            </Stack>
                         </Button>
                         <Button onClick={() => selectSex(1)} sx={{color: pink[700]}}>
-                            <Female fontSize="large" />
+                            <Stack spacing={2} direction="column" sx={{ alignItems: 'center' }}>
+                                <Female sx={{fontSize: 72}} />
+                                <img src={femaleImage} style={{width: '100%'}} alt="Renestra" />
+                            </Stack>
                         </Button>
                     </ButtonGroup>
                 </Box>

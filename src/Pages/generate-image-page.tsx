@@ -1,27 +1,27 @@
 import {
     Alert,
     AlertTitle,
-    Avatar, Box, Button, ButtonGroup,
+    Avatar,
+    Box,
     Card,
     CardActions,
     CardContent,
     CardHeader,
-    CardMedia, Container,
-    IconButton, Paper,
+    CardMedia,
+    Container,
+    Paper,
     Skeleton,
     Typography
 } from '@mui/material';
 import React, {useContext, useEffect, useState} from 'react';
 import PageWrapper from "../components/PageWrapper";
 import {AppContext, TAppContext} from "../context/AppContext";
-import {useSelector} from "react-redux";
-import {RootStateType} from "../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
 import {useTelegram} from "../context/TelegramProvider";
 import {useActionData} from "react-router-dom";
-import {generateImageType, ShareTypeEnum} from "../types/ApiTypes";
-import {apiGenerateImage, updateShareGenerateImage} from "../api/AxiosApi";
-import {Diversity1, Share, Warning} from "@mui/icons-material";
+import {generateImageType} from "../types/ApiTypes";
+import {apiGenerateImage} from "../api/AxiosApi";
+import {Diversity1, Warning} from "@mui/icons-material";
+import ShareButton from "../components/ShareButton";
 
 type Taction = {
     request: Request,
@@ -41,19 +41,6 @@ interface MediaProps {
 const Media = (props: MediaProps) =>  {
     const { loading = false, image } = props;
     const {lang} = useContext<TAppContext>(AppContext);
-    const { userTg, webApp } = useTelegram();
-    const shareStore = async () => {
-        if (image && webApp) {
-            webApp.shareToStory(image.image.url, {
-                text: lang.SHARE_TEXT[image.image_type.type],
-                widget_link: {
-                    url: process.env.REACT_APP_TG_URL,
-                    name: 'Образ: ' + image.image_type.name,
-                }
-            })
-            updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
-        }
-    }
 
     return (
         <Card square elevation={0}>
@@ -112,13 +99,10 @@ const Media = (props: MediaProps) =>  {
             </CardContent>
             <CardActions disableSpacing>
                 {
-                    loading ?
+                    loading  ?
                         <Skeleton sx={{ height: 40, width: 40 }} animation="wave" variant="rectangular" />
-                            : (
-                        <IconButton onClick={shareStore} aria-label="share">
-                        <Share />
-                    </IconButton>
-                    )
+                            :
+                        <ShareButton {...image as generateImageType} />
                 }
 
             </CardActions>
@@ -128,47 +112,24 @@ const Media = (props: MediaProps) =>  {
 
 export default function GenerateImagePage(){
     const {lang} = useContext<TAppContext>(AppContext);
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
-    const { userTg, webApp} = useTelegram();
+    const { userTg} = useTelegram();
     const [image, setImage] = useState<generateImageType>()
     const formData = useActionData() as FormData;
     const [step, setStep] = useState(1);
     const [error, setError] = useState('');
 
-    const share = async () => {
-        if (userTg?.is_premium) {
-            if (image && webApp) {
-                webApp.shareToStory(image.image.url, {
-                    text: lang.SHARE_TEXT[image.image_type.type],
-                    widget_link: {
-                        url: process.env.REACT_APP_TG_URL,
-                        name: 'Образ: ' + image.image_type.name,
-                    }
-                })
-                updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_HISTORY)
-            }
-        } else {
-             if (/*image && */webApp) {
-                 const link = 'https://t.me/Auto_Shop_72_bot/open_app?userId=' + String(userTg?.id) + '&imageId=' + String(5);
-                 const title = encodeURI('Это моя генерация');
-                 const shareLink = `https://t.me/share/url?url=${encodeURI(link)}&text=${title}`;
-                 webApp.openTelegramLink(shareLink);
-                // updateShareGenerateImage(image.id, ShareTypeEnum.SHARE_WALL)
-             }
-        }
-    }
 
     useEffect(() => {
         async function init(){
-            //  const response = await apiGenerateImage(formData)
-            //  setImage(response)
-            // if (response.result) {
-            //     setStep(userTg?.is_premium ? 2 : 3)
-            // } else {
-            //     setStep(0)
-            //     setError(response.message);
-            // }
-            setStep(2)
+             const response = await apiGenerateImage(formData)
+             setImage(response)
+            if (response.result) {
+                setStep(2)
+            } else {
+                setStep(0)
+                setError(response.message);
+            }
+            // setStep(2)
         }
         init()
     }, []);
@@ -205,7 +166,12 @@ export default function GenerateImagePage(){
                     </Alert>
                 }
                 {
-                    step === 3 && <Media image={image} />
+                    step === 0 && <Box sx={{height: '50vh'}} display="flex" justifyContent="center" alignItems="center">
+                        <Warning color="error" sx={{width: 180, height: 180}} />
+                    </Box>
+                }
+                {
+                    step === 1 && <Media loading />
                 }
                 {
                     step === 2 && <Paper sx={{height: '50vh'}} square elevation={0}>
@@ -214,19 +180,14 @@ export default function GenerateImagePage(){
                                 <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
                                 <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
                             </Box>
-                                <Button fullWidth variant="contained" startIcon={<Share />} autoFocus onClick={share}>
-                                    {lang.BUTTONS.SHARE}
-                                </Button>
+                            {
+                                image && <ShareButton {...image} />
+                            }
                         </Container>
                     </Paper>
                 }
                 {
-                    step === 1 && <Media loading />
-                }
-                {
-                    step === 0 && <Box sx={{height: '50vh'}} display="flex" justifyContent="center" alignItems="center">
-                        <Warning color="error" sx={{width: 180, height: 180}} />
-                    </Box>
+                    step === 3 && <Media image={image} />
                 }
             </PageWrapper>
         </React.Fragment>

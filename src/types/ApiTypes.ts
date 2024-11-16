@@ -14,6 +14,7 @@ export type userApiType = {
     allow_messages: number,
     subscribe: boolean,
     voice_subscribe: voiceSubscribeType|null,
+    date_vip_ended: string,
 }
 
 export type voiceSubscribeType = {
