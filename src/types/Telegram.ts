@@ -61,4 +61,15 @@ export interface IWebApp {
     shareToStory: (media_url: string, params: IStoryShareParams) => void;
     openTelegramLink: (url: string) => void;
     switchInlineQuery: (query: string, chatList?: string[]) => void;
+    openInvoice: (url: string, callBack: (status:  "paid" | "cancelled" | "failed" | "pending") => void) => void;
 }
+
+/**
+ * eventHandler receives an object with the two fields: url – invoice link provided and status – one of the invoice statuses:
+ * - paid – invoice was paid successfully,
+ * - cancelled – user closed this invoice without paying,
+ * - failed – user tried to pay, but the payment was failed,
+ * - pending – the payment is still processing. The bot will receive a service message
+ */
+
+

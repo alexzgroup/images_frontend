@@ -18,15 +18,25 @@ import {common, orange} from "@mui/material/colors";
 import {AutoFixHigh, Diversity3, Palette, PanTool} from "@mui/icons-material";
 import StarFields from "../StarFields";
 import {TransitionBottom} from "../../helpers/Transitions";
+import {createInvoiceLink} from "../../api/AxiosApi";
+import {useTelegram} from "../../context/TelegramProvider";
 
 export default function VipFullPageModal() {
     const {setModal} = useModalPage();
     const {lang} = useContext<TAppContext>(AppContext);
     const ref = useRef<React.ReactNode| null>(null);
+    const { webApp} = useTelegram();
 
     const handleClose = () => {
         setModal(null);
     };
+
+    const getInvoiceLink = async () => {
+        const {link} = await createInvoiceLink();
+        webApp?.openInvoice(link, (data) => {
+            console.log(data);
+        });
+    }
 
     return (
         <React.Fragment>
@@ -73,7 +83,7 @@ export default function VipFullPageModal() {
                         {lang.TITLES.VIP_MODAL_GET_VIP}
                     </Typography>
                     <CardActions>
-                        <Button fullWidth sx={{background: 'var(--gold_gradient)', mx: 1, color: common.black}}>
+                        <Button onClick={getInvoiceLink} fullWidth sx={{background: 'var(--gold_gradient)', mx: 1, color: common.black}}>
                             {lang.BUTTONS.VIP_MODAL_GET}
                         </Button>
                     </CardActions>

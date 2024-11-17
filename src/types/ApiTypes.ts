@@ -113,6 +113,10 @@ export type operationWithMessageType = operationResultType & {
     message: string,
 }
 
+export type TInvoiceLink = operationResultType & {
+    link: string,
+}
+
 export type uploadPhotoType = {
     url: string,
     base64: string,

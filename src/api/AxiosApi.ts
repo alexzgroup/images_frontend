@@ -11,6 +11,7 @@ import {
     initUserApiType,
     operationResultType,
     ShareTypeEnum,
+    TInvoiceLink,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -65,6 +66,13 @@ export const addAdvertisement = (data: AdvertisementType) => {
  */
 export const getGeneratedImages = (userId: number) => {
     return axiosApi.get(`generate_image/all/` + userId).then((r: {data: GeneratedImagesType}) => r.data.images);
+}
+
+/**
+ * Получает ссылку на оплату
+ */
+export const createInvoiceLink = () => {
+    return axiosApi.get(`tg/create_invoice_link`).then((r: {data: TInvoiceLink}) => r.data);
 }
 
 /**
