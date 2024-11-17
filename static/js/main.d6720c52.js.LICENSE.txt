@@ -4,6 +4,14 @@ object-assign
 @license MIT
 */
 
+/*!
+ * Pusher JavaScript Library v8.4.0-rc2
+ * https://pusher.com/
+ *
+ * Copyright 2020, Pusher
+ * Released under the MIT licence.
+ */
+
 /**
  * @license React
  * react-is.production.min.js
