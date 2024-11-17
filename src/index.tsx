@@ -23,6 +23,7 @@ import {ModalProvider} from "./context/ModalProvider";
 import SelectSexPage from "./Pages/select-sex";
 import GenerateImagePage, {action as generateImageAction} from "./Pages/generate-image-page";
 import HistoryImagesPage from "./Pages/history-images-page";
+import {SocketProvider} from "./context/SocketProvider";
 
 const router = createBrowserRouter([
     {
@@ -78,7 +79,9 @@ ReactDOM.render(
         <TelegramProvider>
             <ModalProvider>
                 <Provider store={AppConfigureStore}>
-                    <RouterProvider router={router} fallbackElement={<PagePreloader />} />
+                    <SocketProvider>
+                        <RouterProvider router={router} fallbackElement={<PagePreloader/>}/>
+                    </SocketProvider>
                 </Provider>
             </ModalProvider>
         </TelegramProvider>

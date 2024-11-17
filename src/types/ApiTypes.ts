@@ -95,16 +95,6 @@ export type initUserApiType = {
     generated_images_not_share_wall: GenerateImageNoShareType[],
 }
 
-export type groupType = {
-    id: number,
-    name: string,
-    photo_100: string,
-    members_count: number,
-    pays_count?: number,
-    users_count?: number,
-    pays_sum_amount?: number,
-}
-
 export type operationResultType = {
     result: boolean,
 }
@@ -117,41 +107,10 @@ export type TInvoiceLink = operationResultType & {
     link: string,
 }
 
-export type uploadPhotoType = {
-    url: string,
-    base64: string,
-    created_at: string,
-    type: 'default'|'name'|'zodiac',
-    image_type: {
-        name: string,
-        sex?: number,
-    },
-    available_share_free_image?: boolean,
-}
-
 export type generateImageType = operationWithMessageType & {
     id: number,
     image: GeneratedImageType,
     image_type: imageType,
-}
-
-export type monetizationDataType = {
-    available_balance: number,
-    subscribes: number,
-    total_pays: number,
-    groups: groupType[]|[],
-}
-
-export type AddGroupChatBootType = {
-    vk_group_id: number,
-    secret_key: string,
-    code_answer: string,
-    access_token: string,
-}
-
-export type GroupToChatBootType = {
-    server_id: number,
-    vk_group_id: number,
 }
 
 export enum AdvertisementEnum {
@@ -179,20 +138,8 @@ export type GeneratedImagesType = {
     images: GeneratedImageType[],
 }
 
-export type UploadPhotoToServerType = {
-    generate_image_id: number,
-    upload_url: string,
-}
-
-export type ResponseUploadPhotoType = {
-    hash: string,
-    photo: string,
-    server: number
-}
-
 export enum ShareTypeEnum {
     SHARE_HISTORY = "share_history",
-    SHARE_WALL = "share_wall",
 }
 
 export type GenerateProfileInfoType = {
@@ -203,3 +150,10 @@ export type GenerateProfileInfoType = {
 }
 
 export type UserWithGeneratedInfoType = ITelegramUser & GenerateProfileInfoType
+
+export type socketDonutType = {
+    data: {
+        date_vip_ended: string,
+        status: boolean,
+    }
+}

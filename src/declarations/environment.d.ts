@@ -8,7 +8,6 @@ declare global {
             REACT_APP_PUSHER_CLUSTER: string,
             REACT_APP_PUSHER_HOST: string,
             REACT_APP_URL_API: string,
-            REACT_APP_HOST_URL: string,
             REACT_APP_TG_URL: string,
             REACT_APP_TG_TADS_WIDGET_ID: number
             REACT_APP_TG_ADSGRAM_BLOCK_ID: number

@@ -23,12 +23,22 @@ export const userSlice = createSlice({
                 };
             }
         },
+        setUserDateVip: (state, action: PayloadAction<{date_vip_ended: string}>) => {
+            if (state.userDbData) {
+                state.userDbData = {
+                    ...state.userDbData,
+                    date_vip_ended: action.payload.date_vip_ended,
+                    is_vip: true,
+                };
+            }
+        },
     }
 })
 
 export const {
     setUserDbData,
     setUserVip,
+    setUserDateVip,
 } = userSlice.actions
 
 export default userSlice.reducer
