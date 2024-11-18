@@ -37,6 +37,7 @@ import {useDispatch, useSelector} from "react-redux";
 import {hideAppLoading} from '../../redux/slice/AppStatusesSlice';
 import example_man_generated from "../../assets/images/example_man_generated.png";
 import example_woman_generated from "../../assets/images/example_woman_generated.jpg";
+import AlertDialogAvailableImage from "../../components/Modals/AlertDialogAvailableImage";
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -60,7 +61,7 @@ export default function SelectImagePage() {
     const [formData, setFormData] = useState<FormDataOptionType[]>([])
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const dispatch = useDispatch();
-    const {item, img_type_to_variant_groups, type_variant_to_img_group_variants, zodiac} = useLoaderData() as imageTypeStatisticType;
+    const {item, img_type_to_variant_groups, type_variant_to_img_group_variants, zodiac, available_image_limit} = useLoaderData() as imageTypeStatisticType;
     const [disabledOptions, setDisabledOptions] = useState<number[]>([])
     const [formDataError, setFormDataError] = useState<TError|null>(null)
     const submit = useSubmit();
@@ -196,6 +197,10 @@ export default function SelectImagePage() {
 
     return (
         <React.Fragment>
+            {
+                (available_image_limit.available_images === 0 || (!userDbData?.is_vip && !available_image_limit.nex_free_image_available)) &&
+                    <AlertDialogAvailableImage available_image_limit={available_image_limit} />
+            }
             <PageWrapper back title={lang.HEADERS.SELECT_IMAGE_PANEL} >
                 <Paper square elevation={2} sx={{mb: 1, pb: 1}}>
                     <Box display="flex" alignItems="center" justifyContent="center" sx={{flexFlow: 'column', textAlign: 'center'}}>

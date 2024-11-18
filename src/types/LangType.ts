@@ -39,6 +39,7 @@ export type TLang = {
         OPEN: string,
         SHARE: string,
         SHARE_MESSAGE: string,
+        VIEW_ADVERT: string,
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: string,
@@ -91,6 +92,7 @@ export type TLang = {
         ABOUT_AS: string,
         NO_RESULT: string,
         SHARE_MESSAGE: string,
+        GO_VIEW_ADS: string,
         TIME: {
             DAYS: string,
             HOURS: string,
@@ -107,7 +109,6 @@ export type TLang = {
     MODALS: {
         VIEW: string,
         WHY_VIP: string,
-        AMOUNT_VIP: string,
         IMAGE: string,
         CREATE: string,
         SHARE_STORE_SHORT: string,

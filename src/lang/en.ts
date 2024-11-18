@@ -39,6 +39,7 @@ export const Lang = {
         OPEN: "Open",
         SHARE: "Share",
         SHARE_MESSAGE: "In message",
+        VIEW_ADVERT: "Посмотреть ads",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Try on a stylish look, become a warrior or fantasy character with the help of AI.",
@@ -91,6 +92,7 @@ export const Lang = {
         ABOUT_AS: "About as",
         NO_RESULT: "No results",
         SHARE_MESSAGE: "Share the attachment with your friends",
+        GO_VIEW_ADS: "To get free generation, view the advertisement. Each generation is available no more than once every 5 minutes, a total of 3 generations are available for free every day.",
         TIME: {
             DAYS: "days",
             HOURS: "hours",
@@ -107,7 +109,6 @@ export const Lang = {
     MODALS: {
         VIEW: "View",
         WHY_VIP: "To generate this image, VIP status is required",
-        AMOUNT_VIP: "Subscribe to VK Donut in the amount of 179 rubles or more.",
         IMAGE: "Image",
         CREATE: "Created",
         SHARE_STORE_SHORT: "Share with friends",
