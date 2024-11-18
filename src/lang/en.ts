@@ -76,7 +76,7 @@ export const Lang = {
         VIP_CANCEL: "Cancel subscription",
         OFFLINE_PANEL: "Check your internet connection.",
         SHOW_GENERATE_PANEL_GET_GENERATION: "You will get +1 more generation for free!",
-        VIP_MODAL_TOTAL_AMOUNT: "Only 20 votes per month.",
+        VIP_MODAL_TOTAL_AMOUNT: "Only 99 stars per month.",
         VIP_MODAL_MOTIVATION: "Take full advantage of VIP status now!",
         VIP_MODAL_VIP_TEXT_1: "Priority queue",
         VIP_MODAL_VIP_TEXT_2: "No ads",

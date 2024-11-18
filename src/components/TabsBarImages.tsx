@@ -32,14 +32,14 @@ export default function TabsBarImages({images}: {images: TImageType[]}) {
                     aria-label="scrollable force tabs example"
                 >
                     {
-                        images.map((image) => (
-                            <Tab label={image.name} />
+                        images.map((image, index) => (
+                            <Tab key={'tab_li' + index} label={image.name} />
                         ))
                     }
                 </Tabs>
                 {
                     images.map((item, index) => (
-                        <TabPanel sx={{px: 0}} value={index}>
+                        <TabPanel key={'tab' + index} sx={{px: 0}} value={index}>
                             <Box  sx={{ minWidth: 280 }}>
                                 <CardMedia
                                     sx={{ height: 140 }}

@@ -7,7 +7,7 @@ export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {
     const getLabelJSX = (label: string) => {
         switch (label) {
             case 'popular':
-                return <Typography sx={(theme) => ({
+                return <Typography key={1} sx={(theme) => ({
                     color: theme.palette.common.white,
                     bgcolor: theme.palette.primary.dark,
                     display: 'inline-block',
@@ -17,7 +17,7 @@ export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {
                     variant="caption"
                     component="div">Top</Typography>
             case 'new':
-                return <Typography sx={(theme) => ({
+                return <Typography key={2} sx={(theme) => ({
                     color: theme.palette.common.white,
                     bgcolor: theme.palette.secondary.dark,
                     display: 'inline-block',
@@ -27,7 +27,7 @@ export const LabelImageTypeGenerator = (labels: string[]|[]): JSX.Element => {
                    variant="caption"
                    component="div">New</Typography>
             case 'vip':
-                return <Paid color="warning" />
+                return <Paid key={3} color="warning" />
             default:
                 return <React.Fragment />
         }

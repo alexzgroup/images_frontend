@@ -286,7 +286,7 @@ export default function SelectImagePage() {
                             <CardContent>
                                 {
                                     img_type_to_variant_groups.map((group, groupKey) => (
-                                        <FormControl error={formDataError?.options}>
+                                        <FormControl key={groupKey} error={formDataError?.options}>
                                             <FormLabel component="legend" id={`options-group-${groupKey}`}>{group.group.name}</FormLabel>
                                             {
                                                 img_type_to_variant_groups.length > 1
@@ -347,14 +347,14 @@ export default function SelectImagePage() {
                             <Step>
                                 <Avatar
                                     variant="rounded"
-                                    src={userDbData?.sex === 2 ? example_man_generated : example_woman_generated}
-                                    sx={{width: 50, height: 50}} />
+                                    src={image}
+                                    sx={{width: 80, height: 80}} />
                             </Step>
                             <Step>
                                 <Avatar
-                                    src={/*imageType.item.url ||*/ example_man_generated}
+                                    src={item.url || (userDbData?.sex === 2 ? example_man_generated : example_woman_generated)}
                                     variant="rounded"
-                                    sx={{width: 50, height: 50}} />
+                                    sx={{width: 80, height: 80}} />
                             </Step>
                         </Stepper>
                     </CardContent>

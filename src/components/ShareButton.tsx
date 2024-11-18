@@ -8,12 +8,11 @@ import {Send, Share} from "@mui/icons-material";
 import {updateShareGenerateImage} from "../api/AxiosApi";
 
 type TShareBtn = {
-    icon?: boolean
     image: GeneratedImageType,
     image_type: imageType,
 }
 
-export default function ShareButton({image, icon, image_type}: TShareBtn) {
+export default function ShareButton({image, image_type}: TShareBtn) {
     const {lang} = useContext<TAppContext>(AppContext);
     const { webApp, userTg } = useTelegram();
 

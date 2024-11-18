@@ -76,7 +76,7 @@ export const Lang = {
         VIP_CANCEL: "Отменить подписку",
         OFFLINE_PANEL: "Проверьте Ваше соединение с интернетом.",
         SHOW_GENERATE_PANEL_GET_GENERATION: "Вы получите ещё +1 генерациаю бесплатно!",
-        VIP_MODAL_TOTAL_AMOUNT: "Всего 20 голосов в месяц.",
+        VIP_MODAL_TOTAL_AMOUNT: "Всего 99 звезд в месяц.",
         VIP_MODAL_MOTIVATION: "Воспользуйтесь всеми преимуществами VIP статуса уже сейчас!",
         VIP_MODAL_VIP_TEXT_1: "Приоритетная очередь",
         VIP_MODAL_VIP_TEXT_2: "Отсутствие рекламы",

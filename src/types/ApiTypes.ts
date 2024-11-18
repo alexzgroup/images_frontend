@@ -57,9 +57,7 @@ export type typeVariantType = {
 }
 
 export type generateStatisticType = {
-    available_count_generate: number,
     generate_in_process: boolean,
-    available_day_limit: number,
 }
 
 export type typeVariantToImgGroupVariants = {
@@ -71,6 +69,7 @@ export type typeVariantToImgGroupVariants = {
 
 export type imageTypeStatisticType = {
     generate_statistic: generateStatisticType,
+    available_image_limit: TAvailableImageLimit,
     item: imageType,
     img_type_to_variant_groups: {
         group: typeVariantGroupType,
@@ -86,6 +85,17 @@ export type favoriteImageType = exclusiveImageTypesType & {
 
 export type GenerateImageNoShareType = GeneratedImageType & {
     type?: string
+}
+
+export type TAvailableImageLimit = {
+    available_images: number,
+    last_advert: {
+        id: number,
+        vk_user_id: number,
+        type: 'tg_tads' | 'ads_gram',
+        created_at: string,
+    },
+    nex_free_image_available: boolean
 }
 
 export type initUserApiType = {
