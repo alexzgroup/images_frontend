@@ -20,6 +20,7 @@ export default function AlertDialogAvailableImage({available_image_limit}: {avai
     const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
     const {setModal} = useModalPage();
     const navigate = useNavigate();
+    const [open, setOpen] = React.useState(true);
 
     const handleClose = () => {
         return null;
@@ -30,7 +31,7 @@ export default function AlertDialogAvailableImage({available_image_limit}: {avai
             // user watch ad till the end
             // your code to reward user
             console.log('ADS success', result);
-            navigate('select-image-type');
+            setOpen(false);
         }).catch((result) => {
             // user get error during playing ad or skip ad
             // do nothing or whatever you want
@@ -41,7 +42,7 @@ export default function AlertDialogAvailableImage({available_image_limit}: {avai
     return (
         <React.Fragment>
             <Dialog
-                open={true}
+                open={open}
                 onClose={handleClose}
                 disableEscapeKeyDown={true}
                 aria-labelledby="alert-dialog-title"
@@ -53,41 +54,39 @@ export default function AlertDialogAvailableImage({available_image_limit}: {avai
                 <DialogContent>
                     {
                         available_image_limit.available_images === 0 &&
-                            <>
+                            <React.Fragment>
                                 <DialogContentText id="alert-dialog-description">
                                     {lang.DESCRIPTIONS.SELECT_IMAGE_PANEL_AVAILABLE_IMAGES} 0
                                 </DialogContentText>
                                 <DialogContentText id="alert-dialog-description">
                                     {lang.DESCRIPTIONS.SELECT_IMAGE_NAME_PANEL_RETURN_TOMORROW}
                                 </DialogContentText>
-                            </>
+                            </React.Fragment>
                     }
                     {
-                        (available_image_limit.available_images > 0 && !available_image_limit.nex_free_image_available && !userDbData?.is_vip) &&
-                        <>
+                        (!userDbData?.is_vip && available_image_limit.available_images > 0) &&
                             <DialogContentText id="alert-dialog-description">
                                 {lang.DESCRIPTIONS.GO_VIEW_ADS}
                             </DialogContentText>
-                        </>
                     }
                 </DialogContent>
                 <DialogActions>
                     {
-                        (available_image_limit.available_images === 0 && !userDbData?.is_vip) &&
+                        !userDbData?.is_vip &&
                             <Button onClick={() => setModal(<VipFullPageModal />)}>
                                 {lang.BUTTONS.VIP_MODAL_GET}
                             </Button>
                     }
                     {
-                        (available_image_limit.available_images === 0 && !!userDbData?.is_vip) &&
-                            <Button onClick={() => navigate('profile')}>
-                                {lang.MODALS.CLOSE}
+                        (available_image_limit.nex_free_image_available && !userDbData?.is_vip && available_image_limit.available_images > 0) &&
+                            <Button onClick={handleAds}>
+                                {lang.BUTTONS.VIEW_ADVERT}
                             </Button>
                     }
                     {
-                        (!available_image_limit.nex_free_image_available && !userDbData?.is_vip) &&
-                            <Button onClick={handleAds}>
-                                {lang.BUTTONS.VIEW_ADVERT}
+                        ((available_image_limit.available_images === 0 && userDbData?.is_vip) || (!available_image_limit.nex_free_image_available && !userDbData?.is_vip && available_image_limit.available_images > 0)) &&
+                            <Button onClick={() => navigate('/')}>
+                                {lang.MODALS.CLOSE}
                             </Button>
                     }
                 </DialogActions>

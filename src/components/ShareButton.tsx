@@ -19,7 +19,7 @@ export default function ShareButton({image, image_type}: TShareBtn) {
     const shareStore = async () => {
         if (webApp) {
             webApp.shareToStory(image.url, {
-                text: lang.SHARE_TEXT[image_type.type] + process.env.REACT_APP_TG_URL,
+                text: process.env.REACT_APP_TG_URL + ' - generate image Renestra AI',
                 widget_link: {
                     url: process.env.REACT_APP_TG_URL,
                     name: lang.MODALS.IMAGE + ": " + image_type.name,

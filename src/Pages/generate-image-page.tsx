@@ -22,10 +22,6 @@ import {generateImageType} from "../types/ApiTypes";
 import {apiGenerateImage} from "../api/AxiosApi";
 import {Diversity1, Warning} from "@mui/icons-material";
 import ShareButton from "../components/ShareButton";
-import {AdsGramController} from "../libs/AdsGram";
-import {useSelector} from "react-redux";
-import {RootStateType} from "../redux/store/ConfigureStore";
-import {ReduxSliceUserInterface} from "../redux/slice/UserSlice";
 
 type Taction = {
     request: Request,
@@ -121,22 +117,9 @@ export default function GenerateImagePage(){
     const formData = useActionData() as FormData;
     const [step, setStep] = useState(1);
     const [error, setError] = useState('');
-    const {userDbData} = useSelector<RootStateType, ReduxSliceUserInterface>(state => state.user)
 
     useEffect(() => {
         async function init(){
-            if (!userDbData?.is_vip) {
-                AdsGramController().show().then((result) => {
-                    // user watch ad till the end
-                    // your code to reward user
-                    console.log('ADS success', result);
-                }).catch((result) => {
-                    // user get error during playing ad or skip ad
-                    // do nothing or whatever you want
-                    console.log('ADS error', result);
-                })
-            }
-
             const response = await apiGenerateImage(formData)
             setImage(response)
             if (response.result) {

@@ -198,7 +198,7 @@ export default function SelectImagePage() {
     return (
         <React.Fragment>
             {
-                (available_image_limit.available_images === 0 || (!userDbData?.is_vip && !available_image_limit.nex_free_image_available)) &&
+                (available_image_limit.available_images === 0 || (!userDbData?.is_vip && available_image_limit.available_images < 3)) &&
                     <AlertDialogAvailableImage available_image_limit={available_image_limit} />
             }
             <PageWrapper back title={lang.HEADERS.SELECT_IMAGE_PANEL} >
