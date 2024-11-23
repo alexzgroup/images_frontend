@@ -1,9 +1,9 @@
 {
   "files": {
     "main.css": "/images_frontend/static/css/main.2b3396ac.css",
-    "main.js": "/images_frontend/static/js/main.ce4c6975.js",
+    "main.js": "/images_frontend/static/js/main.96c4337e.js",
     "static/js/495.54f04246.chunk.js": "/images_frontend/static/js/495.54f04246.chunk.js",
-    "static/js/877.2cc8f667.chunk.js": "/images_frontend/static/js/877.2cc8f667.chunk.js",
+    "static/js/877.01f4255a.chunk.js": "/images_frontend/static/js/877.01f4255a.chunk.js",
     "static/js/256.1275282f.chunk.js": "/images_frontend/static/js/256.1275282f.chunk.js",
     "static/media/vip_logo.png": "/images_frontend/static/media/vip_logo.4866c8df3429d6b7f509.png",
     "static/media/select_image_profile_man.jpg": "/images_frontend/static/media/select_image_profile_man.4fe33ec58a7989070a57.jpg",
@@ -58,6 +58,7 @@
     "static/media/roboto-vietnamese-400-normal.woff": "/images_frontend/static/media/roboto-vietnamese-400-normal.0dc97c66f9b542d6fa17.woff",
     "static/media/roboto-vietnamese-500-normal.woff": "/images_frontend/static/media/roboto-vietnamese-500-normal.23b7b8a2524d2d4b637b.woff",
     "static/media/roboto-vietnamese-700-normal.woff": "/images_frontend/static/media/roboto-vietnamese-700-normal.35ed0597568ff6f19c16.woff",
+    "static/media/female-select-sex.svg": "/images_frontend/static/media/female-select-sex.e60a339ff0f5bb4bd2b0025902085d3e.svg",
     "static/media/roboto-greek-ext-500-normal.woff2": "/images_frontend/static/media/roboto-greek-ext-500-normal.4a96ba31abcce0f5d52b.woff2",
     "static/media/roboto-greek-ext-300-normal.woff2": "/images_frontend/static/media/roboto-greek-ext-300-normal.d6049cb54aa6fbe14c42.woff2",
     "static/media/roboto-greek-ext-400-normal.woff2": "/images_frontend/static/media/roboto-greek-ext-400-normal.1df4abad55796d11a0c8.woff2",
@@ -66,17 +67,16 @@
     "static/media/roboto-greek-ext-700-normal.woff": "/images_frontend/static/media/roboto-greek-ext-700-normal.4abdc9fff4507f17d726.woff",
     "static/media/roboto-greek-ext-300-normal.woff": "/images_frontend/static/media/roboto-greek-ext-300-normal.b590dbe5c639944366d1.woff",
     "static/media/roboto-greek-ext-400-normal.woff": "/images_frontend/static/media/roboto-greek-ext-400-normal.16eb83b4a3b1ea994243.woff",
-    "static/media/female-select-sex.svg": "/images_frontend/static/media/female-select-sex.cee9208b63e724e0a0019c005236692f.svg",
     "static/media/male-select-sex.svg": "/images_frontend/static/media/male-select-sex.1ef0894cd7982cce6776ccef0cbda749.svg",
     "index.html": "/images_frontend/index.html",
     "main.2b3396ac.css.map": "/images_frontend/static/css/main.2b3396ac.css.map",
-    "main.ce4c6975.js.map": "/images_frontend/static/js/main.ce4c6975.js.map",
+    "main.96c4337e.js.map": "/images_frontend/static/js/main.96c4337e.js.map",
     "495.54f04246.chunk.js.map": "/images_frontend/static/js/495.54f04246.chunk.js.map",
-    "877.2cc8f667.chunk.js.map": "/images_frontend/static/js/877.2cc8f667.chunk.js.map",
+    "877.01f4255a.chunk.js.map": "/images_frontend/static/js/877.01f4255a.chunk.js.map",
     "256.1275282f.chunk.js.map": "/images_frontend/static/js/256.1275282f.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.2b3396ac.css",
-    "static/js/main.ce4c6975.js"
+    "static/js/main.96c4337e.js"
   ]
 }
