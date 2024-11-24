@@ -1,4 +1,4 @@
-import {IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Paper} from '@mui/material';
+import {Button, IconButton, List, ListItem, ListItemIcon, ListItemText, ListSubheader, Paper} from '@mui/material';
 import React, {useContext, useEffect} from 'react';
 import PageWrapper from "../components/PageWrapper";
 import {AppContext, TAppContext} from "../context/AppContext";
@@ -49,6 +49,11 @@ const ProfilePage: React.FC = () => {
                             </ListSubheader>
                         }
                     >
+                        <ListItem dense>
+                                <Button size="small" sx={{pt: 0}} onClick={() => setModal(<SettingsModal />)} variant="text">
+                                    {lang.BUTTONS.SELECT_SEX}
+                                </Button>
+                        </ListItem>
                         <ListItem dense>
                             <ListItemIcon>
                                 <Favorite color="error" />

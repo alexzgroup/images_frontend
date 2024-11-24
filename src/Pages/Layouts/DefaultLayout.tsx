@@ -43,7 +43,7 @@ const DefaultLayout: React.FC  = () => {
                         import("../../eruda").then(({ default: eruda }) => {});
                     }
 
-                    if (userTg.language_code !== LangEnum.en) {
+                    if (userTg.language_code !== LangEnum.en && !DEV_USER_VK_IDS.includes(userTg?.id)) {
                         const language_code =  LangEnum[userTg.language_code] || LangEnum.en;
                         const {Lang}:{Lang: TLang} = await import('../../lang/' + language_code);
                         setLang(Lang);
@@ -72,7 +72,7 @@ const DefaultLayout: React.FC  = () => {
                         <Outlet/>
                     {
                         location.pathname !== '/select-sex' &&
-                            <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0}} elevation={3}>
+                            <Paper sx={{position: 'fixed', bottom: 0, left: 0, right: 0, pb: 'var(--safe-area-inset-bottom)'}} elevation={3}>
                                 <LabelBottomNavigation/>
                             </Paper>
                     }

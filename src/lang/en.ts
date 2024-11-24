@@ -40,6 +40,7 @@ export const Lang = {
         SHARE: "Share",
         SHARE_MESSAGE: "In message",
         VIEW_ADVERT: "Посмотреть ads",
+        SELECT_SEX: "Change sex of the generations",
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: "Try on a stylish look, become a warrior or fantasy character with the help of AI.",

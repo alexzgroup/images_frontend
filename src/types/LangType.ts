@@ -40,6 +40,7 @@ export type TLang = {
         SHARE: string,
         SHARE_MESSAGE: string,
         VIEW_ADVERT: string,
+        SELECT_SEX: string,
     },
     DESCRIPTIONS: {
         HOME_PANEL_TOP: string,

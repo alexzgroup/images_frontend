@@ -41,14 +41,14 @@ export default  function SelectSexPage() {
         <React.Fragment>
             <PageWrapper title={lang.HEADERS.SELECT_SEX_PANEL}>
                 <Box display="flex" sx={{height: 'calc(100vh - 48px)'}}>
-                    <ButtonGroup sx={{flexShrink: 0, flexGrow: 1}} fullWidth variant="text" aria-label="Basic button group">
-                        <Button onClick={() => selectSex(2)} sx={{color: blue[700]}}>
+                    <ButtonGroup fullWidth variant="text" aria-label="Basic button group">
+                        <Button fullWidth onClick={() => selectSex(2)} sx={{color: blue[700]}}>
                             <Stack spacing={2} direction="column" sx={{ alignItems: 'center' }}>
                                 <Male sx={{fontSize: 72}} />
                                 <img src={maleImage} style={{width: '100%'}} alt="Renestra" />
                             </Stack>
                         </Button>
-                        <Button onClick={() => selectSex(1)} sx={{color: pink[700]}}>
+                        <Button fullWidth onClick={() => selectSex(1)} sx={{color: pink[700]}}>
                             <Stack spacing={2} direction="column" sx={{ alignItems: 'center' }}>
                                 <Female sx={{fontSize: 72}} />
                                 <img src={femaleImage} style={{width: '100%'}} alt="Renestra" />
