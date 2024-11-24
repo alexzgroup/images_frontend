@@ -117,6 +117,10 @@ export type TInvoiceLink = operationResultType & {
     link: string,
 }
 
+export type TSavePreparedInlineMessage = operationResultType & {
+    id: string,
+}
+
 export type generateImageType = operationWithMessageType & {
     id: number,
     image: GeneratedImageType,

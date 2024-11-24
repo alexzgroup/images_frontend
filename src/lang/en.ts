@@ -93,6 +93,7 @@ export const Lang = {
         ABOUT_AS: "About as",
         NO_RESULT: "No results",
         SHARE_MESSAGE: "Share the attachment with your friends",
+        RESULT_GENERATE_SHARE: "To view the result of the generation, save or share",
         GO_VIEW_ADS: "To get free generation, view the advertisement. Each generation is available no more than once every 5 minutes, a total of 3 generations are available for free every day.",
         TIME: {
             DAYS: "days",

@@ -12,6 +12,7 @@ import {
     operationResultType,
     ShareTypeEnum,
     TInvoiceLink,
+    TSavePreparedInlineMessage,
 } from "../types/ApiTypes";
 
 const axiosApi =  axios.create({
@@ -73,6 +74,14 @@ export const getGeneratedImages = (userId: number) => {
  */
 export const createInvoiceLink = () => {
     return axiosApi.get(`tg/create_invoice_link`).then((r: {data: TInvoiceLink}) => r.data);
+}
+
+/**
+ * Получает ID сообщения для нового шаринга
+ * @param shareImageId
+ */
+export const getSavePreparedInlineMessage = (shareImageId: number) => {
+    return axiosApi.get(`tg/save_prepared_inline_message/` + shareImageId).then((r: {data: TSavePreparedInlineMessage}) => r.data);
 }
 
 /**

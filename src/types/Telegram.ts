@@ -61,6 +61,7 @@ export interface IWebApp {
     shareToStory: (media_url: string, params: IStoryShareParams) => void;
     openTelegramLink: (url: string) => void;
     switchInlineQuery: (query: string, chatList?: string[]) => void;
+    postEvent: (method: string, type: boolean, data: any) => void;
     openInvoice: (url: string, callBack: (status:  "paid" | "cancelled" | "failed" | "pending") => void) => void;
 }
 

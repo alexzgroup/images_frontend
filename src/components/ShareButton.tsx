@@ -5,14 +5,15 @@ import {AppContext, TAppContext} from "../context/AppContext";
 import {useTelegram} from "../context/TelegramProvider";
 import {Box, Button, ButtonGroup, Typography} from "@mui/material";
 import {Send, Share} from "@mui/icons-material";
-import {updateShareGenerateImage} from "../api/AxiosApi";
+import {getSavePreparedInlineMessage, updateShareGenerateImage} from "../api/AxiosApi";
 
 type TShareBtn = {
     image: GeneratedImageType,
     image_type: imageType,
+    title?: string,
 }
 
-export default function ShareButton({image, image_type}: TShareBtn) {
+export default function ShareButton({image, image_type, title}: TShareBtn) {
     const {lang} = useContext<TAppContext>(AppContext);
     const { webApp, userTg } = useTelegram();
 
@@ -31,12 +32,9 @@ export default function ShareButton({image, image_type}: TShareBtn) {
 
     const shareMessage = async () => {
         if (webApp) {
-            const data = {
-                shareImageId: image.id,
-            }
-            webApp.switchInlineQuery(JSON.stringify(data), [
-                'users', 'bots', 'groups', 'channels'
-            ]);
+            const {id} = await getSavePreparedInlineMessage(image.id);
+            // @ts-ignore
+            window.Telegram.WebView.postEvent('web_app_send_prepared_message', false, {id});
         }
     }
 
@@ -44,7 +42,7 @@ export default function ShareButton({image, image_type}: TShareBtn) {
         <React.Fragment>
             <Box sx={{width:'100%'}}>
                 <Typography sx={{mb: 1}} textAlign="center" variant="body2" component="p" color="primary">
-                    {lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}
+                    {title || lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}
                 </Typography>
                 <ButtonGroup fullWidth orientation="horizontal" variant="contained" aria-label="Basic button group">
                     {

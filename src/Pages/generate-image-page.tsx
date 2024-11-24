@@ -93,7 +93,7 @@ const Media = (props: MediaProps) =>  {
                     </React.Fragment>
                 ) : (
                     <Typography variant="body2" component="p" color="primary">
-                        {lang.DESCRIPTIONS.SHARE_STORY_NOT_FORGET}
+                        {lang.DESCRIPTIONS.RESULT_GENERATE_SHARE}
                     </Typography>
                 )}
             </CardContent>
@@ -179,7 +179,7 @@ export default function GenerateImagePage(){
                                 <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
                             </Box>
                             {
-                                image && <ShareButton {...image} />
+                                image && <ShareButton {...image} title={lang.DESCRIPTIONS.RESULT_GENERATE_SHARE} />
                             }
                         </Container>
                     </Paper>

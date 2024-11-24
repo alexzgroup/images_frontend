@@ -94,6 +94,7 @@ export type TLang = {
         NO_RESULT: string,
         SHARE_MESSAGE: string,
         GO_VIEW_ADS: string,
+        RESULT_GENERATE_SHARE: string,
         TIME: {
             DAYS: string,
             HOURS: string,
