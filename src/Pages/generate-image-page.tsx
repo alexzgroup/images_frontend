@@ -22,6 +22,7 @@ import {generateImageType} from "../types/ApiTypes";
 import {apiGenerateImage} from "../api/AxiosApi";
 import {Diversity1, Warning} from "@mui/icons-material";
 import ShareButton from "../components/ShareButton";
+import {TgAnimalsBanner} from "../components/TgAnimalsBanner";
 
 type Taction = {
     request: Request,
@@ -174,6 +175,7 @@ export default function GenerateImagePage(){
                 {
                     step === 2 && <Paper sx={{height: '50vh'}} square elevation={0}>
                         <Container sx={{display: 'flex', flexFlow: 'column', height: '100%', justifyContent: 'space-around', alignItems: 'center'}}>
+                            <TgAnimalsBanner />
                             <Box id="animateHeartWrapper">
                                 <Diversity1 color="secondary" sx={{width: 124, height: 124}} />
                                 <Diversity1 color="secondary" sx={{width: 124, height: 124}} />

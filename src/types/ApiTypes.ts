@@ -1,10 +1,12 @@
 import {ITelegramUser} from "./Telegram";
+import {LangEnum} from "../enum/LangEnum";
 
 export type userApiType = {
     balance: number,
     bdate: string,
     first_name: string,
     last_name: string,
+    lang: LangEnum,
     id: number,
     photo_100: string,
     sex: 0|1|2,

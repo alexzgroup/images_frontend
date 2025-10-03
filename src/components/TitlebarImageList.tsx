@@ -17,7 +17,7 @@ import {
     List,
     ListItem,
     ListItemIcon,
-    ListItemText,
+    ListItemText, Paper,
     Typography,
     useTheme
 } from '@mui/material';
@@ -32,6 +32,8 @@ import Toolbar from "@mui/material/Toolbar";
 import {Link} from 'react-router-dom';
 import ShareButton from "./ShareButton";
 import {TransitionBottom} from "../helpers/Transitions";
+import DialogTitle from "@mui/material/DialogTitle";
+import {TgAnimalsBanner} from "./TgAnimalsBanner";
 
 export default function TitlebarImageList({history_generate, showBtn}: {
     history_generate: GeneratedImageType[],
@@ -127,6 +129,7 @@ export default function TitlebarImageList({history_generate, showBtn}: {
                     <Box ref={ref}>
                         <Container>
                             <DialogContent dividers>
+                                <TgAnimalsBanner />
                                 <List>
                                     <ListItem dense>
                                         <ListItemIcon>
