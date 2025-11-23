@@ -28,6 +28,7 @@ import VipPageBanner from "../components/RenestraVip/VipPageBanner";
 import {LabelImageTypeGenerator} from "../components/LabelImageTypeGenerator";
 import {useModalPage} from "../context/ModalProvider";
 import VipFullPageModal from "../components/Modals/VipFullPageModal";
+import {TgAnimalsBanner} from "../components/TgAnimalsBanner";
 
 const HomePage: React.FC = () => {
     const {lang} = useContext<TAppContext>(AppContext);
@@ -47,6 +48,7 @@ const HomePage: React.FC = () => {
     return (
         <React.Fragment>
             <PageWrapper>
+                <TgAnimalsBanner />
                 <Card square elevation={2} sx={{my: 1}}>
                     <CardHeader
                         avatar={
